@@ -88,6 +88,10 @@ trigger it (e.g. no DB code → no DB findings) rather than padding it.
    excess client JS/bundle, image/font/media handling, layout thrash / CLS,
    and DB query concerns (N+1, missing indexes, in-memory filtering that
    belongs in the query) when relevant.
+   - Flag obvious data-layer problems here, but deep schema, index, migration,
+     transaction, query-plan, and PostgreSQL analysis belongs to
+     `/database-dsa-review` — aim for complementary review, not duplicate DB
+     findings.
 5. **Security** — trust boundaries, input validation, authn/authz impact,
    unsafe data handling, exposed secrets, injection and access-control risks.
    Treat auth, validation, DB mutations, payments, and secrets as high-scrutiny
