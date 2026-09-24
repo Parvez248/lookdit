@@ -1,3 +1,4 @@
-// Schema entry point. Tables are added here (or re-exported from sibling
-// modules) once the approved schema lands. Intentionally empty for now.
-export {};
+// Schema entry point. Re-exports each table module.
+export * from "./projects";
+export * from "./technologies";
+export * from "./project-technologies";
