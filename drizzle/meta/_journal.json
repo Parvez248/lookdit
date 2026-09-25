@@ -8,6 +8,13 @@
       "when": 1790226668037,
       "tag": "0000_initial_project_technology_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1790312470479,
+      "tag": "0001_add_project_media",
+      "breakpoints": true
     }
   ]
 }
