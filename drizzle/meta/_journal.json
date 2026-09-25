@@ -15,6 +15,13 @@
       "when": 1790312470479,
       "tag": "0001_add_project_media",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790313534210,
+      "tag": "0002_add_inquiries",
+      "breakpoints": true
     }
   ]
 }
