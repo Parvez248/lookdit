@@ -4,3 +4,4 @@ export * from "./technologies";
 export * from "./project-technologies";
 export * from "./project-media";
 export * from "./inquiries";
+export * from "./testimonials";
