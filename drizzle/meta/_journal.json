@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1790226668037,
+      "tag": "0000_initial_project_technology_schema",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1790312470479,
+      "tag": "0001_add_project_media",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790313534210,
+      "tag": "0002_add_inquiries",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1790314244678,
+      "tag": "0003_add_testimonials",
+      "breakpoints": true
+    }
+  ]
+}
