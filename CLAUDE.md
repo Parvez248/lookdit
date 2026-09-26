@@ -19,7 +19,8 @@ Priorities, in order: **UI/UX quality → accessibility → performance → main
 - **PostgreSQL** — only if/when backend data is actually justified. Not before.
 - **GSAP + ScrollTrigger** — major/complex animation.
 - **Lenis** — smooth scrolling, only when it materially improves the experience.
-- **Tailwind CSS and/or custom CSS** — chosen per case; keep styling coherent.
+- **CSS Modules + CSS custom-property tokens** (decided 2026-09-26; no Tailwind). Tokens live in
+  `src/app/globals.css`; component styles sit next to each component as `*.module.css`.
 - **Three.js / React Three Fiber** — only if a specific visual concept genuinely requires 3D.
 
 Nothing above is a mandate to install everything up front. Add each dependency when a real need
@@ -66,20 +67,28 @@ arises, and explain why (see rule 3).
 
 ## Current state
 
-Empty repository — not yet scaffolded. When scaffolding lands, replace this section with the real
-project structure and fill in the commands below.
+- **Backend:** PostgreSQL (Neon) via Drizzle. Schema and migrations in `src/db/schema` and
+  `drizzle/`; typed reads in `src/db/queries`; inquiry writes in `src/db/mutations` behind the
+  `submitInquiry` Server Action (`src/app/actions/inquiry.ts`) with validation and per-client
+  rate limiting in `src/lib/inquiries`.
+- **Frontend (in progress):** dark-only "In Focus" design system. `src/app/layout.tsx` holds the
+  shell (fonts, skip link, header, footer); `src/app/globals.css` holds the tokens (colour, type,
+  space, motion), reset and the `.container` / `.grid` layout primitives.
+  - `src/components/site`: header, native `<dialog>` mobile menu, footer, temporary text wordmark.
+  - `src/components/ui`: shared primitives (`ButtonLink`, `FocusFrame`).
+  - `src/components/home`: home page sections (currently the hero only).
+  - `src/content/site.ts`: static site copy and navigation.
+- Server Components by default; the only client component so far is `MobileMenu`.
 
 ## Commands
 
-_To be filled in once the project is scaffolded (e.g. dev, build, lint, typecheck, test)._
-
-<!--
-dev:        <tbd>
-build:      <tbd>
-lint:       <tbd>
-typecheck:  <tbd>
-test:       <tbd>
--->
+```bash
+pnpm dev                 # local dev server
+pnpm build               # production build (run before tsc on a fresh clone)
+pnpm lint                # ESLint
+pnpm exec tsc --noEmit   # typecheck (strict)
+pnpm test                # Vitest unit tests
+```
 
 <!-- BEGIN:nextjs-agent-rules -->
 

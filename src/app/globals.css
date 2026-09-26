@@ -1,40 +1,158 @@
+/*
+ * Lookdit design foundation: tokens, reset, base typography and the two
+ * layout primitives (.container, .grid). Component styles live in CSS Modules.
+ * Dark only (v1). Contrast ratios are measured against --ground.
+ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
+
+  /* Colour: surfaces */
+  --ground: #06080c;
+  --surface-1: #0c1017;
+  --surface-2: #121722;
+
+  /* Colour: lines (decorative, except --line-interactive at 3.4:1) */
+  --line: #1a202a;
+  --line-strong: #2a3140;
+  --line-interactive: #5a6477;
+  --grid-line: rgb(237 241 247 / 0.045);
+
+  /* Colour: text (17.7 / 7.7 / 4.8 : 1) */
+  --text: #edf1f7;
+  --text-muted: #98a1b3;
+  --text-subtle: #737c8e;
+
+  /* Colour: blue carries focus and action only */
+  --blue-500: #2f6bff; /* brand: Focus Frame, markers; not for small text */
+  --blue-600: #2a5fe6; /* primary fill: white label 5.4:1 */
+  --blue-700: #2458e0; /* primary hover/pressed: 5.9:1 */
+  --blue-400: #5b8cff; /* link text: 6.3:1 */
+  --focus: #7ea4ff; /* focus ring: 8.3:1 */
+  --cyan: #4fd8e6; /* signal only, used sparingly */
+
+  /* Type families (variables come from next/font in layout.tsx) */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
+
+  /* Type scale: fluid between 360px and 1440px, rem-based so zoom scales */
+  --text-display-xl: clamp(2.75rem, 1.35rem + 5.6vw, 7.5rem);
+  --text-display-l: clamp(2.25rem, 1.5rem + 3.2vw, 4.5rem);
+  --text-display-m: clamp(1.75rem, 1.3rem + 1.8vw, 3rem);
+  --text-heading-s: clamp(1.125rem, 1rem + 0.5vw, 1.5rem);
+  --text-body-l: clamp(1.125rem, 1rem + 0.45vw, 1.375rem);
+  --text-body: 1rem;
+  --text-body-s: 0.875rem;
+  --text-mono-label: 0.75rem;
+  --text-mono-data: 0.8125rem;
+
+  /* Space: 4px base */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+  --space-11: 12rem;
+
+  /* Layout */
+  --container-max: 90rem;
+  --gutter: clamp(1.25rem, 0.5rem + 3.2vw, 4rem);
+  --grid-columns: 4;
+  --grid-gap: 1rem;
+  --section-space: clamp(6rem, 4rem + 8vw, 12rem);
+  --header-height: 3.5rem;
+  --measure: 68ch;
+
+  /* Shape */
+  --radius-s: 2px;
+
+  /* Motion */
+  --dur-fast: 150ms;
+  --dur-base: 240ms;
+  --dur-slow: 600ms;
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+  --ease-in-out: cubic-bezier(0.6, 0, 0.2, 1);
 }
 
-@media (prefers-color-scheme: dark) {
+@media (min-width: 40rem) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --grid-columns: 8;
+    --grid-gap: 1.25rem;
   }
 }
 
-html {
-  height: 100%;
+@media (min-width: 64rem) {
+  :root {
+    --grid-columns: 12;
+    --grid-gap: 1.5rem;
+    --header-height: 4rem;
+  }
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
+/* Reset */
 
-body {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 * {
-  box-sizing: border-box;
-  padding: 0;
   margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--header-height) + var(--space-4));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* `clip`, not `hidden`: hidden makes body a scroll container and breaks sticky. */
+html,
+body {
+  overflow-x: clip;
+}
+
+/* The mobile menu is a modal <dialog>; keep the page still behind it. */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background: var(--ground);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+main {
+  flex: 1;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
 }
 
 a {
@@ -42,8 +160,92 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+::selection {
+  background: var(--blue-500);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Layout primitives */
+
+.container {
+  width: 100%;
+  max-width: calc(var(--container-max) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+  column-gap: var(--grid-gap);
+}
+
+/* Utilities */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: fixed;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 100;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-s);
+  background: var(--blue-600);
+  color: #fff;
+  font-size: var(--text-body-s);
+  font-weight: 500;
+  transform: translateY(calc(-100% - var(--space-4)));
+}
+
+.skip-link:focus-visible {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
