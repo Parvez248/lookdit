@@ -6,6 +6,7 @@ import {
   INQUIRY_HONEYPOT_FIELD,
   isHoneypotFilled,
   pickInquiryFields,
+  RATE_LIMITED_SUBMIT_MESSAGE,
   toSubmitInquiryState,
 } from "./submission";
 import { validateInquiryInput } from "./validation";
@@ -104,6 +105,13 @@ describe("toSubmitInquiryState", () => {
       value: { id: "0190f7e0-0000-7000-8000-000000000000", createdAt: new Date() },
     };
     expect(toSubmitInquiryState(created)).toEqual({ status: "success" });
+  });
+
+  it("maps a rate-limited result to the fixed rate_limited state", () => {
+    expect(toSubmitInquiryState({ ok: false, rateLimited: true })).toEqual({
+      status: "rate_limited",
+      message: RATE_LIMITED_SUBMIT_MESSAGE,
+    });
   });
 
   it("maps validation issues to one message per field", () => {
