@@ -17,6 +17,9 @@ export const INQUIRY_HONEYPOT_FIELD = "company_website";
 
 export const GENERIC_SUBMIT_ERROR_MESSAGE = "Something went wrong. Please try again.";
 
+export const RATE_LIMITED_SUBMIT_MESSAGE =
+  "You've sent several messages recently. Please try again later.";
+
 /**
  * Result contract for the future form (`useActionState`). Never carries the
  * inquiry id, timestamps, or any submitted value.
@@ -25,6 +28,7 @@ export type SubmitInquiryState =
   | { status: "idle" }
   | { status: "success" }
   | { status: "invalid"; fieldErrors: Partial<Record<InquiryFormField, string>> }
+  | { status: "rate_limited"; message: string }
   | { status: "error"; message: string };
 
 export const INITIAL_SUBMIT_INQUIRY_STATE: SubmitInquiryState = { status: "idle" };
@@ -61,13 +65,20 @@ function isInquiryFormField(field: string | null): field is InquiryFormField {
 
 /**
  * Map a `createInquiry` result to the frontend-safe state. Success deliberately
- * drops the created id/timestamp. Validation issues become at most one message
- * per field (the first one); issue messages never contain submitted values.
+ * drops the created id/timestamp. A rate-limited result gets a fixed message.
+ * Validation issues become at most one message per field (the first one); issue
+ * messages never contain submitted values.
  */
 export function toSubmitInquiryState(
-  result: { ok: true } | { ok: false; issues: readonly InquiryValidationIssue[] },
+  result:
+    | { ok: true }
+    | { ok: false; issues: readonly InquiryValidationIssue[] }
+    | { ok: false; rateLimited: true },
 ): SubmitInquiryState {
   if (result.ok) return { status: "success" };
+  if ("rateLimited" in result) {
+    return { status: "rate_limited", message: RATE_LIMITED_SUBMIT_MESSAGE };
+  }
 
   const fieldErrors: Partial<Record<InquiryFormField, string>> = {};
   for (const issue of result.issues) {
