@@ -41,16 +41,16 @@ export function Hero() {
         </div>
 
         <div className={`grid ${styles.band}`}>
-          <p className={styles.bandLabel} id="hero-disciplines">
-            Disciplines
+          <p className={styles.bandLabel} id="hero-services">
+            Core services
           </p>
-          <ol className={styles.disciplines} aria-labelledby="hero-disciplines">
-            {hero.disciplines.map((discipline, index) => (
-              <li key={discipline}>
+          <ol className={styles.services} aria-labelledby="hero-services">
+            {hero.coreServices.map((service, index) => (
+              <li key={service}>
                 <span className={styles.index} aria-hidden="true">
                   {String(index + 1).padStart(2, "0")}
                 </span>
-                {discipline}
+                {service}
               </li>
             ))}
           </ol>

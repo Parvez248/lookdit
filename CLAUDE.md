@@ -74,7 +74,9 @@ arises, and explain why (see rule 3).
 - **Frontend (in progress):** dark-only "In Focus" design system. `src/app/layout.tsx` holds the
   shell (fonts, skip link, header, footer); `src/app/globals.css` holds the tokens (colour, type,
   space, motion), reset and the `.container` / `.grid` layout primitives.
-  - `src/components/site`: header, native `<dialog>` mobile menu, footer, temporary text wordmark.
+  - `src/components/site`: header, native `<dialog>` mobile menu, footer, and
+    `Brand` (the supplied logo in `public/brand/` with the "LOOKDIT" name beside it). The app
+    icons `src/app/icon.png` / `apple-icon.png` are the same logo padded to square (temporary).
   - `src/components/ui`: shared primitives (`ButtonLink`, `FocusFrame`).
   - `src/components/home`: home page sections (currently the hero only).
   - `src/content/site.ts`: static site copy and navigation.

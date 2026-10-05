@@ -3,16 +3,16 @@ import Link from "next/link";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { contactCta, primaryNav } from "@/content/site";
 
+import { Brand } from "./Brand";
 import { MobileMenu } from "./MobileMenu";
 import styles from "./SiteHeader.module.css";
-import { Wordmark } from "./Wordmark";
 
 export function SiteHeader() {
   return (
     <header className={styles.header}>
       <div className={`container ${styles.inner}`}>
-        <Link href="/" className={styles.home} aria-label="Lookdit, home">
-          <Wordmark />
+        <Link href="/" className={styles.home} aria-label="LOOKDIT, home">
+          <Brand />
         </Link>
 
         <nav aria-label="Primary" className={styles.nav}>

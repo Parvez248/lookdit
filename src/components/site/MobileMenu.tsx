@@ -6,8 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import type { NavItem } from "@/content/site";
 
+import { Brand } from "./Brand";
 import styles from "./MobileMenu.module.css";
-import { Wordmark } from "./Wordmark";
 
 type MobileMenuProps = {
   items: readonly NavItem[];
@@ -70,8 +70,8 @@ export function MobileMenu({ items, cta }: MobileMenuProps) {
 
       <dialog ref={dialogRef} id="mobile-menu" className={styles.dialog} aria-label="Menu">
         <div className={`container ${styles.bar}`}>
-          <Link href="/" className={styles.home} aria-label="Lookdit, home" onClick={close}>
-            <Wordmark />
+          <Link href="/" className={styles.home} aria-label="LOOKDIT, home" onClick={close}>
+            <Brand />
           </Link>
           <button type="button" className={styles.trigger} onClick={close}>
             Close

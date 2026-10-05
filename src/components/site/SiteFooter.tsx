@@ -3,8 +3,8 @@ import Link from "next/link";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { contactCta, footer, primaryNav } from "@/content/site";
 
+import { Brand } from "./Brand";
 import styles from "./SiteFooter.module.css";
-import { Wordmark } from "./Wordmark";
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
@@ -18,8 +18,8 @@ export function SiteFooter() {
         </div>
 
         <div className={styles.meta}>
-          <Link href="/" className={styles.home} aria-label="Lookdit, home">
-            <Wordmark />
+          <Link href="/" className={styles.home} aria-label="LOOKDIT, home">
+            <Brand height={40} />
           </Link>
 
           <nav aria-label="Footer">
@@ -34,7 +34,7 @@ export function SiteFooter() {
             </ul>
           </nav>
 
-          <p className={styles.legal}>© {year} Lookdit</p>
+          <p className={styles.legal}>© {year} LOOKDIT</p>
         </div>
       </div>
     </footer>

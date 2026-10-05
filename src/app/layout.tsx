@@ -21,8 +21,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    template: "%s — Lookdit",
-    default: "Lookdit — Product design & engineering studio",
+    template: "%s — LOOKDIT",
+    default: "LOOKDIT — SEO, Digital Marketing & Web Apps Development",
   },
   description: hero.supporting,
 };

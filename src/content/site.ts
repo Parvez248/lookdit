@@ -1,5 +1,6 @@
 // Static site content (the locked architecture keeps curated site copy in code).
-// Hero wording is an approved DRAFT and expected to change.
+// Hero and service copy: v1 approved positioning (2026-10-05), from the LOOKDIT positioning
+// framework. It may be refined as stronger business evidence emerges.
 
 export type NavItem = { label: string; href: string };
 
@@ -14,14 +15,15 @@ export const primaryNav: readonly NavItem[] = [
 export const contactCta: NavItem = { label: "Start a project", href: "/#contact" };
 
 export const hero = {
-  eyebrow: "Product design & engineering studio",
+  eyebrow: "SEO · Digital Marketing · Web Apps",
   // The headline is split so the Focus Frame can wrap the final phrase.
-  headlineLead: "We design and engineer software that holds up to a",
+  headlineLead: "Digital work that holds up to a",
   headlineFocus: "closer look.",
   supporting:
-    "Lookdit is a product studio for companies whose software has to be exact: product design, web applications and the engineering underneath.",
+    "LOOKDIT helps businesses improve visibility, reach customers, and build the web systems they need through SEO, digital marketing, and web application development.",
   secondaryCta: { label: "See selected work", href: "/#work" },
-  disciplines: ["Product design", "Web applications", "Engineering"],
+  /** The three core service pillars, each a peer of the others. */
+  coreServices: ["SEO", "Digital Marketing", "Web Apps Development"],
 } as const;
 
 export const footer = {

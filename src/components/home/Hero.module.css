@@ -110,7 +110,7 @@
 }
 
 .bandLabel,
-.disciplines {
+.services {
   font-family: var(--font-mono);
   font-size: var(--text-mono-data);
   line-height: 1.4;
@@ -126,7 +126,7 @@
   color: var(--text-subtle);
 }
 
-.disciplines {
+.services {
   grid-column: 1 / -1;
   display: grid;
   gap: var(--space-2);
@@ -160,7 +160,7 @@
     gap: var(--space-6);
   }
 
-  .disciplines {
+  .services {
     grid-column: 1 / -1;
     grid-template-columns: repeat(3, auto);
     justify-content: start;
@@ -173,9 +173,12 @@
     display: block;
   }
 
-  /* Fill the first screen, capped so very tall screens keep the composition. */
+  /*
+   * Nearly fill the first screen: stop one spacing step short of the fold and
+   * cap the height, so the slack above a two-line headline stays modest.
+   */
   .inner {
-    min-height: calc(min(100svh, 54rem) - var(--header-height));
+    min-height: calc(min(100svh - var(--space-9), 46rem) - var(--header-height));
     padding-block: var(--space-7) var(--space-6);
   }
 
@@ -211,7 +214,7 @@
     grid-column: 1 / span 3;
   }
 
-  .disciplines {
+  .services {
     grid-column: 4 / -1;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     column-gap: var(--grid-gap);
