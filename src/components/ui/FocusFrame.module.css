@@ -1,0 +1,94 @@
+/*
+ * Sizes are in em so the frame scales with the text it wraps. Override the
+ * custom properties from the parent to tune a specific use.
+ */
+.frame {
+  --frame-color: var(--blue-500);
+  --frame-stroke: 2px;
+  --frame-arm: 0.14em;
+  --frame-inset-x: -0.1em;
+  --frame-inset-top: 0.02em;
+  --frame-inset-bottom: -0.1em;
+
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.corners {
+  position: absolute;
+  inset: var(--frame-inset-top) var(--frame-inset-x) var(--frame-inset-bottom);
+  pointer-events: none;
+}
+
+.corners > span {
+  position: absolute;
+  width: var(--frame-arm);
+  height: var(--frame-arm);
+  border: 0 solid var(--frame-color);
+}
+
+.corners > .tl {
+  top: 0;
+  left: 0;
+  border-top-width: var(--frame-stroke);
+  border-left-width: var(--frame-stroke);
+}
+
+.corners > .tr {
+  top: 0;
+  right: 0;
+  border-top-width: var(--frame-stroke);
+  border-right-width: var(--frame-stroke);
+}
+
+.corners > .bl {
+  bottom: 0;
+  left: 0;
+  border-bottom-width: var(--frame-stroke);
+  border-left-width: var(--frame-stroke);
+}
+
+.corners > .br {
+  right: 0;
+  bottom: 0;
+  border-bottom-width: var(--frame-stroke);
+  border-right-width: var(--frame-stroke);
+}
+
+/*
+ * Optional load intro: the corners settle in from slightly outside the frame.
+ * CSS only, so it runs before hydration and never hides the framed text.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .intro .corners > span {
+    animation: frame-settle 520ms var(--ease-out) var(--frame-intro-delay, 0ms) both;
+  }
+
+  .intro .corners > .tl {
+    --settle-x: -0.12em;
+    --settle-y: -0.12em;
+  }
+
+  .intro .corners > .tr {
+    --settle-x: 0.12em;
+    --settle-y: -0.12em;
+  }
+
+  .intro .corners > .bl {
+    --settle-x: -0.12em;
+    --settle-y: 0.12em;
+  }
+
+  .intro .corners > .br {
+    --settle-x: 0.12em;
+    --settle-y: 0.12em;
+  }
+}
+
+@keyframes frame-settle {
+  from {
+    opacity: 0;
+    transform: translate(var(--settle-x), var(--settle-y));
+  }
+}
