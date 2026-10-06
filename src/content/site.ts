@@ -4,12 +4,14 @@
 
 export type NavItem = { label: string; href: string };
 
-/** Section anchors on the home page; each section lands in its own slice. */
+/**
+ * Section anchors on the home page. Only sections that exist are listed:
+ * Work returns when Selected Work is implemented, and Studio only when a real
+ * Studio/About section exists.
+ */
 export const primaryNav: readonly NavItem[] = [
-  { label: "Work", href: "/#work" },
   { label: "Services", href: "/#services" },
   { label: "Industries", href: "/#industries" },
-  { label: "Studio", href: "/#studio" },
 ];
 
 export const contactCta: NavItem = { label: "Start a project", href: "/#contact" };
