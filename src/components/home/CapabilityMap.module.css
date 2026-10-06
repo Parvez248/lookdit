@@ -1,0 +1,248 @@
+/*
+ * The plate is framed by print-style crop marks in grey, not by the Focus Frame:
+ * the blue frame stays reserved for "this is in focus".
+ */
+.map {
+  --mark-offset: var(--space-4);
+  --mark-length: 0.625rem;
+  --mark: linear-gradient(var(--line-interactive) 0 0);
+  --column-lines: linear-gradient(to right, var(--line) 1px, transparent 1px);
+
+  display: grid;
+  gap: var(--space-5);
+}
+
+.plate {
+  position: relative;
+  padding: var(--space-5);
+  border: 1px solid var(--line);
+  background: var(--surface-1);
+}
+
+/* Eight short marks continuing the plate's edges outwards, two per corner. */
+.plate::before {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--mark-offset) - 1px);
+  pointer-events: none;
+  background:
+    var(--mark) left 0 top var(--mark-offset) / var(--mark-length) 1px,
+    var(--mark) left var(--mark-offset) top 0 / 1px var(--mark-length),
+    var(--mark) right 0 top var(--mark-offset) / var(--mark-length) 1px,
+    var(--mark) right var(--mark-offset) top 0 / 1px var(--mark-length),
+    var(--mark) left 0 bottom var(--mark-offset) / var(--mark-length) 1px,
+    var(--mark) left var(--mark-offset) bottom 0 / 1px var(--mark-length),
+    var(--mark) right 0 bottom var(--mark-offset) / var(--mark-length) 1px,
+    var(--mark) right var(--mark-offset) bottom 0 / 1px var(--mark-length);
+  background-repeat: no-repeat;
+}
+
+/* Readout above the plate; the extra space clears the crop marks. */
+.label {
+  margin-bottom: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-data);
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+/* Small screens: the stages are a numbered legend above the ruler. */
+.stages {
+  display: grid;
+  gap: var(--space-2);
+  list-style: none;
+}
+
+.stage {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  align-items: baseline;
+  font-size: var(--text-body-s);
+  line-height: 1.4;
+}
+
+.index {
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-data);
+  letter-spacing: 0.02em;
+  color: var(--text-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Five equal columns with a hairline on each column edge. */
+.chart,
+.ticks,
+.spans {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.chart {
+  margin-top: var(--space-6);
+  border-right: 1px solid var(--line);
+  background: var(--column-lines) 0 0 / 20% 100%;
+}
+
+.ticks {
+  grid-column: 1 / -1;
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-label);
+  line-height: 1.4;
+  color: var(--text-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+.ticks > span {
+  padding: var(--space-2);
+}
+
+.spans {
+  grid-column: 1 / -1;
+  row-gap: var(--space-5);
+  padding-block: var(--space-4) var(--space-5);
+}
+
+/* Label, then the dimension line, then the span in words. */
+.span {
+  grid-column: var(--start) / var(--end);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.capability {
+  padding-inline: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-label);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+/* A dimension line: end ticks with a rule between them. */
+.span::after {
+  content: "";
+  order: 1;
+  height: 0.5625rem;
+  border-inline: 1px solid var(--text-muted);
+  background: linear-gradient(var(--text-muted) 0 0) center / 100% 1px no-repeat;
+}
+
+.range {
+  order: 2;
+  padding-inline: var(--space-2);
+  font-size: var(--text-body-s);
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+.caption {
+  max-width: 60ch;
+  font-size: var(--text-body-s);
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+/*
+ * From 40rem: one diagram. The stages head the five columns, the lines show each span,
+ * and the words move to assistive technology only.
+ */
+@media (min-width: 40rem) {
+  .plate {
+    display: grid;
+    /* `1fr` keeps the content's minimum, so enlarged text grows the plate, never spills. */
+    grid-template-rows: auto 1fr;
+    aspect-ratio: 4 / 3;
+    padding: var(--space-6);
+  }
+
+  .stages {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0;
+    border-right: 1px solid var(--line);
+    background: var(--column-lines) 0 0 / 20% 100%;
+  }
+
+  .stage {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    row-gap: var(--space-3);
+    padding: var(--space-2) var(--space-4) var(--space-6);
+    font-size: var(--text-heading-s);
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  .chart {
+    margin-top: 0;
+    align-content: center;
+  }
+
+  .ticks {
+    display: none;
+  }
+
+  .spans {
+    row-gap: var(--space-7);
+    padding-block: var(--space-6);
+  }
+
+  .capability {
+    padding-inline: var(--space-4);
+  }
+
+  .range {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+@media (min-width: 64rem) {
+  .plate {
+    aspect-ratio: 2 / 1;
+    padding: var(--space-7);
+  }
+
+  .spans {
+    row-gap: var(--space-8);
+  }
+}
+
+/*
+ * Each line draws in from its start tick as it scrolls into view, finishing a fifth of
+ * the viewport later, so the three lines stagger by their own position. Only where
+ * scroll-driven animations exist and motion is welcome; everywhere else the static,
+ * complete diagram is the default.
+ */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .span {
+      view-timeline-name: --capability-span;
+    }
+
+    .span::after {
+      transform-origin: left center;
+      animation: draw var(--ease-out) both;
+      animation-timeline: --capability-span;
+      animation-range: entry 100% entry calc(100% + 20vh);
+    }
+  }
+}
+
+@keyframes draw {
+  from {
+    transform: scaleX(0);
+  }
+}
