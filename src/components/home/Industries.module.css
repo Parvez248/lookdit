@@ -1,0 +1,101 @@
+.section {
+  padding-block: var(--section-space);
+
+  /* Anchor jumps land on the label, not on the empty space above it. */
+  scroll-margin-top: calc(var(--space-6) - var(--section-space));
+}
+
+.inner {
+  row-gap: var(--space-8);
+}
+
+.intro {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: var(--space-5);
+}
+
+.lead {
+  max-width: 24ch;
+  font-size: var(--text-display-m);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.matrix {
+  grid-column: 1 / -1;
+  display: grid;
+  border-top: 1px solid var(--line);
+}
+
+/* Small screens: one priority per row, index beside the name. */
+.cell {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  align-items: baseline;
+  column-gap: var(--space-3);
+  padding-block: var(--space-5);
+  border-bottom: 1px solid var(--line);
+}
+
+.index {
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-data);
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  color: var(--text-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+.name {
+  font-size: var(--text-heading-s);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+/*
+ * From 40rem: a 2 × 2 matrix. Hairlines on the top, bottom and between cells;
+ * the outer left and right edges stay open so it reads as part of the grid.
+ */
+@media (min-width: 40rem) {
+  .matrix {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cell {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    align-items: start;
+    row-gap: var(--space-7);
+    min-height: 13rem;
+    padding: var(--space-5) var(--space-6) var(--space-6);
+  }
+
+  .cell:nth-child(odd) {
+    padding-left: 0;
+    border-right: 1px solid var(--line);
+  }
+
+  .name {
+    align-self: end;
+    max-width: 18ch;
+    font-size: var(--text-display-m);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+}
+
+@media (min-width: 64rem) {
+  .intro {
+    grid-column: 1 / span 8;
+  }
+
+  .cell {
+    min-height: 16rem;
+    padding: var(--space-6) var(--space-7) var(--space-7);
+  }
+}

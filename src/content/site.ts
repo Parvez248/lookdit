@@ -8,7 +8,7 @@ export type NavItem = { label: string; href: string };
 export const primaryNav: readonly NavItem[] = [
   { label: "Work", href: "/#work" },
   { label: "Services", href: "/#services" },
-  { label: "Process", href: "/#process" },
+  { label: "Industries", href: "/#industries" },
   { label: "Studio", href: "/#studio" },
 ];
 
@@ -21,9 +21,44 @@ export const hero = {
   headlineFocus: "closer look.",
   supporting:
     "LOOKDIT helps businesses improve visibility, reach customers, and build the web systems they need through SEO, digital marketing, and web application development.",
-  secondaryCta: { label: "See selected work", href: "/#work" },
-  /** The three core service pillars, each a peer of the others. */
-  coreServices: ["SEO", "Digital Marketing", "Web Apps Development"],
+  // Points at Services until Selected Work exists.
+  secondaryCta: { label: "Explore services", href: "/#services" },
+} as const;
+
+/**
+ * The three core service pillars, peers of one another. Descriptions are v1
+ * working copy. Sub-services are unconfirmed, so none are listed.
+ */
+export const services = {
+  label: "Core services",
+  heading: "Built around visibility, reach and useful web systems.",
+  items: [
+    {
+      name: "SEO",
+      description: "Improve search visibility so the right customers can find your business.",
+    },
+    {
+      name: "Digital Marketing",
+      description: "Reach customers through focused digital channels.",
+    },
+    {
+      name: "Web Apps Development",
+      description:
+        "Build websites and web applications that support customer journeys and business operations.",
+    },
+  ],
+} as const;
+
+/** Priority sectors, in priority order. Priority areas, not exclusive markets. */
+export const industries = {
+  label: "Priority industries",
+  intro: "LOOKDIT serves multiple industries, with deeper focus on four priority sectors.",
+  items: [
+    "E-commerce",
+    "Healthcare & Clinics",
+    "Home Services",
+    "Residential & Commercial Construction Services",
+  ],
 } as const;
 
 export const footer = {

@@ -40,6 +40,13 @@
   padding-block: var(--space-8) var(--space-6);
 }
 
+/* A content-width hairline closes the hero before the next section. */
+.inner::after {
+  content: "";
+  margin-top: var(--space-8);
+  border-top: 1px solid var(--line);
+}
+
 .eyebrow {
   font-family: var(--font-mono);
   font-size: var(--text-mono-label);
@@ -101,45 +108,6 @@
   gap: var(--space-2);
 }
 
-.band {
-  align-items: baseline;
-  row-gap: var(--space-3);
-  margin-top: var(--space-8);
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--line);
-}
-
-.bandLabel,
-.services {
-  font-family: var(--font-mono);
-  font-size: var(--text-mono-data);
-  line-height: 1.4;
-  letter-spacing: 0.02em;
-}
-
-.bandLabel {
-  grid-column: 1 / -1;
-  font-size: var(--text-mono-label);
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-subtle);
-}
-
-.services {
-  grid-column: 1 / -1;
-  display: grid;
-  gap: var(--space-2);
-  color: var(--text-muted);
-}
-
-.index {
-  display: inline-block;
-  min-width: 2.5em;
-  color: var(--text-subtle);
-  font-variant-numeric: tabular-nums;
-}
-
 @media (min-width: 40rem) {
   .gridLines span:nth-child(-n + 8) {
     display: block;
@@ -158,13 +126,6 @@
     flex-direction: row;
     align-items: center;
     gap: var(--space-6);
-  }
-
-  .services {
-    grid-column: 1 / -1;
-    grid-template-columns: repeat(3, auto);
-    justify-content: start;
-    column-gap: var(--space-7);
   }
 }
 
@@ -205,28 +166,13 @@
     grid-column: 1 / span 6;
     grid-row: 1;
   }
-
-  .band {
-    margin-top: var(--space-8);
-  }
-
-  .bandLabel {
-    grid-column: 1 / span 3;
-  }
-
-  .services {
-    grid-column: 4 / -1;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    column-gap: var(--grid-gap);
-  }
 }
 
 /* Load reveal: CSS only, so it runs before hydration and never waits on JS. */
 @media (prefers-reduced-motion: no-preference) {
   .eyebrow,
   .title,
-  .lower,
-  .band {
+  .lower {
     animation: rise 700ms var(--ease-out) both;
   }
 
@@ -237,22 +183,11 @@
   .lower {
     animation-delay: 320ms;
   }
-
-  .band {
-    animation-name: fade;
-    animation-delay: 520ms;
-  }
 }
 
 @keyframes rise {
   from {
     opacity: 0;
     transform: translateY(1rem);
-  }
-}
-
-@keyframes fade {
-  from {
-    opacity: 0;
   }
 }
