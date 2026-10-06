@@ -39,22 +39,6 @@ export function Hero() {
             </ButtonLink>
           </div>
         </div>
-
-        <div className={`grid ${styles.band}`}>
-          <p className={styles.bandLabel} id="hero-services">
-            Core services
-          </p>
-          <ol className={styles.services} aria-labelledby="hero-services">
-            {hero.coreServices.map((service, index) => (
-              <li key={service}>
-                <span className={styles.index} aria-hidden="true">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                {service}
-              </li>
-            ))}
-          </ol>
-        </div>
       </div>
     </section>
   );

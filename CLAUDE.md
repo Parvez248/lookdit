@@ -77,8 +77,8 @@ arises, and explain why (see rule 3).
   - `src/components/site`: header, native `<dialog>` mobile menu, footer, and
     `Brand` (the supplied logo in `public/brand/` with the "LOOKDIT" name beside it). The app
     icons `src/app/icon.png` / `apple-icon.png` are the same logo padded to square (temporary).
-  - `src/components/ui`: shared primitives (`ButtonLink`, `FocusFrame`).
-  - `src/components/home`: home page sections (currently the hero only).
+  - `src/components/ui`: shared primitives (`ButtonLink`, `FocusFrame`, `SectionLabel`).
+  - `src/components/home`: home page sections: `Hero`, `Services`, `Industries`.
   - `src/content/site.ts`: static site copy and navigation.
 - Server Components by default; the only client component so far is `MobileMenu`.
 
