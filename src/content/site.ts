@@ -5,13 +5,13 @@
 export type NavItem = { label: string; href: string };
 
 /**
- * Section anchors on the home page. Only sections that exist are listed:
- * Work returns when Selected Work is implemented, and Studio only when a real
- * Studio/About section exists.
+ * Section anchors on the home page, in page order. Only sections that exist are
+ * listed: Studio returns only when a real Studio/About section exists.
  */
 export const primaryNav: readonly NavItem[] = [
   { label: "Services", href: "/#services" },
   { label: "Industries", href: "/#industries" },
+  { label: "Work", href: "/#work" },
 ];
 
 export const contactCta: NavItem = { label: "Start a project", href: "/#contact" };

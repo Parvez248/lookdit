@@ -78,8 +78,14 @@ arises, and explain why (see rule 3).
     `Brand` (the supplied logo in `public/brand/` with the "LOOKDIT" name beside it). The app
     icons `src/app/icon.png` / `apple-icon.png` are the same logo padded to square (temporary).
   - `src/components/ui`: shared primitives (`ButtonLink`, `FocusFrame`, `SectionLabel`).
-  - `src/components/home`: home page sections: `Hero`, `Services`, `Industries`.
-  - `src/content/site.ts`: static site copy and navigation.
+  - `src/components/home`: home page sections: `Hero`, `Services`, `Industries`,
+    `SelectedWork` (with `CapabilityMap`, the temporary visual for the concept project).
+  - `src/content/site.ts`: static site copy and navigation. `src/content/work.ts`: static
+    Selected Work content (concept projects only; real client work will come from the DB).
+- **Content rule:** Selected Work may contain real client work and clearly identified LOOKDIT
+  concept work. Concept work must never be presented in a way that implies a real client,
+  commercial engagement, or measured result. Concept projects are never written to the
+  `projects` table.
 - Server Components by default; the only client component so far is `MobileMenu`.
 
 ## Commands

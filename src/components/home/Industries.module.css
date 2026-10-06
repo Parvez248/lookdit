@@ -1,5 +1,5 @@
 .section {
-  padding-block: var(--section-space);
+  padding-top: var(--section-space);
 
   /* Anchor jumps land on the label, not on the empty space above it. */
   scroll-margin-top: calc(var(--space-6) - var(--section-space));
