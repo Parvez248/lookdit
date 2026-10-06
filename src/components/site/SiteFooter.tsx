@@ -10,7 +10,7 @@ export function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className={styles.footer}>
+    <footer id="contact" className={styles.footer}>
       <div className="container">
         <div className={styles.cta}>
           <p className={styles.ctaLine}>{footer.cta}</p>
