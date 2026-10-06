@@ -12,8 +12,8 @@ const pad = (position: number) => String(position).padStart(2, "0");
 
 /**
  * The temporary project visual: the journey's stages as columns, and each core service
- * as a dimension line across the stages it applies to. Each span is also written out in
- * words, so the meaning never depends on reading the geometry. Replaced by the concept's
+ * as a dimension line across the stages where it is emphasised. Each span is also written
+ * out in words, so the meaning never depends on reading the geometry. Replaced by the concept's
  * real screens once they exist.
  */
 export function CapabilityMap({ map }: CapabilityMapProps) {
