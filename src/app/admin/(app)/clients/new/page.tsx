@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { ClientForm } from "@/components/admin/ClientForm";
 import { requireUser } from "@/lib/auth/session";
 
-import styles from "../form-page.module.css";
+import styles from "@/components/admin/AdminFormPage.module.css";
 
 export const metadata: Metadata = {
   title: "Add client",

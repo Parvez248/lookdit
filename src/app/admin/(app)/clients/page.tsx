@@ -42,12 +42,12 @@ export default async function ClientsPage({ searchParams }: PageProps<"/admin/cl
 
   return (
     <div className={`container ${list.page}`}>
-      <header className={styles.intro}>
+      <header className={list.intro}>
         <div>
           <h1 className={list.title}>Clients</h1>
           <p className={list.lede}>The people and companies LOOKDIT works with, A to Z.</p>
         </div>
-        <Link href="/admin/clients/new" className={styles.add}>
+        <Link href="/admin/clients/new" className={list.add}>
           Add client
         </Link>
       </header>

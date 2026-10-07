@@ -8,7 +8,7 @@ import { initialClientFormState } from "@/lib/clients/form-state";
 import { CLIENT_STATUS_LABELS, CLIENT_STATUSES, type ClientStatus } from "@/lib/clients/status";
 import { CLIENT_LIMITS, type ClientField } from "@/lib/clients/validation";
 
-import styles from "./ClientForm.module.css";
+import styles from "./AdminForm.module.css";
 
 export type ClientFormValues = {
   name: string;

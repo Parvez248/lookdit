@@ -1,5 +1,6 @@
 import { CLIENT_STATUS_LABELS, type ClientStatus } from "@/lib/clients/status";
 import { INQUIRY_STATUS_LABELS, type InquiryStatus } from "@/lib/inquiries/status";
+import { WORK_STATUS_LABELS, type WorkStatus } from "@/lib/projects/status";
 
 import styles from "./StatusBadge.module.css";
 
@@ -20,6 +21,14 @@ const clientTones: Record<ClientStatus, Tone> = {
   past: "neutral",
 };
 
+const projectTones: Record<WorkStatus, Tone> = {
+  active: "action",
+  planned: "signal",
+  on_hold: "strong",
+  completed: "neutral",
+  cancelled: "outline",
+};
+
 /** A status as a small mono label with a marker. The text carries the meaning. */
 function Badge({ label, tone }: { label: string; tone: Tone }) {
   return (
@@ -35,4 +44,8 @@ export function StatusBadge({ status }: { status: InquiryStatus }) {
 
 export function ClientStatusBadge({ status }: { status: ClientStatus }) {
   return <Badge label={CLIENT_STATUS_LABELS[status]} tone={clientTones[status]} />;
+}
+
+export function ProjectStatusBadge({ status }: { status: WorkStatus }) {
+  return <Badge label={WORK_STATUS_LABELS[status]} tone={projectTones[status]} />;
 }
