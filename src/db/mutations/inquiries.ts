@@ -1,9 +1,10 @@
 import "server-only";
 
-import { sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 import { getDb } from "@/db";
 import { inquiries } from "@/db/schema";
+import type { InquiryStatus } from "@/lib/inquiries/status";
 import {
   type InquiryValidationIssue,
   type NormalizedInquiryInput,
@@ -119,4 +120,17 @@ async function insertInquiryWithinRateLimit(
   // Raw results skip drizzle's column mapping; neon-http returns timestamptz as
   // text, which drizzle's own timestamptz mapper also parses with `new Date`.
   return { id: row.id, createdAt: new Date(row.created_at) };
+}
+
+/**
+ * Admin status change. The caller must have checked the session and validated
+ * `status`. Returns false when no inquiry has this id.
+ */
+export async function updateInquiryStatus(id: string, status: InquiryStatus): Promise<boolean> {
+  const rows = await getDb()
+    .update(inquiries)
+    .set({ status, updatedAt: sql`now()` })
+    .where(eq(inquiries.id, id))
+    .returning({ id: inquiries.id });
+  return rows.length > 0;
 }

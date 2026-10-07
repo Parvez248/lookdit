@@ -2,3 +2,4 @@
 export * from "./projects";
 export * from "./technologies";
 export * from "./auth";
+export * from "./inquiries";

@@ -5,6 +5,7 @@ import { Brand } from "@/components/site/Brand";
 import { adminRoutes } from "@/lib/auth/routes";
 
 import styles from "./AdminHeader.module.css";
+import { AdminNav } from "./AdminNav";
 
 type AdminHeaderProps = {
   userName: string;
@@ -21,6 +22,10 @@ export function AdminHeader({ userName }: AdminHeaderProps) {
           <span className={styles.tag} aria-hidden="true">
             Admin
           </span>
+        </div>
+
+        <div className={styles.nav}>
+          <AdminNav />
         </div>
 
         <div className={styles.account}>

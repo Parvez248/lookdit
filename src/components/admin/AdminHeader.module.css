@@ -6,17 +6,49 @@
   border-bottom: 1px solid var(--line);
 }
 
+/*
+ * Narrow: brand and account on the first row, the section nav on its own row.
+ * Wide (64rem+): one row, nav after the brand.
+ */
 .inner {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas:
+    "identity . account"
+    "nav nav nav";
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4);
-  height: var(--header-height);
+  column-gap: var(--space-4);
+}
+
+.nav {
+  grid-area: nav;
+  border-top: 1px solid var(--line);
+}
+
+.account {
+  grid-area: account;
+}
+
+@media (min-width: 64rem) {
+  .inner {
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: "identity nav account";
+    column-gap: var(--space-8);
+  }
+
+  .nav {
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    border-top: 0;
+  }
 }
 
 .identity {
+  grid-area: identity;
   display: flex;
   flex: none;
+  min-height: var(--header-height);
   align-items: center;
   gap: var(--space-4);
 }
