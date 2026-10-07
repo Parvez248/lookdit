@@ -1,0 +1,71 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.media {
+  transition: opacity var(--dur) var(--ease);
+}
+
+.card:hover .media {
+  opacity: 0.92;
+}
+
+.body {
+  display: grid;
+  gap: var(--space-1);
+  padding-top: var(--space-3);
+}
+
+.title {
+  font-size: var(--text-h3);
+  line-height: 1.25;
+}
+
+.link {
+  text-decoration: none;
+}
+
+/* Stretch the link over the card (image included). */
+.link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.link:focus-visible {
+  outline: none;
+}
+
+.link:focus-visible::after {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.card:hover .link {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.price {
+  font-size: var(--text-small);
+  font-variant-numeric: tabular-nums;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  color: var(--muted);
+  font-size: var(--text-label);
+  letter-spacing: 0.02em;
+}
+
+.label {
+  color: var(--accent);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}

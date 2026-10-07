@@ -1,0 +1,13 @@
+.banner {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+.text {
+  padding-block: var(--space-2);
+  color: var(--muted);
+  font-size: var(--text-label);
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  text-align: center;
+}

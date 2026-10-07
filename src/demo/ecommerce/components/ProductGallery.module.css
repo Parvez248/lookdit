@@ -1,0 +1,49 @@
+/* Below 64rem: a horizontal scroll-snap strip, bleeding to the screen edge. */
+.gallery {
+  margin-inline: calc(-1 * var(--gutter));
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gutter);
+  scrollbar-width: none;
+}
+
+.gallery::-webkit-scrollbar {
+  display: none;
+}
+
+.gallery:focus-visible {
+  outline-offset: -2px;
+}
+
+.list {
+  display: flex;
+  gap: var(--space-2);
+  padding-inline: var(--gutter);
+}
+
+.slide {
+  flex: 0 0 82%;
+  scroll-snap-align: start;
+}
+
+@media (min-width: 40rem) {
+  .slide {
+    flex-basis: 60%;
+  }
+}
+
+/* From 64rem: images stacked in the left columns. */
+@media (min-width: 64rem) {
+  .gallery {
+    margin-inline: 0;
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+
+  .list {
+    flex-direction: column;
+    gap: var(--grid-gap);
+    padding-inline: 0;
+  }
+}

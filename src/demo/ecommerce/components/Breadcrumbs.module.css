@@ -1,0 +1,34 @@
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: var(--text-small);
+  color: var(--muted);
+}
+
+/* The separator is decorative CSS content, so screen readers hear only the list. */
+.item + .item::before {
+  content: "/";
+  content: "/" / "";
+  margin-inline: var(--space-2);
+  color: var(--control);
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  text-decoration: underline;
+  text-decoration-color: var(--control);
+  text-underline-offset: 0.3em;
+  text-decoration-thickness: 1px;
+}
+
+.link:hover {
+  color: var(--accent);
+  text-decoration-color: currentColor;
+}
+
+.current {
+  color: var(--ink);
+}

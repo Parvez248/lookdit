@@ -1,0 +1,59 @@
+.header {
+  border-bottom: 1px solid var(--line);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  min-height: var(--header-height);
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-family: var(--font-serif);
+  font-size: 1.625rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+.nav {
+  display: none;
+}
+
+.links {
+  display: flex;
+  gap: var(--space-6);
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-size: var(--text-small);
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  transition: color var(--dur) var(--ease);
+}
+
+.link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+  text-decoration-thickness: 1px;
+}
+
+/* Must match DESKTOP_QUERY in StoreMenu. */
+@media (min-width: 64rem) {
+  .nav {
+    display: block;
+  }
+
+  .menu {
+    display: none;
+  }
+}

@@ -1,0 +1,228 @@
+/*
+ * Nidery demo foundation: tokens, reset, base type and layout primitives for the
+ * E-commerce concept demo. Imported only by the demo root layout, so none of it reaches
+ * LOOKDIT pages (and no LOOKDIT tokens reach the demo). Light only.
+ * Contrast ratios are measured against --bg.
+ */
+
+:root {
+  color-scheme: light;
+
+  /* Colour */
+  --bg: #f5f1ea;
+  --surface: #ece5da; /* image plates, disclosure banner */
+  --ink: #26211d; /* text, primary fills: 14.2:1 */
+  --muted: #675e55; /* secondary text: 5.6:1 (5.1:1 on --surface) */
+  --line: #d9d0c3; /* hairlines, decorative only */
+  --control: #8c8278; /* radio and input borders: 3.3:1 */
+  --accent: #7a3e26; /* labels, link hover, focus ring: 7.3:1 */
+
+  /* Type families (variables come from next/font in the demo root layout) */
+  --font-serif: var(--font-newsreader), ui-serif, Georgia, serif;
+  --font-sans: var(--font-instrument-sans), ui-sans-serif, system-ui, sans-serif;
+
+  /* Type scale: fluid between 360px and 1440px, rem-based so zoom scales */
+  --text-display: clamp(2.5rem, 1.6rem + 4vw, 5.25rem);
+  --text-h1: clamp(2rem, 1.5rem + 2.2vw, 3.5rem);
+  --text-h2: clamp(1.625rem, 1.3rem + 1.4vw, 2.5rem);
+  --text-h3: clamp(1.125rem, 1.05rem + 0.3vw, 1.3125rem);
+  --text-body-l: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  --text-body: 1rem;
+  --text-small: 0.875rem;
+  --text-label: 0.75rem;
+
+  /* Space: 4px base */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+
+  /* Layout */
+  --container-max: 90rem;
+  --gutter: clamp(1rem, 0.4rem + 2.6vw, 3rem);
+  --grid-columns: 4;
+  --grid-gap: 1rem;
+  --section-space: clamp(4rem, 3rem + 4vw, 7.5rem);
+  --header-height: 3.5rem;
+  --measure: 62ch;
+
+  /* Shape and motion */
+  --radius: 2px;
+  --dur: 150ms;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+@media (min-width: 40rem) {
+  :root {
+    --grid-columns: 8;
+    --grid-gap: 1.25rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --grid-columns: 12;
+    --grid-gap: 1.5rem;
+    --header-height: 4.5rem;
+  }
+}
+
+/* Reset */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: var(--space-6);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+html,
+body {
+  overflow-x: clip;
+}
+
+/* The store menu is a modal <dialog>; keep the page still behind it. */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+main {
+  flex: 1;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Layout primitives */
+
+.container {
+  width: 100%;
+  max-width: calc(var(--container-max) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+  column-gap: var(--grid-gap);
+}
+
+/* Utilities */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: fixed;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 100;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius);
+  background: var(--ink);
+  color: var(--bg);
+  font-size: var(--text-small);
+  font-weight: 500;
+  text-decoration: none;
+  transform: translateY(calc(-100% - var(--space-4)));
+}
+
+.skip-link:focus-visible {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
