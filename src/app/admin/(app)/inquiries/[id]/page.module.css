@@ -1,0 +1,183 @@
+.page {
+  padding-block: var(--space-5) var(--space-9);
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 2.75rem;
+  color: var(--text-muted);
+  font-size: var(--text-body-s);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.backIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .back:hover {
+    color: var(--text);
+  }
+}
+
+.layout {
+  display: grid;
+  gap: var(--space-7);
+  margin-top: var(--space-5);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.title {
+  font-size: var(--text-display-m);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+
+.company {
+  color: var(--text-muted);
+}
+
+/* The visitor's own words: kept as written, line breaks included. */
+.message {
+  max-width: var(--measure);
+  margin-top: var(--space-6);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--line);
+  font-size: var(--text-body-l);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  align-self: start;
+  padding: var(--space-5);
+  border: 1px solid var(--line);
+  background: var(--surface-1);
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.details dt {
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+.details dd {
+  margin-top: var(--space-1);
+  font-size: var(--text-body-s);
+  overflow-wrap: anywhere;
+}
+
+.email {
+  color: var(--blue-400);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--blue-400) 40%, transparent);
+  text-underline-offset: 0.2em;
+}
+
+.reply {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding-inline: var(--space-5);
+  border-radius: var(--radius-s);
+  background: var(--blue-600);
+  color: #fff;
+  font-size: var(--text-body-s);
+  font-weight: 500;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .reply:hover {
+    background: var(--blue-700);
+  }
+}
+
+.statusForm {
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--line);
+}
+
+.fieldset {
+  border: 0;
+  min-width: 0;
+}
+
+.legend {
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+.statusOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.statusOption {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding-inline: var(--space-4);
+  border: 1px solid var(--line-interactive);
+  border-radius: var(--radius-s);
+  font-size: var(--text-body-s);
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+/* The current status: selected, not clickable. */
+.statusOption[aria-pressed="true"] {
+  border-color: var(--text);
+  background: var(--text);
+  color: var(--ground);
+  font-weight: 500;
+  cursor: default;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .statusOption:not([aria-pressed="true"]):hover {
+    border-color: var(--text-muted);
+    background: var(--surface-2);
+  }
+}
+
+@media (min-width: 64rem) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) 20rem;
+    gap: var(--space-9);
+  }
+
+  .side {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-5));
+  }
+}

@@ -1,0 +1,42 @@
+.list {
+  display: flex;
+  gap: var(--space-6);
+}
+
+.link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  color: var(--text-muted);
+  font-size: var(--text-body-s);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+/* The current section: full-contrast text and a brand-blue rule on the header's edge. */
+.link[aria-current="page"] {
+  color: var(--text);
+}
+
+.link[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  background: var(--blue-500);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .link:hover {
+    color: var(--text);
+  }
+}
+
+/* In the single-row header the links fill its height, so the rule sits on its edge. */
+@media (min-width: 64rem) {
+  .link {
+    min-height: var(--header-height);
+  }
+}

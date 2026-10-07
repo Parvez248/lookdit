@@ -1,0 +1,43 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-label);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* Decorative marker; colour only reinforces the label. Blue marks what needs action. */
+.badge::before {
+  content: "";
+  flex: none;
+  width: 0.375rem;
+  height: 0.375rem;
+  background: var(--text-subtle);
+}
+
+.badge[data-status="new"] {
+  color: var(--text);
+}
+
+.badge[data-status="new"]::before {
+  background: var(--blue-500);
+}
+
+.badge[data-status="reviewing"]::before {
+  background: var(--cyan);
+}
+
+.badge[data-status="replied"]::before {
+  background: var(--text-muted);
+}
+
+.badge[data-status="spam"]::before {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--text-subtle);
+}
