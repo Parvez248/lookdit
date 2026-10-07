@@ -1,6 +1,7 @@
 import { CLIENT_STATUS_LABELS, type ClientStatus } from "@/lib/clients/status";
 import { INQUIRY_STATUS_LABELS, type InquiryStatus } from "@/lib/inquiries/status";
 import { WORK_STATUS_LABELS, type WorkStatus } from "@/lib/projects/status";
+import { TASK_STATUS_LABELS, type TaskStatus } from "@/lib/workspace/status";
 
 import styles from "./StatusBadge.module.css";
 
@@ -29,6 +30,12 @@ const projectTones: Record<WorkStatus, Tone> = {
   cancelled: "outline",
 };
 
+const taskTones: Record<TaskStatus, Tone> = {
+  todo: "outline",
+  doing: "action",
+  done: "neutral",
+};
+
 /** A status as a small mono label with a marker. The text carries the meaning. */
 function Badge({ label, tone }: { label: string; tone: Tone }) {
   return (
@@ -48,4 +55,8 @@ export function ClientStatusBadge({ status }: { status: ClientStatus }) {
 
 export function ProjectStatusBadge({ status }: { status: WorkStatus }) {
   return <Badge label={WORK_STATUS_LABELS[status]} tone={projectTones[status]} />;
+}
+
+export function TaskStatusBadge({ status }: { status: TaskStatus }) {
+  return <Badge label={TASK_STATUS_LABELS[status]} tone={taskTones[status]} />;
 }

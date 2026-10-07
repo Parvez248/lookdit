@@ -83,6 +83,11 @@
   max-width: 8rem;
 }
 
+/* A date field: room for the native picker, still narrower than a column. */
+.short.date {
+  max-width: 13rem;
+}
+
 /* Native select with the arrow redrawn (stroke = --text-muted; tokens can't reach a data URI). */
 .select {
   appearance: none;

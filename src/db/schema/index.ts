@@ -7,3 +7,4 @@ export * from "./clients";
 export * from "./inquiries";
 export * from "./testimonials";
 export * from "./auth";
+export * from "./project-workspace";

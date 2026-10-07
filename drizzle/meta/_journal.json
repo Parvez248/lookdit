@@ -50,6 +50,13 @@
       "when": 1791392160017,
       "tag": "0006_add_project_work_status",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1791394148680,
+      "tag": "0007_add_project_workspace",
+      "breakpoints": true
     }
   ]
 }
