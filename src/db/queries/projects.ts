@@ -2,7 +2,7 @@ import "server-only";
 
 import { and, asc, desc, eq, inArray } from "drizzle-orm";
 
-import { db } from "@/db";
+import { getDb } from "@/db";
 import { projectMedia, projectTechnologies, projects, technologies } from "@/db/schema";
 
 /** Minimal technology reference shown alongside a project. */
@@ -70,7 +70,7 @@ async function technologiesByProjectIds(
   const grouped = new Map<string, ProjectTechnologyRef[]>();
   if (projectIds.length === 0) return grouped;
 
-  const rows = await db
+  const rows = await getDb()
     .select({
       projectId: projectTechnologies.projectId,
       id: technologies.id,
@@ -109,7 +109,7 @@ async function technologiesByProjectIds(
  * Two queries total (projects, then their technologies) — no N+1.
  */
 export async function listPublishedProjects(): Promise<PublishedProjectListItem[]> {
-  const rows = await db
+  const rows = await getDb()
     .select({
       id: projects.id,
       slug: projects.slug,
@@ -147,7 +147,7 @@ export async function listPublishedProjects(): Promise<PublishedProjectListItem[
 export async function getPublishedProjectBySlug(
   slug: string,
 ): Promise<PublishedProjectDetail | null> {
-  const [project] = await db
+  const [project] = await getDb()
     .select({
       id: projects.id,
       slug: projects.slug,
@@ -172,7 +172,7 @@ export async function getPublishedProjectBySlug(
 
   const [techs, media] = await Promise.all([
     getProjectTechnologies(project.id),
-    db
+    getDb()
       .select({
         id: projectMedia.id,
         kind: projectMedia.kind,

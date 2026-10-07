@@ -29,6 +29,13 @@
       "when": 1790314244678,
       "tag": "0003_add_testimonials",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1791387012512,
+      "tag": "0004_add_admin_auth",
+      "breakpoints": true
     }
   ]
 }

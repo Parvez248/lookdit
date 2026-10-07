@@ -1,0 +1,73 @@
+.page {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+  padding: var(--space-7) var(--gutter);
+  /* The site's calibrated grid, as a faint field behind the panel. */
+  background:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px) center / 6rem 100%,
+    var(--ground);
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-6);
+  width: 100%;
+  max-width: 26rem;
+}
+
+.home {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+}
+
+.panel {
+  position: relative;
+  width: 100%;
+  padding: var(--space-6) var(--space-5);
+  border: 1px solid var(--line);
+  background: var(--surface-1);
+}
+
+/* The Focus Frame signature, drawn on the panel's corners. Decorative. */
+.corners {
+  --arm: 0.875rem;
+  --stroke: 2px;
+
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--blue-500), var(--blue-500)) top left / var(--arm) var(--stroke),
+    linear-gradient(var(--blue-500), var(--blue-500)) top left / var(--stroke) var(--arm),
+    linear-gradient(var(--blue-500), var(--blue-500)) top right / var(--arm) var(--stroke),
+    linear-gradient(var(--blue-500), var(--blue-500)) top right / var(--stroke) var(--arm),
+    linear-gradient(var(--blue-500), var(--blue-500)) bottom left / var(--arm) var(--stroke),
+    linear-gradient(var(--blue-500), var(--blue-500)) bottom left / var(--stroke) var(--arm),
+    linear-gradient(var(--blue-500), var(--blue-500)) bottom right / var(--arm) var(--stroke),
+    linear-gradient(var(--blue-500), var(--blue-500)) bottom right / var(--stroke) var(--arm);
+  background-repeat: no-repeat;
+}
+
+.title {
+  margin-top: var(--space-4);
+  font-size: var(--text-display-m);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.lede {
+  margin-top: var(--space-3);
+  margin-bottom: var(--space-6);
+  font-size: var(--text-body-s);
+  color: var(--text-muted);
+}
+
+@media (min-width: 40rem) {
+  .panel {
+    padding: var(--space-7) var(--space-7) var(--space-6);
+  }
+}
