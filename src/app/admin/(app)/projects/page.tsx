@@ -4,6 +4,7 @@ import Link from "next/link";
 import { FilterTabs } from "@/components/admin/FilterTabs";
 import { Pagination } from "@/components/admin/Pagination";
 import { ProjectStatusBadge } from "@/components/admin/StatusBadge";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 import { countProjectsByWorkStatus, listProjects } from "@/db/queries/admin-projects";
 import { requireUser } from "@/lib/auth/session";
 import { formatDateUtc } from "@/lib/format-date";
@@ -45,6 +46,7 @@ export default async function ProjectsPage({ searchParams }: PageProps<"/admin/p
     <div className={`container ${list.page}`}>
       <header className={list.intro}>
         <div>
+          <SectionLabel>{total === 1 ? "1 project" : `${total} projects`}</SectionLabel>
           <h1 className={list.title}>Projects</h1>
           <p className={list.lede}>LOOKDIT&rsquo;s work, most recently updated first.</p>
         </div>
@@ -56,7 +58,7 @@ export default async function ProjectsPage({ searchParams }: PageProps<"/admin/p
       <FilterTabs label="Filter by status" tabs={tabs} />
 
       {items.length > 0 ? (
-        <ol className={list.list}>
+        <ol className={`${list.list} ${list.primary}`}>
           {items.map((project) => (
             <li key={project.id} className={list.item}>
               <div className={list.who}>

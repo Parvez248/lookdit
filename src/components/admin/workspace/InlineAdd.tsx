@@ -13,16 +13,19 @@ type InlineAddProps = {
   projectId: string;
   /** Tasks only: the milestone the new task goes into. */
   milestoneId?: string | null;
-  /** Visible label, e.g. "Add task to Design". */
+  /** Accessible label, e.g. "Add a task to Design". */
   label: string;
+  /** Start folded behind a quiet "Add task" toggle (a native details element). */
+  collapsible?: boolean;
 };
 
 /**
  * One-line add form: title, optional due date, Add. Client only for the pending
  * state, the inline error and keeping focus in the title for quick entry;
- * without JavaScript it still posts to the same Server Action.
+ * without JavaScript it still posts to the same Server Action (and the
+ * collapsible variant still opens, being a native details element).
  */
-export function InlineAdd({ kind, projectId, milestoneId = null, label }: InlineAddProps) {
+export function InlineAdd({ kind, projectId, milestoneId = null, label, collapsible = false }: InlineAddProps) {
   const [state, formAction, pending] = useActionState(
     kind === "task" ? addTask : addMilestone,
     initialWorkspaceFormState,
@@ -42,7 +45,7 @@ export function InlineAdd({ kind, projectId, milestoneId = null, label }: Inline
     if (state.status !== "idle") titleRef.current?.focus();
   }, [state]);
 
-  return (
+  const form = (
     <form action={formAction} className={styles.add} data-kind={kind} noValidate>
       <input type="hidden" name="projectId" value={projectId} />
       {kind === "task" ? <input type="hidden" name="milestoneId" value={milestoneId ?? ""} /> : null}
@@ -79,5 +82,22 @@ export function InlineAdd({ kind, projectId, milestoneId = null, label }: Inline
         {error}
       </p>
     </form>
+  );
+
+  if (!collapsible) return form;
+
+  return (
+    <details
+      className={styles.addDisclosure}
+      onToggle={(event) => {
+        if (event.currentTarget.open) titleRef.current?.focus();
+      }}
+    >
+      <summary className={styles.addSummary}>
+        <span aria-hidden="true">{kind === "task" ? "Add task" : "Add milestone"}</span>
+        <span className="visually-hidden">{label}</span>
+      </summary>
+      {form}
+    </details>
   );
 }

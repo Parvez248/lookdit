@@ -33,22 +33,22 @@ export default async function DashboardPage() {
   const latest = recent.slice(0, LATEST_COUNT);
   const total = INQUIRY_STATUSES.reduce((sum, status) => sum + counts[status], 0);
   const stats = [
-    { label: "New", status: "new", value: counts.new },
-    { label: "Reviewing", status: "reviewing", value: counts.reviewing },
-    { label: "Replied", status: "replied", value: counts.replied },
-    { label: "All time", status: null, value: total },
+    { label: "New", href: inquiryListHref("new"), value: counts.new },
+    { label: "Reviewing", href: inquiryListHref("reviewing"), value: counts.reviewing },
+    { label: "Replied", href: inquiryListHref("replied"), value: counts.replied },
+    { label: "All time", href: inquiryListHref(null), value: total },
   ] as const;
   const clientStats = [
-    { label: "Leads", status: "lead", value: clientCounts.lead },
-    { label: "Active", status: "active", value: clientCounts.active },
-    { label: "Past", status: "past", value: clientCounts.past },
-    { label: "All", status: null, value: CLIENT_STATUSES.reduce((sum, status) => sum + clientCounts[status], 0) },
+    { label: "Leads", href: clientListHref("lead"), value: clientCounts.lead },
+    { label: "Active", href: clientListHref("active"), value: clientCounts.active },
+    { label: "Past", href: clientListHref("past"), value: clientCounts.past },
+    { label: "All", href: clientListHref(null), value: CLIENT_STATUSES.reduce((sum, status) => sum + clientCounts[status], 0) },
   ] as const;
   const projectStats = [
-    { label: "Active", status: "active", value: projectCounts.active },
-    { label: "Planned", status: "planned", value: projectCounts.planned },
-    { label: "On hold", status: "on_hold", value: projectCounts.on_hold },
-    { label: "All", status: null, value: WORK_STATUSES.reduce((sum, status) => sum + projectCounts[status], 0) },
+    { label: "Active", href: projectListHref("active"), value: projectCounts.active },
+    { label: "Planned", href: projectListHref("planned"), value: projectCounts.planned },
+    { label: "On hold", href: projectListHref("on_hold"), value: projectCounts.on_hold },
+    { label: "All", href: projectListHref(null), value: WORK_STATUSES.reduce((sum, status) => sum + projectCounts[status], 0) },
   ] as const;
 
   return (
@@ -61,29 +61,23 @@ export default async function DashboardPage() {
           : `${counts.new} new ${counts.new === 1 ? "inquiry is" : "inquiries are"} waiting for a first look.`}
       </p>
 
-      <section className={`${styles.panel} ${styles.first}`} aria-labelledby="inquiries-title">
-        <div className={styles.inquiriesHead}>
-          <h2 id="inquiries-title" className={styles.sectionTitle}>
-            Inquiries
+      <div className={styles.overview}>
+        <OverviewRow id="inquiries" title="Inquiries" href={adminRoutes.inquiries} stats={stats} />
+        <OverviewRow id="clients" title="Clients" href={adminRoutes.clients} stats={clientStats} />
+        <OverviewRow id="projects" title="Projects" href={adminRoutes.projects} stats={projectStats} />
+      </div>
+
+      <section className={styles.latestSection} aria-labelledby="latest-title">
+        <div className={styles.sectionHead}>
+          <h2 id="latest-title" className={styles.sectionTitle}>
+            Latest inquiries
           </h2>
           <Link href={adminRoutes.inquiries} className={styles.sectionLink}>
-            View all
+            View all<span className="visually-hidden"> inquiries</span>
           </Link>
         </div>
-
-        <ul className={styles.stats} aria-label="Inquiries by status">
-          {stats.map((stat) => (
-            <li key={stat.label}>
-              <Link href={inquiryListHref(stat.status)} className={styles.stat}>
-                <span className={styles.statLabel}>{stat.label}</span>
-                <span className={styles.statValue}>{stat.value}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-
         {latest.length > 0 ? (
-          <ol className={styles.latest} aria-label="Latest inquiries">
+          <ol className={styles.latest}>
             {latest.map((inquiry) => (
               <li key={inquiry.id} className={styles.latestItem}>
                 <Link href={`/admin/inquiries/${inquiry.id}`} className={styles.latestLink}>
@@ -103,48 +97,44 @@ export default async function DashboardPage() {
           <p className={styles.none}>No inquiries yet. New requests from the contact form appear here.</p>
         )}
       </section>
-
-      <section className={styles.panel} aria-labelledby="clients-title">
-        <div className={styles.inquiriesHead}>
-          <h2 id="clients-title" className={styles.sectionTitle}>
-            Clients
-          </h2>
-          <Link href={adminRoutes.clients} className={styles.sectionLink}>
-            View all
-          </Link>
-        </div>
-        <ul className={styles.stats} aria-label="Clients by status">
-          {clientStats.map((stat) => (
-            <li key={stat.label}>
-              <Link href={clientListHref(stat.status)} className={styles.stat}>
-                <span className={styles.statLabel}>{stat.label}</span>
-                <span className={styles.statValue}>{stat.value}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className={styles.panel} aria-labelledby="projects-title">
-        <div className={styles.inquiriesHead}>
-          <h2 id="projects-title" className={styles.sectionTitle}>
-            Projects
-          </h2>
-          <Link href={adminRoutes.projects} className={styles.sectionLink}>
-            View all
-          </Link>
-        </div>
-        <ul className={styles.stats} aria-label="Projects by status">
-          {projectStats.map((stat) => (
-            <li key={stat.label}>
-              <Link href={projectListHref(stat.status)} className={styles.stat}>
-                <span className={styles.statLabel}>{stat.label}</span>
-                <span className={styles.statValue}>{stat.value}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
     </div>
+  );
+}
+
+type OverviewStat = { label: string; value: number; href: string };
+
+/** One line of the overview: a heading, its counts (each opens the filtered list) and "View all". */
+function OverviewRow({
+  id,
+  title,
+  href,
+  stats,
+}: {
+  id: string;
+  title: string;
+  href: string;
+  stats: readonly OverviewStat[];
+}) {
+  return (
+    <section className={styles.row} aria-labelledby={`${id}-title`}>
+      <div className={styles.rowHead}>
+        <h2 id={`${id}-title`} className={styles.rowTitle}>
+          {title}
+        </h2>
+        <Link href={href} className={styles.sectionLink}>
+          View all<span className="visually-hidden"> {title.toLowerCase()}</span>
+        </Link>
+      </div>
+      <ul className={styles.stats} aria-label={`${title} by status`}>
+        {stats.map((stat) => (
+          <li key={stat.label}>
+            <Link href={stat.href} className={styles.stat}>
+              <span className={styles.statValue}>{stat.value}</span>
+              <span className={styles.statLabel}>{stat.label}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }

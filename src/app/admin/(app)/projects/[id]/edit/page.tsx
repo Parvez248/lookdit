@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { ProjectForm } from "@/components/admin/ProjectForm";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 import { getProject, listClientOptions } from "@/db/queries/admin-projects";
 import { requireUser } from "@/lib/auth/session";
 import { isProjectId } from "@/lib/projects/status";
@@ -21,6 +22,7 @@ export default async function EditProjectPage({ params }: PageProps<"/admin/proj
 
   return (
     <div className={`container ${styles.page}`}>
+      <SectionLabel>Projects</SectionLabel>
       <h1 className={styles.title}>Edit {project.title}</h1>
       <ProjectForm
         id={project.id}

@@ -1,21 +1,24 @@
 /* Shared layout for admin list pages (inquiries, clients, projects): header, rows, empty state. */
 
 .page {
-  padding-block: var(--space-7) var(--space-9);
+  padding-block: var(--space-6) var(--space-9);
 }
 
 .title {
-  font-size: var(--text-display-m);
-  line-height: 1.05;
-  letter-spacing: -0.02em;
+  margin-top: var(--space-3);
+  font-size: var(--text-heading-l);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
 }
 
 .lede {
-  margin-top: var(--space-3);
+  margin-top: var(--space-2);
+  font-size: var(--text-body-s);
   color: var(--text-muted);
 }
 
-/* Title block with an "Add …" button beside it. */
+/* Title block with an "Add …" button beside it, aligned to the title's last line. */
 .intro {
   display: flex;
   flex-wrap: wrap;
@@ -28,6 +31,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: var(--space-2);
   min-height: 2.75rem;
   padding-inline: var(--space-5);
   border-radius: var(--radius-s);
@@ -44,7 +48,7 @@
   }
 }
 
-/* Each inquiry is one row; the name's link stretches over the whole row. */
+/* Each record is one row; the name's link stretches over the whole row. */
 .list {
   border-bottom: 1px solid var(--line);
 }
@@ -53,7 +57,7 @@
   position: relative;
   display: grid;
   gap: var(--space-2) var(--space-5);
-  padding-block: var(--space-5);
+  padding-block: var(--space-4);
   border-top: 1px solid var(--line);
   transition:
     background-color var(--dur-fast) var(--ease-out),
@@ -64,6 +68,19 @@
   border-top: 0;
 }
 
+/* Hover marker: a short brand-blue rule at the row's left edge. Decorative. */
+.item::before {
+  content: "";
+  position: absolute;
+  top: var(--space-3);
+  bottom: var(--space-3);
+  left: calc(-1 * var(--space-4));
+  width: 2px;
+  background: var(--blue-500);
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
 .who {
   min-width: 0;
 }
@@ -72,6 +89,7 @@
   font-size: var(--text-body);
   font-weight: 500;
   line-height: 1.4;
+  overflow-wrap: anywhere;
 }
 
 .link::after {
@@ -90,13 +108,13 @@
 }
 
 .sub {
+  margin-top: var(--space-1);
   overflow: hidden;
   font-size: var(--text-body-s);
   color: var(--text-muted);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
 
 .meta {
   display: flex;
@@ -108,11 +126,12 @@
 .date {
   font-family: var(--font-mono);
   font-size: var(--text-mono-data);
+  font-variant-numeric: tabular-nums;
   color: var(--text-subtle);
   white-space: nowrap;
 }
 
-/* The hover fill reaches a little past the text; the rules between rows stay content-width. */
+/* Fine pointers only: the fill reaches a little past the text, the rules between rows stay content-width. */
 @media (hover: hover) and (pointer: fine) {
   .item:hover {
     background: var(--surface-1);
@@ -120,12 +139,22 @@
       calc(-1 * var(--space-4)) 0 0 var(--surface-1),
       var(--space-4) 0 0 var(--surface-1);
   }
+
+  .item:hover::before {
+    opacity: 1;
+  }
 }
 
 @media (min-width: 48rem) {
+  /* Default: name, a wide middle column (an inquiry's preview), status and date. */
   .item {
-    grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr) auto;
+    grid-template-columns: minmax(12rem, 2fr) minmax(0, 3fr) auto;
     align-items: baseline;
+  }
+
+  /* Lists where the name is the main content (clients, projects): it gets the widest column. */
+  .primary > .item {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr) auto;
   }
 
   /* Fixed columns, so badges and dates line up from row to row. */
@@ -140,23 +169,34 @@
   }
 }
 
+/* Empty list: one framed note with at most one action. */
 .empty {
-  padding-block: var(--space-8);
-  border-bottom: 1px solid var(--line);
+  margin-top: var(--space-5);
+  padding: var(--space-7) var(--space-5);
+  border: 1px dashed var(--line-strong);
 }
 
 .emptyTitle {
   font-size: var(--text-heading-s);
+  font-weight: 500;
   line-height: 1.3;
 }
 
 .emptyBody {
   margin-top: var(--space-2);
+  font-size: var(--text-body-s);
   color: var(--text-muted);
 }
 
 .textLink {
   color: var(--blue-400);
   text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--blue-400) 40%, transparent);
   text-underline-offset: 0.2em;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .textLink:hover {
+    text-decoration-color: currentColor;
+  }
 }

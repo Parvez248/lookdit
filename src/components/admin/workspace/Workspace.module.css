@@ -72,10 +72,16 @@
   }
 }
 
+/* Narrow: next milestone on its own line, the two counts side by side below it. */
 .facts {
   display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-4);
   margin-top: var(--space-5);
+}
+
+.facts > :first-child {
+  grid-column: 1 / -1;
 }
 
 .facts dt {
@@ -111,6 +117,10 @@
 @media (min-width: 36rem) {
   .facts {
     grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .facts > :first-child {
+    grid-column: auto;
   }
 }
 
@@ -178,12 +188,19 @@
   color: var(--text);
 }
 
+/* Narrow: actions sit under the title, so a long title keeps the full width. */
 .groupActions {
-  grid-column: 2;
-  grid-row: 1 / span 2;
+  grid-column: 1 / -1;
   display: flex;
   align-items: center;
   gap: var(--space-4);
+}
+
+@media (min-width: 36rem) {
+  .groupActions {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
 }
 
 .smallButton {
@@ -191,7 +208,7 @@
   align-items: center;
   min-height: 2.75rem;
   padding-inline: var(--space-4);
-  border: 1px solid var(--line-interactive);
+  border: 1px solid var(--line-strong);
   border-radius: var(--radius-s);
   font-size: var(--text-body-s);
   font-weight: 500;
@@ -201,16 +218,20 @@
     background-color var(--dur-fast) var(--ease-out);
 }
 
+/* Quiet secondary link (Edit): muted until hover or keyboard focus. */
 .textAction {
   display: inline-flex;
   align-items: center;
   min-height: 2.75rem;
-  color: var(--text-muted);
+  color: var(--text-subtle);
   font-size: var(--text-body-s);
-  text-decoration: underline;
-  text-decoration-color: var(--line-interactive);
   text-underline-offset: 0.2em;
   transition: color var(--dur-fast) var(--ease-out);
+}
+
+.textAction:focus-visible {
+  color: var(--text);
+  text-decoration: underline;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -221,6 +242,7 @@
 
   .textAction:hover {
     color: var(--text);
+    text-decoration: underline;
   }
 }
 
@@ -233,10 +255,10 @@
 
 .task {
   display: grid;
-  grid-template-columns: 5.5rem minmax(0, 1fr) auto;
-  gap: var(--space-4);
+  grid-template-columns: 2.75rem minmax(0, 1fr) auto;
+  gap: var(--space-3);
   align-items: center;
-  padding-block: var(--space-2);
+  padding-block: var(--space-1);
   border-bottom: 1px solid var(--line);
 }
 
@@ -244,41 +266,71 @@
   display: contents;
 }
 
-/* The one-click step. "Done" is the primary move, so it gets the strongest fill. */
+/*
+ * The one-click step, drawn as a status marker: empty square (to do), square
+ * with a blue core (in progress), filled square with a tick (done). The
+ * button's hidden text and the status label beside it carry the meaning.
+ */
 .step {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 2.75rem;
-  border: 1px solid var(--line-interactive);
+  display: inline-grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
   border-radius: var(--radius-s);
-  font-size: var(--text-body-s);
-  font-weight: 500;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+.stepMark {
+  position: relative;
+  width: 1.125rem;
+  height: 1.125rem;
+  border: 1.5px solid var(--line-interactive);
+  border-radius: var(--radius-s);
   transition:
     border-color var(--dur-fast) var(--ease-out),
     background-color var(--dur-fast) var(--ease-out);
 }
 
-.step[data-step="done"] {
-  border-color: var(--text);
-  background: var(--text);
-  color: var(--ground);
+.step[data-status="doing"] .stepMark {
+  border-color: var(--blue-500);
 }
 
-.step[data-step="todo"] {
-  border-color: var(--line-strong);
-  color: var(--text-muted);
+.step[data-status="doing"] .stepMark::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  background: var(--blue-500);
+}
+
+.step[data-status="done"] .stepMark {
+  border-color: var(--text-muted);
+  background: var(--text-muted);
+}
+
+/* The tick: two borders of a rotated box, in the ground colour. */
+.step[data-status="done"] .stepMark::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  left: 4.5px;
+  width: 5px;
+  height: 9px;
+  border: solid var(--ground);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .step:not([data-step="done"]):hover {
-    border-color: var(--text-muted);
+  .step:hover {
     background: var(--surface-2);
-    color: var(--text);
   }
 
-  .step[data-step="done"]:hover {
-    background: var(--text-muted);
+  .step:hover .stepMark {
+    border-color: var(--text);
+  }
+
+  .step[data-status="done"]:hover .stepMark {
+    background: var(--text);
   }
 }
 
@@ -308,6 +360,57 @@
 }
 
 /* --- Inline add forms ----------------------------------------------------- */
+
+/* Collapsed task add: a quiet "+ Add task" line that opens the form in place. */
+.addDisclosure {
+  margin-top: var(--space-1);
+}
+
+.addSummary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 2.75rem;
+  color: var(--text-subtle);
+  font-size: var(--text-body-s);
+  cursor: pointer;
+  list-style: none;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.addSummary::-webkit-details-marker {
+  display: none;
+}
+
+.addSummary::before {
+  content: "+";
+  display: inline-grid;
+  place-items: center;
+  width: 1.125rem;
+  height: 1.125rem;
+  border: 1px dashed var(--line-interactive);
+  border-radius: var(--radius-s);
+  font-family: var(--font-mono);
+  line-height: 1;
+}
+
+.addDisclosure[open] > .addSummary {
+  color: var(--text);
+}
+
+.addDisclosure[open] > .addSummary::before {
+  content: "−";
+}
+
+.addDisclosure > .add {
+  margin-top: var(--space-1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .addSummary:hover {
+    color: var(--text);
+  }
+}
 
 .add {
   display: grid;

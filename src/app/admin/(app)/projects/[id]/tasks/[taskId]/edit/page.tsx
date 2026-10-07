@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { removeTask } from "@/app/actions/admin-workspace";
 import { DeleteDisclosure } from "@/components/admin/workspace/DeleteDisclosure";
 import { WorkspaceEditForm } from "@/components/admin/workspace/WorkspaceEditForm";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 import { getTask, listMilestoneOptions } from "@/db/queries/project-workspace";
 import { requireUser } from "@/lib/auth/session";
 import { isProjectId } from "@/lib/projects/status";
@@ -25,6 +26,7 @@ export default async function EditTaskPage({ params }: PageProps<"/admin/project
 
   return (
     <div className={`container ${styles.page}`}>
+      <SectionLabel>Projects</SectionLabel>
       <h1 className={styles.title}>Edit task</h1>
       <WorkspaceEditForm
         kind="task"

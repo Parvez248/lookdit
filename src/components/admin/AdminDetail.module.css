@@ -39,9 +39,10 @@
 }
 
 .title {
-  font-size: var(--text-display-m);
-  line-height: 1.05;
-  letter-spacing: -0.02em;
+  font-size: var(--text-heading-l);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
   overflow-wrap: anywhere;
 }
 
@@ -176,39 +177,60 @@
   color: var(--text-subtle);
 }
 
+/* The status picker: one joined list; the current status is marked, not clickable. */
 .statusOptions {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
+  flex-direction: column;
   margin-top: var(--space-3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-s);
 }
 
 .statusOption {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
   min-height: 2.75rem;
   padding-inline: var(--space-4);
-  border: 1px solid var(--line-interactive);
-  border-radius: var(--radius-s);
+  color: var(--text-muted);
   font-size: var(--text-body-s);
+  text-align: left;
   transition:
-    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
     background-color var(--dur-fast) var(--ease-out);
 }
 
-/* The current status: selected, not clickable. */
+.statusOption + .statusOption {
+  border-top: 1px solid var(--line);
+}
+
+.statusOption:focus-visible {
+  outline-offset: -2px;
+}
+
 .statusOption[aria-pressed="true"] {
-  border-color: var(--text);
-  background: var(--text);
-  color: var(--ground);
+  background: var(--surface-2);
+  box-shadow: inset 2px 0 0 var(--blue-500);
+  color: var(--text);
   font-weight: 500;
   cursor: default;
 }
 
+/* Decorative marker beside the current status; aria-pressed carries the meaning. */
+.statusOption[aria-pressed="true"]::after {
+  content: "";
+  flex: none;
+  width: 0.375rem;
+  height: 0.375rem;
+  background: var(--blue-500);
+}
+
 @media (hover: hover) and (pointer: fine) {
   .statusOption:not([aria-pressed="true"]):hover {
-    border-color: var(--text-muted);
     background: var(--surface-2);
+    color: var(--text);
   }
 }
 
