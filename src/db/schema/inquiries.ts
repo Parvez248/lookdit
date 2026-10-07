@@ -1,6 +1,8 @@
 import { sql } from "drizzle-orm";
 import { check, index, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
+import { clients } from "./clients";
+
 /**
  * Inquiries — public contact / project-inquiry submissions (private data).
  * Public INSERT (validated + rate-limited at the app layer); admin reads/updates
@@ -25,6 +27,9 @@ export const inquiries = pgTable(
     // - This column holds ONLY the resulting fingerprint (64 lowercase hex).
     // - Intended for abuse / rate-limit analysis, NOT user identity.
     ipFingerprint: text("ip_fingerprint"),
+    // Set by an admin ("Make client" or linking to an existing client). Deleting
+    // the client keeps the inquiry and clears the link.
+    clientId: uuid("client_id").references(() => clients.id, { onDelete: "set null" }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -63,5 +68,10 @@ export const inquiries = pgTable(
     index("inquiries_ip_fingerprint_created_at_idx")
       .on(table.ipFingerprint, table.createdAt.desc())
       .where(sql`${table.ipFingerprint} IS NOT NULL`),
+    // A client's inquiries (client page) and the FK's ON DELETE SET NULL. Partial:
+    // most inquiries never become a client.
+    index("inquiries_client_id_created_at_idx")
+      .on(table.clientId, table.createdAt.desc())
+      .where(sql`${table.clientId} IS NOT NULL`),
   ],
 );

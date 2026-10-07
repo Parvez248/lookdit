@@ -23,6 +23,7 @@ export type InquirySummary = {
 export type InquiryDetail = Omit<InquirySummary, "preview"> & {
   message: string;
   updatedAt: Date;
+  clientId: string | null;
 };
 
 const PREVIEW_LENGTH = 180;
@@ -73,6 +74,7 @@ export async function getInquiry(id: string): Promise<InquiryDetail | null> {
       company: inquiries.company,
       status: inquiries.status,
       message: inquiries.message,
+      clientId: inquiries.clientId,
       createdAt: inquiries.createdAt,
       updatedAt: inquiries.updatedAt,
     })

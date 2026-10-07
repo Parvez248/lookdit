@@ -2,14 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { makeClientFromInquiry } from "@/app/actions/admin-clients";
 import { setInquiryStatus } from "@/app/actions/admin-inquiries";
 import { StatusBadge } from "@/components/admin/StatusBadge";
+import { getClientName } from "@/db/queries/clients";
 import { getInquiry } from "@/db/queries/inquiries";
 import { requireUser } from "@/lib/auth/session";
 import { formatDateTimeUtc } from "@/lib/format-date";
 import { INQUIRY_STATUS_LABELS, INQUIRY_STATUSES, inquiryListHref, isInquiryId } from "@/lib/inquiries/status";
 
-import styles from "./page.module.css";
+import styles from "@/components/admin/AdminDetail.module.css";
 
 // The title is generic on purpose: an inquirer's name shouldn't land in tab
 // titles, history or screenshots of the tab bar.
@@ -23,6 +25,7 @@ export default async function InquiryPage({ params }: PageProps<"/admin/inquirie
   if (!isInquiryId(id)) notFound();
   const inquiry = await getInquiry(id);
   if (inquiry === null) notFound();
+  const clientName = inquiry.clientId ? await getClientName(inquiry.clientId) : null;
 
   const replySubject = encodeURIComponent("Re: your inquiry to LOOKDIT");
 
@@ -76,6 +79,22 @@ export default async function InquiryPage({ params }: PageProps<"/admin/inquirie
           <a href={`mailto:${inquiry.email}?subject=${replySubject}`} className={styles.reply}>
             Reply by email
           </a>
+
+          <div className={styles.clientRow}>
+            <p className={styles.clientLabel}>Client</p>
+            {inquiry.clientId && clientName ? (
+              <Link href={`/admin/clients/${inquiry.clientId}`} className={styles.email}>
+                {clientName}
+              </Link>
+            ) : (
+              <form action={makeClientFromInquiry}>
+                <input type="hidden" name="inquiryId" value={inquiry.id} />
+                <button type="submit" className={styles.makeClient}>
+                  Make client
+                </button>
+              </form>
+            )}
+          </div>
 
           <form action={setInquiryStatus} className={styles.statusForm}>
             <input type="hidden" name="id" value={inquiry.id} />

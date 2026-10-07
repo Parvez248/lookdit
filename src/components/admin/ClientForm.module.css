@@ -1,0 +1,220 @@
+.form {
+  max-width: 48rem;
+}
+
+.summaryRegion:empty {
+  display: none;
+}
+
+.summary {
+  margin-bottom: var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--line-strong);
+  border-left: 2px solid var(--text);
+  background: var(--surface-2);
+  font-size: var(--text-body-s);
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.fieldset {
+  border: 0;
+}
+
+.label {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  padding: 0;
+  font-size: var(--text-body-s);
+  font-weight: 500;
+}
+
+.optional {
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-label);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--text-subtle);
+}
+
+.hint {
+  margin-top: calc(-1 * var(--space-1));
+  font-size: var(--text-body-s);
+  color: var(--text-muted);
+}
+
+.input {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--line-interactive);
+  border-radius: var(--radius-s);
+  background: var(--ground);
+  color: var(--text);
+  font: inherit;
+  font-size: var(--text-body);
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+
+.textarea {
+  min-height: 9rem;
+  padding-block: var(--space-3);
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.input:focus-visible {
+  border-color: var(--focus);
+  outline-offset: 1px;
+}
+
+/* Error state: a heavier full-contrast border plus the message; never colour alone. */
+.input[aria-invalid="true"] {
+  border-width: 2px;
+  border-color: var(--text);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .input:hover {
+    border-color: var(--text-subtle);
+  }
+}
+
+.error {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-size: var(--text-body-s);
+  color: var(--text);
+}
+
+.error::before {
+  content: "!";
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 1rem;
+  height: 1rem;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1;
+  transform: translateY(0.125rem);
+}
+
+/* Status: native radios drawn as a segmented control. */
+.segmented {
+  display: inline-flex;
+  align-self: flex-start;
+  border: 1px solid var(--line-interactive);
+  border-radius: var(--radius-s);
+}
+
+.segment {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding-inline: var(--space-5);
+  font-size: var(--text-body-s);
+  cursor: pointer;
+}
+
+.segment + .segment {
+  border-left: 1px solid var(--line-interactive);
+}
+
+.radio {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.segment:has(.radio:checked) {
+  background: var(--text);
+  color: var(--ground);
+  font-weight: 500;
+}
+
+.segment:has(.radio:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  z-index: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .segment:not(:has(.radio:checked)):hover {
+    background: var(--surface-2);
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-5);
+  margin-top: var(--space-7);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--line);
+}
+
+.submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding-inline: var(--space-6);
+  border-radius: var(--radius-s);
+  background: var(--blue-600);
+  color: #fff;
+  font-size: var(--text-body-s);
+  font-weight: 500;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+.submit:disabled {
+  cursor: progress;
+  background: var(--blue-700);
+}
+
+.cancel {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  color: var(--text-muted);
+  font-size: var(--text-body-s);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .submit:hover {
+    background: var(--blue-700);
+  }
+
+  .cancel:hover {
+    color: var(--text);
+  }
+}
+
+@media (min-width: 40rem) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-5);
+  }
+
+  .wide {
+    grid-column: 1 / -1;
+  }
+}

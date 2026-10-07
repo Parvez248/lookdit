@@ -21,23 +21,23 @@
   background: var(--text-subtle);
 }
 
-.badge[data-status="new"] {
+.badge[data-tone="action"] {
   color: var(--text);
 }
 
-.badge[data-status="new"]::before {
+.badge[data-tone="action"]::before {
   background: var(--blue-500);
 }
 
-.badge[data-status="reviewing"]::before {
+.badge[data-tone="signal"]::before {
   background: var(--cyan);
 }
 
-.badge[data-status="replied"]::before {
+.badge[data-tone="strong"]::before {
   background: var(--text-muted);
 }
 
-.badge[data-status="spam"]::before {
+.badge[data-tone="outline"]::before {
   background: transparent;
   box-shadow: inset 0 0 0 1px var(--text-subtle);
 }
