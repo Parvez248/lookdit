@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { ClientStatusBadge, StatusBadge } from "@/components/admin/StatusBadge";
+import { ClientStatusBadge, ProjectStatusBadge, StatusBadge } from "@/components/admin/StatusBadge";
+import { listClientProjects } from "@/db/queries/admin-projects";
 import { getClient, listClientInquiries } from "@/db/queries/clients";
 import { requireUser } from "@/lib/auth/session";
 import { clientListHref, isClientId } from "@/lib/clients/status";
@@ -21,7 +22,11 @@ export default async function ClientPage({ params }: PageProps<"/admin/clients/[
   await requireUser();
   const { id } = await params;
   if (!isClientId(id)) notFound();
-  const [client, inquiries] = await Promise.all([getClient(id), listClientInquiries(id)]);
+  const [client, inquiries, projects] = await Promise.all([
+    getClient(id),
+    listClientInquiries(id),
+    listClientProjects(id),
+  ]);
   if (client === null) notFound();
 
   return (
@@ -43,26 +48,51 @@ export default async function ClientPage({ params }: PageProps<"/admin/clients/[
             {client.company ? <p className={detail.company}>{client.company}</p> : null}
           </header>
 
-          <section className={styles.section} aria-labelledby="notes-title">
-            <h2 id="notes-title" className={styles.sectionTitle}>
+          <section className={detail.section} aria-labelledby="notes-title">
+            <h2 id="notes-title" className={detail.sectionTitle}>
               Notes
             </h2>
             {client.notes ? (
               <p className={styles.notes}>{client.notes}</p>
             ) : (
-              <p className={styles.muted}>No notes yet.</p>
+              <p className={detail.muted}>No notes yet.</p>
             )}
           </section>
 
-          <section className={styles.section} aria-labelledby="client-inquiries-title">
-            <h2 id="client-inquiries-title" className={styles.sectionTitle}>
+          <section className={detail.section} aria-labelledby="client-projects-title">
+            <h2 id="client-projects-title" className={detail.sectionTitle}>
+              Projects
+            </h2>
+            {projects.length > 0 ? (
+              <ol className={styles.records}>
+                {projects.map((project) => (
+                  <li key={project.id} className={styles.record}>
+                    <Link href={`/admin/projects/${project.id}`} className={styles.recordLink}>
+                      {project.title}
+                    </Link>
+                    <ProjectStatusBadge status={project.workStatus} />
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <p className={detail.muted}>
+                None yet.{" "}
+                <Link href={`/admin/projects/new?client=${client.id}`} className={styles.inlineLink}>
+                  Add a project for this client
+                </Link>
+              </p>
+            )}
+          </section>
+
+          <section className={detail.section} aria-labelledby="client-inquiries-title">
+            <h2 id="client-inquiries-title" className={detail.sectionTitle}>
               Inquiries
             </h2>
             {inquiries.length > 0 ? (
-              <ol className={styles.inquiries}>
+              <ol className={styles.records}>
                 {inquiries.map((inquiry) => (
-                  <li key={inquiry.id} className={styles.inquiry}>
-                    <Link href={`/admin/inquiries/${inquiry.id}`} className={styles.inquiryLink}>
+                  <li key={inquiry.id} className={styles.record}>
+                    <Link href={`/admin/inquiries/${inquiry.id}`} className={styles.recordLink}>
                       <time dateTime={inquiry.createdAt.toISOString()}>{formatDateUtc(inquiry.createdAt)}</time>
                     </Link>
                     <StatusBadge status={inquiry.status} />
@@ -71,7 +101,7 @@ export default async function ClientPage({ params }: PageProps<"/admin/clients/[
                 ))}
               </ol>
             ) : (
-              <p className={styles.muted}>None linked. Use “Make client” on an inquiry to link it here.</p>
+              <p className={detail.muted}>None linked. Use “Make client” on an inquiry to link it here.</p>
             )}
           </section>
         </article>
@@ -86,7 +116,7 @@ export default async function ClientPage({ params }: PageProps<"/admin/clients/[
                     {client.email}
                   </a>
                 ) : (
-                  <span className={styles.muted}>Not set</span>
+                  <span className={detail.muted}>Not set</span>
                 )}
               </dd>
             </div>
@@ -98,7 +128,7 @@ export default async function ClientPage({ params }: PageProps<"/admin/clients/[
                     {client.phone}
                   </a>
                 ) : (
-                  <span className={styles.muted}>Not set</span>
+                  <span className={detail.muted}>Not set</span>
                 )}
               </dd>
             </div>
@@ -111,7 +141,7 @@ export default async function ClientPage({ params }: PageProps<"/admin/clients/[
                     <span className="visually-hidden"> (opens in a new tab)</span>
                   </a>
                 ) : (
-                  <span className={styles.muted}>Not set</span>
+                  <span className={detail.muted}>Not set</span>
                 )}
               </dd>
             </div>
@@ -123,7 +153,7 @@ export default async function ClientPage({ params }: PageProps<"/admin/clients/[
             </div>
           </dl>
 
-          <Link href={`/admin/clients/${client.id}/edit`} className={styles.edit}>
+          <Link href={`/admin/clients/${client.id}/edit`} className={detail.edit}>
             Edit client
           </Link>
         </aside>

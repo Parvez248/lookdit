@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { SectionLabel } from "@/components/ui/SectionLabel";
+import { countProjectsByWorkStatus } from "@/db/queries/admin-projects";
 import { countClientsByStatus } from "@/db/queries/clients";
 import { countInquiriesByStatus, listInquiries } from "@/db/queries/inquiries";
 import { adminRoutes } from "@/lib/auth/routes";
@@ -10,6 +11,7 @@ import { requireUser } from "@/lib/auth/session";
 import { formatDateUtc } from "@/lib/format-date";
 import { CLIENT_STATUSES, clientListHref } from "@/lib/clients/status";
 import { INQUIRY_STATUSES, inquiryListHref } from "@/lib/inquiries/status";
+import { projectListHref, WORK_STATUSES } from "@/lib/projects/status";
 
 import styles from "./page.module.css";
 
@@ -19,15 +21,14 @@ export const metadata: Metadata = {
 
 const LATEST_COUNT = 4;
 
-const upcoming = [{ title: "Projects", body: "Work in progress and the case studies on the public site." }] as const;
-
 export default async function DashboardPage() {
   const user = await requireUser();
   const firstName = user.name.trim().split(/\s+/)[0];
-  const [counts, recent, clientCounts] = await Promise.all([
+  const [counts, recent, clientCounts, projectCounts] = await Promise.all([
     countInquiriesByStatus(),
     listInquiries(null, 1),
     countClientsByStatus(),
+    countProjectsByWorkStatus(),
   ]);
   const latest = recent.slice(0, LATEST_COUNT);
   const total = INQUIRY_STATUSES.reduce((sum, status) => sum + counts[status], 0);
@@ -42,6 +43,12 @@ export default async function DashboardPage() {
     { label: "Active", status: "active", value: clientCounts.active },
     { label: "Past", status: "past", value: clientCounts.past },
     { label: "All", status: null, value: CLIENT_STATUSES.reduce((sum, status) => sum + clientCounts[status], 0) },
+  ] as const;
+  const projectStats = [
+    { label: "Active", status: "active", value: projectCounts.active },
+    { label: "Planned", status: "planned", value: projectCounts.planned },
+    { label: "On hold", status: "on_hold", value: projectCounts.on_hold },
+    { label: "All", status: null, value: WORK_STATUSES.reduce((sum, status) => sum + projectCounts[status], 0) },
   ] as const;
 
   return (
@@ -118,15 +125,26 @@ export default async function DashboardPage() {
         </ul>
       </section>
 
-      <ul className={styles.areas} aria-label="Coming next">
-        {upcoming.map((area) => (
-          <li key={area.title} className={styles.area}>
-            <h2 className={styles.areaTitle}>{area.title}</h2>
-            <p className={styles.areaBody}>{area.body}</p>
-            <p className={styles.areaStatus}>Not set up yet</p>
-          </li>
-        ))}
-      </ul>
+      <section className={styles.panel} aria-labelledby="projects-title">
+        <div className={styles.inquiriesHead}>
+          <h2 id="projects-title" className={styles.sectionTitle}>
+            Projects
+          </h2>
+          <Link href={adminRoutes.projects} className={styles.sectionLink}>
+            View all
+          </Link>
+        </div>
+        <ul className={styles.stats} aria-label="Projects by status">
+          {projectStats.map((stat) => (
+            <li key={stat.label}>
+              <Link href={projectListHref(stat.status)} className={styles.stat}>
+                <span className={styles.statLabel}>{stat.label}</span>
+                <span className={styles.statValue}>{stat.value}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
     </div>
   );
 }

@@ -1,18 +1,4 @@
-.section {
-  max-width: var(--measure);
-  margin-top: var(--space-6);
-  padding-top: var(--space-5);
-  border-top: 1px solid var(--line);
-}
-
-.sectionTitle {
-  font-family: var(--font-mono);
-  font-size: var(--text-mono-label);
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-subtle);
-}
+/* Client page: only what differs from AdminDetail.module.css. */
 
 .notes {
   margin-top: var(--space-3);
@@ -20,34 +6,26 @@
   overflow-wrap: anywhere;
 }
 
-.muted {
-  margin-top: var(--space-3);
-  font-size: var(--text-body-s);
-  color: var(--text-muted);
-}
-
-dd > .muted {
-  margin-top: 0;
-}
-
-.inquiries {
+.records {
   margin-top: var(--space-3);
 }
 
-.inquiry {
+.record {
   display: grid;
-  grid-template-columns: auto 1fr;
+  /* A long project title wraps instead of pushing the badge off-screen. */
+  grid-template-columns: minmax(0, max-content) 1fr;
   gap: var(--space-1) var(--space-4);
   align-items: baseline;
   padding-block: var(--space-3);
   border-top: 1px solid var(--line);
 }
 
-.inquiry:first-child {
+.record:first-child {
   border-top: 0;
 }
 
-.inquiryLink {
+.recordLink {
+  overflow-wrap: anywhere;
   font-weight: 500;
   text-decoration: underline;
   text-decoration-color: var(--line-interactive);
@@ -63,24 +41,8 @@ dd > .muted {
   white-space: nowrap;
 }
 
-.edit {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 3rem;
-  padding-inline: var(--space-5);
-  border: 1px solid var(--line-interactive);
-  border-radius: var(--radius-s);
-  font-size: var(--text-body-s);
-  font-weight: 500;
-  transition:
-    border-color var(--dur-fast) var(--ease-out),
-    background-color var(--dur-fast) var(--ease-out);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .edit:hover {
-    border-color: var(--text-muted);
-    background: var(--surface-2);
-  }
+.inlineLink {
+  color: var(--blue-400);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }

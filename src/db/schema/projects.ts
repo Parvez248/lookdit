@@ -12,9 +12,16 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 
+import { clients } from "./clients";
+
 /**
  * Projects — queryable project metadata (PostgreSQL source of truth).
  * The long-form case-study narrative lives in MDX, resolved by `slug`.
+ *
+ * One row per piece of LOOKDIT work. `status` is the public publishing switch
+ * (only `published` rows reach the site); `work_status` is the internal
+ * workflow the admin tracks. `client_id` links the private client record;
+ * `client` stays the public display name and is never derived from it.
  *
  * NOTE: `id` uses `uuidv7()`, a PostgreSQL 18 built-in. Verify the target
  * database is PostgreSQL 18 before applying any migration.
@@ -28,10 +35,12 @@ export const projects = pgTable(
     slug: text("slug").notNull().unique("projects_slug_unique"),
     title: text("title").notNull(),
     client: text("client"),
+    clientId: uuid("client_id").references(() => clients.id, { onDelete: "set null" }),
     category: text("category").notNull(),
     year: smallint("year").notNull(),
     summary: text("summary").notNull(),
     status: text("status").notNull().default("draft"),
+    workStatus: text("work_status").notNull().default("planned"),
     featured: boolean("featured").notNull().default(false),
     displayOrder: integer("display_order").notNull().default(1000),
     liveUrl: text("live_url"),
@@ -63,6 +72,11 @@ export const projects = pgTable(
       "projects_status_allowed",
       sql`${table.status} IN ('draft', 'published', 'archived')`,
     ),
+    // Internal workflow vocabulary (admin only, never shown publicly).
+    check(
+      "projects_work_status_allowed",
+      sql`${table.workStatus} IN ('planned', 'active', 'on_hold', 'completed', 'cancelled')`,
+    ),
     check("projects_year_range", sql`${table.year} BETWEEN 2000 AND 2100`),
     // Published rows must have a published_at; draft/archived may keep history.
     check(
@@ -77,5 +91,8 @@ export const projects = pgTable(
       table.displayOrder.asc(),
       table.year.desc(),
     ),
+    // Serves: a client's projects on the admin client page; also keeps
+    // ON DELETE SET NULL from scanning projects when a client is deleted.
+    index("projects_client_id_idx").on(table.clientId),
   ],
 );

@@ -1,0 +1,14 @@
+/* Project page: only what differs from AdminDetail.module.css. */
+
+.summary {
+  margin-top: var(--space-3);
+  font-size: var(--text-body-l);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.slug {
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-data);
+}

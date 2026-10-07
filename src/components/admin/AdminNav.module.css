@@ -1,6 +1,15 @@
+/* Narrow screens: the links share the row evenly, so all four fit at 320px. */
 .list {
   display: flex;
-  gap: var(--space-6);
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+@media (min-width: 30rem) {
+  .list {
+    justify-content: flex-start;
+    gap: var(--space-6);
+  }
 }
 
 .link {

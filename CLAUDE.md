@@ -83,16 +83,24 @@ arises, and explain why (see rule 3).
   - The sign-in form gives one message for unknown email, wrong password and bad input.
   - Sign-in needs `DATABASE_URL` and `INQUIRY_IP_HMAC_SECRET` at runtime, and fails closed
     without them (or without a trusted client IP).
-  - Admin pages so far: dashboard (`/admin`, live inquiry and client counts), inquiries
-    (`/admin/inquiries` list with status filter and pagination in SQL, `/admin/inquiries/[id]`
-    with a status form and "Make client") and clients (`/admin/clients` list, `/new`, `/[id]`,
-    `/[id]/edit`). Admin reads in `src/db/queries/inquiries.ts` never select the IP
+  - Admin pages so far: dashboard (`/admin`, live inquiry, client and project counts),
+    inquiries (`/admin/inquiries` list with status filter and pagination in SQL,
+    `/admin/inquiries/[id]` with a status form and "Make client"), clients (`/admin/clients`
+    list, `/new`, `/[id]`, `/[id]/edit`) and projects (`/admin/projects`, same four pages). Admin reads in `src/db/queries/inquiries.ts` never select the IP
     fingerprint. Admin timestamps are shown in UTC and labelled.
   - Clients (`clients` table, status lead / active / past) are LOOKDIT's own contacts. An
     inquiry links to at most one client (`inquiries.client_id`, set null if the client is
     deleted). "Make client" copies name, email and company in one SQL statement that locks the
     inquiry, so a double submit cannot create two clients. Validation lives in
-    `src/lib/clients/validation.ts`; shared admin list/detail styles in `src/components/admin`.
+    `src/lib/clients/validation.ts`; shared admin list/detail/form styles in `src/components/admin`.
+  - Projects reuse the `projects` table. `status` (draft / published / archived) is the public
+    publishing switch; `work_status` (planned / active / on_hold / completed / cancelled) is the
+    internal workflow; `client_id` links a client (set null on delete) while `client` stays the
+    public display text and is never derived from it. The admin can't publish yet, so projects
+    it creates stay `draft`. The slug is generated from the title (-2, -3 … when taken, via
+    `ON CONFLICT DO NOTHING`) and never changed by the admin. Admin reads live in
+    `src/db/queries/admin-projects.ts`, apart from the public reads, so internal fields never
+    reach a public query.
 - **Frontend (in progress):** dark-only "In Focus" design system. `src/app/(site)/layout.tsx`
   holds the shell (fonts, skip link, header, footer); `src/app/globals.css` holds the tokens
   (colour, type, space, motion), reset and the `.container` / `.grid` layout primitives.
@@ -109,7 +117,7 @@ arises, and explain why (see rule 3).
   commercial engagement, or measured result. Concept projects are never written to the
   `projects` table.
 - Server Components by default. Client components: `MobileMenu`, and in the admin `SignInForm`,
-  `ClientForm`, `AdminNav` (reads the path for `aria-current`) and the `error.tsx` boundary.
+  `ClientForm`, `ProjectForm`, `AdminNav` (reads the path for `aria-current`) and the `error.tsx` boundary.
 
 ## Commands
 

@@ -6,7 +6,7 @@ import { getClient } from "@/db/queries/clients";
 import { requireUser } from "@/lib/auth/session";
 import { isClientId } from "@/lib/clients/status";
 
-import styles from "../../form-page.module.css";
+import styles from "@/components/admin/AdminFormPage.module.css";
 
 export const metadata: Metadata = {
   title: "Edit client",

@@ -1,33 +1,5 @@
 /* Clients list: only what differs from AdminList.module.css. */
 
-.intro {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--space-5);
-}
-
-.add {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 2.75rem;
-  padding-inline: var(--space-5);
-  border-radius: var(--radius-s);
-  background: var(--blue-600);
-  color: #fff;
-  font-size: var(--text-body-s);
-  font-weight: 500;
-  transition: background-color var(--dur-fast) var(--ease-out);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .add:hover {
-    background: var(--blue-700);
-  }
-}
-
 .email {
   overflow: hidden;
   font-size: var(--text-body-s);
