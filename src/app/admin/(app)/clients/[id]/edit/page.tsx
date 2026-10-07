@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { ClientForm } from "@/components/admin/ClientForm";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 import { getClient } from "@/db/queries/clients";
 import { requireUser } from "@/lib/auth/session";
 import { isClientId } from "@/lib/clients/status";
@@ -21,6 +22,7 @@ export default async function EditClientPage({ params }: PageProps<"/admin/clien
 
   return (
     <div className={`container ${styles.page}`}>
+      <SectionLabel>Clients</SectionLabel>
       <h1 className={styles.title}>Edit {client.name}</h1>
       <ClientForm
         id={client.id}

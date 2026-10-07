@@ -4,6 +4,7 @@ import Link from "next/link";
 import { FilterTabs } from "@/components/admin/FilterTabs";
 import { Pagination } from "@/components/admin/Pagination";
 import { ClientStatusBadge } from "@/components/admin/StatusBadge";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 import { countClientsByStatus, listClients } from "@/db/queries/clients";
 import { requireUser } from "@/lib/auth/session";
 import {
@@ -44,6 +45,7 @@ export default async function ClientsPage({ searchParams }: PageProps<"/admin/cl
     <div className={`container ${list.page}`}>
       <header className={list.intro}>
         <div>
+          <SectionLabel>{total === 1 ? "1 client" : `${total} clients`}</SectionLabel>
           <h1 className={list.title}>Clients</h1>
           <p className={list.lede}>The people and companies LOOKDIT works with, A to Z.</p>
         </div>
@@ -55,7 +57,7 @@ export default async function ClientsPage({ searchParams }: PageProps<"/admin/cl
       <FilterTabs label="Filter by status" tabs={tabs} />
 
       {items.length > 0 ? (
-        <ol className={list.list}>
+        <ol className={`${list.list} ${list.primary}`}>
           {items.map((client) => (
             <li key={client.id} className={list.item}>
               <div className={list.who}>

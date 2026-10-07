@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { ProjectForm } from "@/components/admin/ProjectForm";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 import { listClientOptions } from "@/db/queries/admin-projects";
 import { requireUser } from "@/lib/auth/session";
 import { isClientId } from "@/lib/clients/status";
@@ -19,6 +20,7 @@ export default async function NewProjectPage({ searchParams }: PageProps<"/admin
 
   return (
     <div className={`container ${styles.page}`}>
+      <SectionLabel>Projects</SectionLabel>
       <h1 className={styles.title}>Add project</h1>
       <p className={styles.lede}>New projects stay private. Nothing here is published to the site.</p>
       <ProjectForm

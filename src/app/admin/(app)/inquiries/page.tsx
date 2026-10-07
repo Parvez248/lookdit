@@ -4,6 +4,7 @@ import Link from "next/link";
 import { FilterTabs } from "@/components/admin/FilterTabs";
 import { Pagination } from "@/components/admin/Pagination";
 import { StatusBadge } from "@/components/admin/StatusBadge";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 import { countInquiriesByStatus, listInquiries } from "@/db/queries/inquiries";
 import { requireUser } from "@/lib/auth/session";
 import { formatDateUtc } from "@/lib/format-date";
@@ -39,8 +40,11 @@ export default async function InquiriesPage({ searchParams }: PageProps<"/admin/
   return (
     <div className={`container ${list.page}`}>
       <header className={list.intro}>
-        <h1 className={list.title}>Inquiries</h1>
-        <p className={list.lede}>Requests from the contact form, newest first.</p>
+        <div>
+          <SectionLabel>{total === 1 ? "1 inquiry" : `${total} inquiries`}</SectionLabel>
+          <h1 className={list.title}>Inquiries</h1>
+          <p className={list.lede}>Requests from the contact form, newest first.</p>
+        </div>
       </header>
 
       <FilterTabs

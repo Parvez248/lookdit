@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { ClientForm } from "@/components/admin/ClientForm";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 import { requireUser } from "@/lib/auth/session";
 
 import styles from "@/components/admin/AdminFormPage.module.css";
@@ -13,6 +14,7 @@ export default async function NewClientPage() {
   await requireUser();
   return (
     <div className={`container ${styles.page}`}>
+      <SectionLabel>Clients</SectionLabel>
       <h1 className={styles.title}>Add client</h1>
       <p className={styles.lede}>Only the name is required. Everything else can be added later.</p>
       <ClientForm

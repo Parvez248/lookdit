@@ -94,7 +94,12 @@ export function Workspace({ projectId, data }: WorkspaceProps) {
           {loose.length > 0 ? <p className={styles.count}>{progressOf(loose).done}/{loose.length}</p> : null}
         </div>
         <TaskList projectId={projectId} tasks={loose} today={today} />
-        <InlineAdd kind="task" projectId={projectId} label="Add a task without a milestone" />
+        <InlineAdd
+          kind="task"
+          projectId={projectId}
+          label="Add a task without a milestone"
+          collapsible={data.milestones.length > 0}
+        />
       </section>
 
       <div className={styles.newMilestone}>
@@ -161,7 +166,13 @@ function MilestoneGroup({
       </div>
       {tasks.length > 0 ? <Bar progress={progress} /> : null}
       <TaskList projectId={projectId} tasks={tasks} today={today} />
-      <InlineAdd kind="task" projectId={projectId} milestoneId={milestone.id} label={`Add a task to ${milestone.title}`} />
+      <InlineAdd
+        kind="task"
+        projectId={projectId}
+        milestoneId={milestone.id}
+        label={`Add a task to ${milestone.title}`}
+        collapsible
+      />
     </section>
   );
 }
@@ -180,9 +191,11 @@ function TaskList({ projectId, tasks, today }: { projectId: string; tasks: TaskR
               <input type="hidden" name="projectId" value={projectId} />
               <input type="hidden" name="taskId" value={task.id} />
               <input type="hidden" name="status" value={step.status} />
-              <button type="submit" className={styles.step} data-step={step.status}>
-                {step.label}
-                <span className="visually-hidden">: {task.title}</span>
+              <button type="submit" className={styles.step} data-status={task.status} title={step.label}>
+                <span className={styles.stepMark} aria-hidden="true" />
+                <span className="visually-hidden">
+                  {step.label}: {task.title}
+                </span>
               </button>
             </form>
             <div className={styles.taskBody}>

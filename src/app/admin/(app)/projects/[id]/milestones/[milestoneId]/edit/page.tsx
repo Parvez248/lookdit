@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { removeMilestone } from "@/app/actions/admin-workspace";
 import { DeleteDisclosure } from "@/components/admin/workspace/DeleteDisclosure";
 import { WorkspaceEditForm } from "@/components/admin/workspace/WorkspaceEditForm";
+import { SectionLabel } from "@/components/ui/SectionLabel";
 import { getMilestone } from "@/db/queries/project-workspace";
 import { requireUser } from "@/lib/auth/session";
 import { isProjectId } from "@/lib/projects/status";
@@ -27,6 +28,7 @@ export default async function EditMilestonePage({
 
   return (
     <div className={`container ${styles.page}`}>
+      <SectionLabel>Projects</SectionLabel>
       <h1 className={styles.title}>Edit milestone</h1>
       <WorkspaceEditForm
         kind="milestone"
