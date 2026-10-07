@@ -2,7 +2,7 @@ import "server-only";
 
 import { asc, eq } from "drizzle-orm";
 
-import { db } from "@/db";
+import { getDb } from "@/db";
 import { technologies } from "@/db/schema";
 
 /** An active technology in the controlled catalog. */
@@ -21,7 +21,7 @@ export type ActiveTechnology = {
  * deterministic id tiebreak. Uses the (is_active, display_order) index prefix.
  */
 export async function listActiveTechnologies(): Promise<ActiveTechnology[]> {
-  return db
+  return getDb()
     .select({
       id: technologies.id,
       slug: technologies.slug,

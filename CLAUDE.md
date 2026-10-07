@@ -70,10 +70,22 @@ arises, and explain why (see rule 3).
 - **Backend:** PostgreSQL (Neon) via Drizzle. Schema and migrations in `src/db/schema` and
   `drizzle/`; typed reads in `src/db/queries`; inquiry writes in `src/db/mutations` behind the
   `submitInquiry` Server Action (`src/app/actions/inquiry.ts`) with validation and per-client
-  rate limiting in `src/lib/inquiries`.
-- **Frontend (in progress):** dark-only "In Focus" design system. `src/app/layout.tsx` holds the
-  shell (fonts, skip link, header, footer); `src/app/globals.css` holds the tokens (colour, type,
-  space, motion), reset and the `.container` / `.grid` layout primitives.
+  rate limiting in `src/lib/inquiries`. The DB client comes from `getDb()` (`src/db/index.ts`),
+  created on first use so `next build` never needs `DATABASE_URL`.
+- **Admin auth** (`/admin`): LOOKDIT staff only, no public sign-up; accounts come from
+  `pnpm admin:create-user`. Email + password hashed with Node's built-in scrypt
+  (`src/lib/auth/password.ts`); DB sessions (`users`, `sessions`) where the `__Host-` cookie holds
+  a random token and the DB stores only its SHA-256; sign-in throttled per email and per IP
+  fingerprint (`sign_in_attempts`, HMACs only). Rules:
+  - The admin has its own root layout (`src/app/admin/layout.tsx`), always noindex/nofollow.
+  - Every admin page and admin Server Action calls `requireUser()` (`src/lib/auth/session.ts`)
+    itself. A layout check is never the guard.
+  - The sign-in form gives one message for unknown email, wrong password and bad input.
+  - Sign-in needs `DATABASE_URL` and `INQUIRY_IP_HMAC_SECRET` at runtime, and fails closed
+    without them (or without a trusted client IP).
+- **Frontend (in progress):** dark-only "In Focus" design system. `src/app/(site)/layout.tsx`
+  holds the shell (fonts, skip link, header, footer); `src/app/globals.css` holds the tokens
+  (colour, type, space, motion), reset and the `.container` / `.grid` layout primitives.
   - `src/components/site`: header, native `<dialog>` mobile menu, footer, and
     `Brand` (the supplied logo in `public/brand/` with the "LOOKDIT" name beside it). The app
     icons `src/app/icon.png` / `apple-icon.png` are the same logo padded to square (temporary).
@@ -86,7 +98,7 @@ arises, and explain why (see rule 3).
   concept work. Concept work must never be presented in a way that implies a real client,
   commercial engagement, or measured result. Concept projects are never written to the
   `projects` table.
-- Server Components by default; the only client component so far is `MobileMenu`.
+- Server Components by default. Client components: `MobileMenu` and the admin `SignInForm`.
 
 ## Commands
 
@@ -96,6 +108,7 @@ pnpm build               # production build (run before tsc on a fresh clone)
 pnpm lint                # ESLint
 pnpm exec tsc --noEmit   # typecheck (strict)
 pnpm test                # Vitest unit tests
+pnpm admin:create-user <email> "<name>"  # create an admin account (Node 22.18+)
 ```
 
 <!-- BEGIN:nextjs-agent-rules -->

@@ -2,7 +2,7 @@ import "server-only";
 
 import { sql } from "drizzle-orm";
 
-import { db } from "@/db";
+import { getDb } from "@/db";
 import { inquiries } from "@/db/schema";
 import {
   type InquiryValidationIssue,
@@ -92,6 +92,7 @@ async function insertInquiryWithinRateLimit(
 ): Promise<CreatedInquiry | null> {
   const { maxPerWindow, windowSeconds } = INQUIRY_RATE_LIMIT;
   const column = (name: string) => sql.identifier(name);
+  const db = getDb();
 
   const [, insertResult] = await db.batch([
     db.execute(

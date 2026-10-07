@@ -1,0 +1,90 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--ground);
+  border-bottom: 1px solid var(--line);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  height: var(--header-height);
+}
+
+.identity {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.home {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+}
+
+.tag {
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-s);
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-label);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Below 360px the tag no longer fits beside the name and the sign-out button. */
+@media (max-width: 22.49rem) {
+  .tag {
+    display: none;
+  }
+}
+
+.account {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.user {
+  display: none;
+  font-size: var(--text-body-s);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.signOut {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  padding-inline: var(--space-4);
+  border: 1px solid var(--line-interactive);
+  border-radius: var(--radius-s);
+  font-size: var(--text-body-s);
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .signOut:hover {
+    border-color: var(--text-muted);
+    background: var(--surface-1);
+  }
+}
+
+@media (min-width: 40rem) {
+  .user {
+    display: block;
+  }
+}
