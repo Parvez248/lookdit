@@ -1,0 +1,82 @@
+.page {
+  padding-block: var(--space-7) var(--space-9);
+}
+
+.title {
+  margin-top: var(--space-4);
+  font-size: var(--text-display-m);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.lede {
+  max-width: 52ch;
+  margin-top: var(--space-3);
+  color: var(--text-muted);
+}
+
+.group {
+  margin-top: var(--space-8);
+}
+
+.group + .group {
+  margin-top: var(--space-8);
+}
+
+.groupTitle {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--line-strong);
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-label);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.groupCount {
+  color: var(--text-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+.cards {
+  display: grid;
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+  list-style: none;
+}
+
+@media (min-width: 48rem) {
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--grid-gap);
+  }
+}
+
+@media (min-width: 90rem) {
+  .cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.empty {
+  margin-top: var(--space-7);
+  padding: var(--space-7) var(--space-5);
+  border: 1px dashed var(--line-strong);
+}
+
+.emptyTitle {
+  font-size: var(--text-heading-s);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.emptyBody {
+  margin-top: var(--space-2);
+  font-size: var(--text-body-s);
+  color: var(--text-muted);
+}

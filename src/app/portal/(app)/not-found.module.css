@@ -1,0 +1,32 @@
+.page {
+  padding-block: var(--space-9);
+}
+
+.code {
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-label);
+  letter-spacing: 0.08em;
+  color: var(--text-subtle);
+}
+
+.title {
+  margin-top: var(--space-3);
+  font-size: var(--text-display-m);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.body {
+  margin-top: var(--space-3);
+  color: var(--text-muted);
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  margin-top: var(--space-5);
+  color: var(--blue-400);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}

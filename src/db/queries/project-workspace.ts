@@ -6,7 +6,8 @@ import { getDb } from "@/db";
 import { projectMilestones, projectTasks } from "@/db/schema";
 import type { TaskStatus } from "@/lib/workspace/status";
 
-// Admin reads of a project's milestones and tasks. Call only after requireUser().
+// Reads of a project's milestones and tasks. Call only after requireUser() (admin),
+// or through getPortalProjectView() in ./portal, which checks ownership first.
 
 export type MilestoneRow = {
   id: string;

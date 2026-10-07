@@ -4,3 +4,4 @@ export * from "./auth";
 export * from "./clients";
 export * from "./admin-projects";
 export * from "./project-workspace";
+export * from "./portal-auth";

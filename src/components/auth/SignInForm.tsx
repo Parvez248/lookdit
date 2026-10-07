@@ -2,17 +2,22 @@
 
 import { useActionState } from "react";
 
-import { signIn } from "@/app/actions/auth";
-import { initialSignInState } from "@/lib/auth/sign-in-state";
+import { initialSignInState, type SignInState } from "@/lib/auth/sign-in-state";
 
 import styles from "./SignInForm.module.css";
 
+type SignInFormProps = {
+  /** The sign-in Server Action: staff (`signIn`) or client portal (`portalSignIn`). */
+  action: (previous: SignInState, formData: FormData) => Promise<SignInState>;
+};
+
 /**
- * Client only for the pending state and the inline error. Without JavaScript the
- * form still posts to the same Server Action and the page re-renders the result.
+ * Shared by the admin and the client portal sign-in pages. Client only for the
+ * pending state and the inline error. Without JavaScript the form still posts to
+ * the same Server Action and the page re-renders the result.
  */
-export function SignInForm() {
-  const [state, formAction, pending] = useActionState(signIn, initialSignInState);
+export function SignInForm({ action }: SignInFormProps) {
+  const [state, formAction, pending] = useActionState(action, initialSignInState);
   const error = state.status === "error" ? state.message : null;
 
   return (
