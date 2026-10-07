@@ -1,0 +1,67 @@
+.disclosure {
+  max-width: 48rem;
+  margin-top: var(--space-8);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--line);
+}
+
+.summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  color: var(--text-muted);
+  font-size: var(--text-body-s);
+  text-decoration: underline;
+  text-decoration-color: var(--line-interactive);
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+  list-style: none;
+}
+
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+.disclosure[open] .summary {
+  color: var(--text);
+}
+
+.body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+  margin-top: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--line-strong);
+  border-left: 2px solid var(--text);
+  background: var(--surface-1);
+}
+
+.text {
+  font-size: var(--text-body-s);
+  color: var(--text-muted);
+}
+
+/* Destructive, so the label says exactly what happens; no red-only signal. */
+.confirm {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding-inline: var(--space-5);
+  border: 1px solid var(--text);
+  border-radius: var(--radius-s);
+  font-size: var(--text-body-s);
+  font-weight: 500;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .summary:hover {
+    color: var(--text);
+  }
+
+  .confirm:hover {
+    background: var(--surface-2);
+  }
+}

@@ -101,6 +101,12 @@ arises, and explain why (see rule 3).
     `ON CONFLICT DO NOTHING`) and never changed by the admin. Admin reads live in
     `src/db/queries/admin-projects.ts`, apart from the public reads, so internal fields never
     reach a public query.
+  - Project workspace (on `/admin/projects/[id]`, edit pages under `milestones/` and `tasks/`):
+    `project_milestones` (done = `completed_at` set) and `project_tasks` (todo / doing / done,
+    optional milestone). Both cascade with their project; a composite FK keeps a task's
+    milestone in the same project, and deleting a milestone keeps its tasks
+    (`ON DELETE SET NULL (milestone_id)`, hand-written in migration 0007, PostgreSQL 15+).
+    Writes match on project id and row id. Progress and overdue rules: `src/lib/workspace`.
 - **Frontend (in progress):** dark-only "In Focus" design system. `src/app/(site)/layout.tsx`
   holds the shell (fonts, skip link, header, footer); `src/app/globals.css` holds the tokens
   (colour, type, space, motion), reset and the `.container` / `.grid` layout primitives.
@@ -117,7 +123,7 @@ arises, and explain why (see rule 3).
   commercial engagement, or measured result. Concept projects are never written to the
   `projects` table.
 - Server Components by default. Client components: `MobileMenu`, and in the admin `SignInForm`,
-  `ClientForm`, `ProjectForm`, `AdminNav` (reads the path for `aria-current`) and the `error.tsx` boundary.
+  `ClientForm`, `ProjectForm`, the workspace's `InlineAdd` and `WorkspaceEditForm`, `AdminNav` (reads the path for `aria-current`) and the `error.tsx` boundary.
 
 ## Commands
 

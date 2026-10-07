@@ -3,7 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ProjectStatusBadge } from "@/components/admin/StatusBadge";
+import { Workspace } from "@/components/admin/workspace/Workspace";
 import { getProject } from "@/db/queries/admin-projects";
+import { getWorkspace } from "@/db/queries/project-workspace";
 import { requireUser } from "@/lib/auth/session";
 import { formatDateTimeUtc } from "@/lib/format-date";
 import {
@@ -26,7 +28,7 @@ export default async function ProjectPage({ params }: PageProps<"/admin/projects
   await requireUser();
   const { id } = await params;
   if (!isProjectId(id)) notFound();
-  const project = await getProject(id);
+  const [project, workspace] = await Promise.all([getProject(id), getWorkspace(id)]);
   if (project === null) notFound();
 
   return (
@@ -56,6 +58,8 @@ export default async function ProjectPage({ params }: PageProps<"/admin/projects
             </h2>
             <p className={styles.summary}>{project.summary}</p>
           </section>
+
+          <Workspace projectId={project.id} data={workspace} />
         </article>
 
         <aside className={detail.side} aria-label="Project details">
