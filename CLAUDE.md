@@ -83,10 +83,16 @@ arises, and explain why (see rule 3).
   - The sign-in form gives one message for unknown email, wrong password and bad input.
   - Sign-in needs `DATABASE_URL` and `INQUIRY_IP_HMAC_SECRET` at runtime, and fails closed
     without them (or without a trusted client IP).
-  - Admin pages so far: dashboard (`/admin`, live inquiry counts) and inquiries
+  - Admin pages so far: dashboard (`/admin`, live inquiry and client counts), inquiries
     (`/admin/inquiries` list with status filter and pagination in SQL, `/admin/inquiries/[id]`
-    with a status form). Admin reads in `src/db/queries/inquiries.ts` never select the IP
+    with a status form and "Make client") and clients (`/admin/clients` list, `/new`, `/[id]`,
+    `/[id]/edit`). Admin reads in `src/db/queries/inquiries.ts` never select the IP
     fingerprint. Admin timestamps are shown in UTC and labelled.
+  - Clients (`clients` table, status lead / active / past) are LOOKDIT's own contacts. An
+    inquiry links to at most one client (`inquiries.client_id`, set null if the client is
+    deleted). "Make client" copies name, email and company in one SQL statement that locks the
+    inquiry, so a double submit cannot create two clients. Validation lives in
+    `src/lib/clients/validation.ts`; shared admin list/detail styles in `src/components/admin`.
 - **Frontend (in progress):** dark-only "In Focus" design system. `src/app/(site)/layout.tsx`
   holds the shell (fonts, skip link, header, footer); `src/app/globals.css` holds the tokens
   (colour, type, space, motion), reset and the `.container` / `.grid` layout primitives.
@@ -103,7 +109,7 @@ arises, and explain why (see rule 3).
   commercial engagement, or measured result. Concept projects are never written to the
   `projects` table.
 - Server Components by default. Client components: `MobileMenu`, and in the admin `SignInForm`,
-  `AdminNav` (reads the path for `aria-current`) and the `error.tsx` boundary.
+  `ClientForm`, `AdminNav` (reads the path for `aria-current`) and the `error.tsx` boundary.
 
 ## Commands
 

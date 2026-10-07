@@ -1,3 +1,5 @@
+import { isUuid, parsePageParam } from "../uuid";
+
 // Inquiry statuses, in workflow order. Pure: shared by the admin pages, the
 // status action and tests. Must match the `inquiries_status_allowed` CHECK.
 
@@ -17,12 +19,8 @@ export function isInquiryStatus(value: unknown): value is InquiryStatus {
   return typeof value === "string" && (INQUIRY_STATUSES as readonly string[]).includes(value);
 }
 
-/** Lowercase canonical UUID text. Checked before a lookup, so bad ids never reach SQL. */
-const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
-
-export function isInquiryId(value: unknown): value is string {
-  return typeof value === "string" && UUID_PATTERN.test(value);
-}
+/** Inquiry ids are UUIDs. */
+export const isInquiryId = isUuid;
 
 export const INQUIRIES_PAGE_SIZE = 20;
 
@@ -35,9 +33,7 @@ export function parseInquiryListParams(params: Record<string, string | string[] 
   page: number;
 } {
   const status = isInquiryStatus(params.status) ? params.status : null;
-  const rawPage = typeof params.page === "string" ? params.page : "";
-  const page = /^[1-9]\d{0,5}$/.test(rawPage) ? Number(rawPage) : 1;
-  return { status, page };
+  return { status, page: parsePageParam(params.page) };
 }
 
 /** The list URL for a filter and page, omitting defaults so URLs stay short. */

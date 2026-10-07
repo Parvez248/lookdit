@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { FilterTabs } from "@/components/admin/FilterTabs";
+import { Pagination } from "@/components/admin/Pagination";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { countInquiriesByStatus, listInquiries } from "@/db/queries/inquiries";
 import { requireUser } from "@/lib/auth/session";
@@ -12,6 +14,8 @@ import {
   inquiryListHref,
   parseInquiryListParams,
 } from "@/lib/inquiries/status";
+
+import list from "@/components/admin/AdminList.module.css";
 
 import styles from "./page.module.css";
 
@@ -33,45 +37,38 @@ export default async function InquiriesPage({ searchParams }: PageProps<"/admin/
   ];
 
   return (
-    <div className={`container ${styles.page}`}>
-      <header className={styles.intro}>
-        <h1 className={styles.title}>Inquiries</h1>
-        <p className={styles.lede}>Requests from the contact form, newest first.</p>
+    <div className={`container ${list.page}`}>
+      <header className={list.intro}>
+        <h1 className={list.title}>Inquiries</h1>
+        <p className={list.lede}>Requests from the contact form, newest first.</p>
       </header>
 
-      <nav aria-label="Filter by status" className={styles.filters}>
-        <ul className={styles.filterList}>
-          {filters.map((filter) => (
-            <li key={filter.label}>
-              <Link
-                href={inquiryListHref(filter.status)}
-                className={styles.filter}
-                aria-current={filter.status === status ? "page" : undefined}
-              >
-                {filter.label}
-                <span className={styles.filterCount}>{filter.count}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      <FilterTabs
+        label="Filter by status"
+        tabs={filters.map((filter) => ({
+          label: filter.label,
+          href: inquiryListHref(filter.status),
+          count: filter.count,
+          current: filter.status === status,
+        }))}
+      />
 
       {items.length > 0 ? (
-        <ol className={styles.list}>
+        <ol className={list.list}>
           {items.map((inquiry) => (
-            <li key={inquiry.id} className={styles.item}>
-              <div className={styles.who}>
-                <h2 className={styles.name}>
-                  <Link href={`/admin/inquiries/${inquiry.id}`} className={styles.link}>
+            <li key={inquiry.id} className={list.item}>
+              <div className={list.who}>
+                <h2 className={list.name}>
+                  <Link href={`/admin/inquiries/${inquiry.id}`} className={list.link}>
                     {inquiry.name}
                   </Link>
                 </h2>
-                <p className={styles.org}>{inquiry.company ?? inquiry.email}</p>
+                <p className={list.sub}>{inquiry.company ?? inquiry.email}</p>
               </div>
               <p className={styles.preview}>{inquiry.preview}</p>
-              <div className={styles.meta}>
+              <div className={list.meta}>
                 <StatusBadge status={inquiry.status} />
-                <time dateTime={inquiry.createdAt.toISOString()} className={styles.date}>
+                <time dateTime={inquiry.createdAt.toISOString()} className={list.date}>
                   {formatDateUtc(inquiry.createdAt)}
                 </time>
               </div>
@@ -79,13 +76,13 @@ export default async function InquiriesPage({ searchParams }: PageProps<"/admin/
           ))}
         </ol>
       ) : (
-        <div className={styles.empty}>
-          <p className={styles.emptyTitle}>
+        <div className={list.empty}>
+          <p className={list.emptyTitle}>
             {page > 1 ? "There's nothing on this page." : status ? `No ${INQUIRY_STATUS_LABELS[status].toLowerCase()} inquiries.` : "No inquiries yet."}
           </p>
-          <p className={styles.emptyBody}>
+          <p className={list.emptyBody}>
             {page > 1 ? (
-              <Link href={inquiryListHref(status)} className={styles.textLink}>
+              <Link href={inquiryListHref(status)} className={list.textLink}>
                 Go to the first page
               </Link>
             ) : status ? (
@@ -97,27 +94,13 @@ export default async function InquiriesPage({ searchParams }: PageProps<"/admin/
         </div>
       )}
 
-      {pageCount > 1 && page <= pageCount ? (
-        <nav aria-label="Pagination" className={styles.pagination}>
-          {page > 1 ? (
-            <Link href={inquiryListHref(status, page - 1)} className={styles.pageLink} rel="prev">
-              Newer
-            </Link>
-          ) : (
-            <span />
-          )}
-          <p className={styles.pageStatus}>
-            Page {page} of {pageCount}
-          </p>
-          {page < pageCount ? (
-            <Link href={inquiryListHref(status, page + 1)} className={styles.pageLink} rel="next">
-              Older
-            </Link>
-          ) : (
-            <span />
-          )}
-        </nav>
-      ) : null}
+      <Pagination
+        page={page}
+        pageCount={pageCount}
+        href={(target) => inquiryListHref(status, target)}
+        previousLabel="Newer"
+        nextLabel="Older"
+      />
     </div>
   );
 }
