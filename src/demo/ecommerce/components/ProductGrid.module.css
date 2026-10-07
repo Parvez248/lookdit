@@ -1,0 +1,19 @@
+/* 2 columns, 3 from 40rem, 4 from 64rem. Keep CARD_SIZES in ProductCard in step. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6) var(--grid-gap);
+}
+
+@media (min-width: 40rem) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    row-gap: var(--space-7);
+  }
+}

@@ -71,9 +71,16 @@ arises, and explain why (see rule 3).
   `drizzle/`; typed reads in `src/db/queries`; inquiry writes in `src/db/mutations` behind the
   `submitInquiry` Server Action (`src/app/actions/inquiry.ts`) with validation and per-client
   rate limiting in `src/lib/inquiries`.
-- **Frontend (in progress):** dark-only "In Focus" design system. `src/app/layout.tsx` holds the
-  shell (fonts, skip link, header, footer); `src/app/globals.css` holds the tokens (colour, type,
-  space, motion), reset and the `.container` / `.grid` layout primitives.
+- **Two root layouts.** There is no `src/app/layout.tsx`. LOOKDIT's root layout is
+  `src/app/(site)/layout.tsx` (with `(site)/page.tsx`); the e-commerce concept demo has its own
+  root at `src/app/demo/ecommerce/layout.tsx`. Each root renders its own `<html>`, fonts and
+  global CSS, so they never share styles; navigating between them is a full page load.
+  - Known gap (deferred to launch hardening): with no top-level layout, unknown URLs get Next's
+    bare default 404. A designed LOOKDIT 404 (and `global-not-found`, which is experimental) is
+    planned then, not before.
+- **Frontend (in progress):** dark-only "In Focus" design system. `src/app/(site)/layout.tsx`
+  holds the shell (fonts, skip link, header, footer); `src/app/globals.css` holds the tokens
+  (colour, type, space, motion), reset and the `.container` / `.grid` layout primitives.
   - `src/components/site`: header, native `<dialog>` mobile menu, footer, and
     `Brand` (the supplied logo in `public/brand/` with the "LOOKDIT" name beside it). The app
     icons `src/app/icon.png` / `apple-icon.png` are the same logo padded to square (temporary).
@@ -86,7 +93,24 @@ arises, and explain why (see rule 3).
   concept work. Concept work must never be presented in a way that implies a real client,
   commercial engagement, or measured result. Concept projects are never written to the
   `projects` table.
-- Server Components by default; the only client component so far is `MobileMenu`.
+- **E-commerce concept demo** (`/demo/ecommerce`, Slice 3B): Nidery, a fictional home-goods
+  brand. Routes in `src/app/demo/ecommerce/` (`(storefront)` group: home, `/shop`,
+  `/product/[slug]`, all static); everything else in `src/demo/ecommerce/` (brand, light-theme
+  tokens in `styles/demo.css`, fixtures in `data/`, components). Rules:
+  - **Isolation:** no LOOKDIT visual components, tokens, `globals.css` or Geist in the demo, and
+    no demo code in LOOKDIT. Brand-neutral helpers may be shared. Enforced by directory
+    boundaries and review, not a lint rule.
+  - **Every demo route is noindex/nofollow** (set once in the demo root layout's metadata).
+  - **The demo emits no structured data** (no JSON-LD of any kind) because its products are
+    fictional. The product page has a comment on where Product JSON-LD would go in a real store.
+  - **Locked disclosure,** on every demo page via the root layout, never edited without
+    approval: "LOOKDIT concept demo — fictional products and data. Nothing is for sale."
+  - The content rule above applies to demo content too: no real clients, suppliers, reviews,
+    ratings, sales labels, stock claims or certifications. Product labels are New/Seasonal only.
+  - The LOOKDIT homepage does not link to the demo yet.
+  - Images: `DemoImage.src` stays empty until an approved asset exists; `Media` then renders an
+    exact-ratio placeholder. Approved assets are required before the demo merges to main.
+- Server Components by default. Client components: `MobileMenu` (LOOKDIT) and `StoreMenu` (demo).
 
 ## Commands
 

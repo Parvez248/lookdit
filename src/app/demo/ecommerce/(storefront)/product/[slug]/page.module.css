@@ -1,0 +1,101 @@
+.crumbs {
+  padding-block: var(--space-2);
+}
+
+/* One column: gallery, info, details. From 64rem: gallery and details in columns 1–7,
+   the info panel sticky in columns 8–12. */
+.product {
+  row-gap: var(--space-6);
+}
+
+.gallery,
+.info,
+.details {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+.info {
+  display: grid;
+  align-content: start;
+  gap: var(--space-3);
+}
+
+.details {
+  margin-top: var(--space-5);
+}
+
+.label {
+  color: var(--accent);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.title {
+  font-size: var(--text-h1);
+}
+
+.price {
+  font-size: var(--text-body-l);
+  font-variant-numeric: tabular-nums;
+}
+
+.summary {
+  max-width: 44ch;
+  margin-bottom: var(--space-3);
+  color: var(--muted);
+}
+
+@media (min-width: 64rem) {
+  .product {
+    row-gap: 0;
+  }
+
+  .gallery {
+    grid-column: 1 / span 7;
+    grid-row: 1;
+  }
+
+  .details {
+    grid-column: 1 / span 7;
+    grid-row: 2;
+    margin-top: var(--space-8);
+  }
+
+  .info {
+    grid-column: 9 / -1;
+    grid-row: 1 / span 2;
+    position: sticky;
+    top: var(--space-6);
+    align-self: start;
+  }
+}
+
+/* Colourway swap, CSS only. Radios and gallery images share data-colourway numbers
+   (ProductOptions, ProductGallery). By default only colourway 1 shows; checking another
+   colour that has an image shows that one instead. Without :has() support these rules
+   are ignored and every colourway stays in the gallery. Written for up to 3 colours. */
+.product:has(input[data-colourway]) li[data-colourway]:not([data-colourway="1"]) {
+  display: none;
+}
+
+.product:has(input[data-colourway="2"]:checked) li[data-colourway="1"],
+.product:has(input[data-colourway="3"]:checked) li[data-colourway="1"] {
+  display: none;
+}
+
+.product:has(input[data-colourway="2"]:checked) li[data-colourway="2"],
+.product:has(input[data-colourway="3"]:checked) li[data-colourway="3"] {
+  display: block;
+}
+
+.related {
+  margin-top: var(--section-space);
+}
+
+.relatedTitle {
+  margin-bottom: var(--space-6);
+  font-size: var(--text-h2);
+}
