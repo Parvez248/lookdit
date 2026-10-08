@@ -63,6 +63,28 @@ export const industries = {
   ],
 } as const;
 
+/**
+ * Contact section copy. The form posts to the `submitInquiry` Server Action;
+ * field labels mirror its four public fields (name, email, company, message).
+ */
+export const contact = {
+  label: "Start a project",
+  heading: "Tell us what you're building.",
+  supporting:
+    "Share a little about your business and what you need. We'll read it properly and reply by email.",
+  fields: {
+    name: { label: "Your name", placeholder: "Jane Doe" },
+    email: { label: "Email", placeholder: "jane@company.com" },
+    company: { label: "Company", optional: "optional", placeholder: "Company name" },
+    message: { label: "What can we help with?", placeholder: "A few lines about your project, goals or timeline." },
+  },
+  submit: { idle: "Send message", pending: "Sending…" },
+  success: {
+    heading: "Message sent.",
+    body: "Thanks — we've got your message and will get back to you by email soon.",
+  },
+} as const;
+
 export const footer = {
   cta: "Have something worth building?",
 } as const;

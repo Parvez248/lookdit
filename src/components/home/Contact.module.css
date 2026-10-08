@@ -1,0 +1,49 @@
+.section {
+  padding-block: var(--section-space);
+
+  /* Anchor jumps land on the label, not on the empty space above it. */
+  scroll-margin-top: calc(var(--space-6) - var(--section-space));
+}
+
+.inner {
+  row-gap: var(--space-8);
+}
+
+.intro {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: var(--space-5);
+  align-content: start;
+}
+
+.heading {
+  max-width: 16ch;
+  font-size: var(--text-display-m);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.supporting {
+  max-width: 42ch;
+  font-size: var(--text-body-l);
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.formWrap {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 64rem) {
+  /* Intro holds while the form sits beside it, same rhythm as Services. */
+  .intro {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-7));
+    align-self: start;
+    grid-column: 1 / span 5;
+  }
+
+  .formWrap {
+    grid-column: 7 / -1;
+  }
+}
