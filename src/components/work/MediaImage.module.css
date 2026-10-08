@@ -1,0 +1,18 @@
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--surface-1);
+}
+
+/* Unknown dimensions: a fixed 16:10 frame that fits the whole image inside. */
+.frame {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  background: var(--surface-1);
+}
+
+.contain {
+  object-fit: contain;
+}

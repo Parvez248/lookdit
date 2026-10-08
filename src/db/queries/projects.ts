@@ -24,6 +24,16 @@ export type PublishedProjectListItem = {
   summary: string;
   featured: boolean;
   technologies: ProjectTechnologyRef[];
+  /** The project's hero image, used as the card cover. Null when it has none. */
+  cover: ProjectCover | null;
+};
+
+/** Cover image metadata: object-storage key only, no URL/binary. */
+export type ProjectCover = {
+  storageKey: string;
+  alt: string | null;
+  width: number | null;
+  height: number | null;
 };
 
 /** Ordered media metadata for a project detail — object-storage key only, no URL/binary. */
@@ -104,9 +114,30 @@ async function technologiesByProjectIds(
 }
 
 /**
+ * Batch-load each project's hero in ONE query. `project_media_one_hero_per_project_idx`
+ * guarantees at most one hero per project, so no DISTINCT ON is needed.
+ */
+async function coversByProjectIds(projectIds: readonly string[]): Promise<Map<string, ProjectCover>> {
+  const covers = new Map<string, ProjectCover>();
+  if (projectIds.length === 0) return covers;
+  const rows = await getDb()
+    .select({
+      projectId: projectMedia.projectId,
+      storageKey: projectMedia.storageKey,
+      alt: projectMedia.alt,
+      width: projectMedia.width,
+      height: projectMedia.height,
+    })
+    .from(projectMedia)
+    .where(and(inArray(projectMedia.projectId, [...projectIds]), eq(projectMedia.role, "hero")));
+  for (const { projectId, ...cover } of rows) covers.set(projectId, cover);
+  return covers;
+}
+
+/**
  * Public portfolio listing: published projects only, ordered
  * featured DESC, display_order ASC, year DESC (with a deterministic id tiebreak).
- * Two queries total (projects, then their technologies) — no N+1.
+ * Three queries total (projects, then their technologies and covers) — no N+1.
  */
 export async function listPublishedProjects(): Promise<PublishedProjectListItem[]> {
   const rows = await getDb()
@@ -131,11 +162,16 @@ export async function listPublishedProjects(): Promise<PublishedProjectListItem[
 
   if (rows.length === 0) return [];
 
-  const techByProject = await technologiesByProjectIds(rows.map((r) => r.id));
+  const ids = rows.map((r) => r.id);
+  const [techByProject, coverByProject] = await Promise.all([
+    technologiesByProjectIds(ids),
+    coversByProjectIds(ids),
+  ]);
 
   return rows.map((r) => ({
     ...r,
     technologies: techByProject.get(r.id) ?? [],
+    cover: coverByProject.get(r.id) ?? null,
   }));
 }
 

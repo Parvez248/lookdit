@@ -111,6 +111,18 @@ arises, and explain why (see rule 3).
     milestone in the same project, and deleting a milestone keeps its tasks
     (`ON DELETE SET NULL (milestone_id)`, hand-written in migration 0007, PostgreSQL 15+).
     Writes match on project id and row id. Progress and overdue rules: `src/lib/workspace`.
+  - Project images ("Images" on `/admin/projects/[id]`, `src/components/admin/media`,
+    actions in `src/app/actions/admin-media.ts`): uploaded through a Server Action to a public
+    **Vercel Blob** store (`@vercel/blob`; needs `BLOB_READ_WRITE_TOKEN`, or the OIDC
+    `BLOB_STORE_ID`, which Vercel sets when a store is connected). JPEG / PNG / WebP / AVIF up
+    to 4 MB (`serverActions.bodySizeLimit` is 4.5mb, Vercel's request cap); the type is sniffed
+    from the bytes, never trusted from the browser. Files go to `projects/<projectId>/` with a
+    random suffix. `project_media.storage_key` holds the blob's public URL, and
+    `mediaUrl()` (`src/lib/media/url.ts`) is the only reader: anything that isn't an https Blob
+    URL under `/projects/` resolves to null (next.config.ts allows only that host and path).
+    Alt text is required. Role is hero (one per project; a new hero demotes the old one to
+    gallery) or gallery; order is `display_order`. Remove deletes the row, then the file
+    (best effort). An upload whose row insert fails deletes its file.
 - **Client portal** (`/portal`): read-only, for a client's own contacts. Separate from the
   admin end to end: own root layout (`src/app/portal/layout.tsx`, noindex), own tables
   (`client_accounts`, one per `clients` row; `client_sessions`; `client_sign_in_attempts`), own
@@ -137,7 +149,10 @@ arises, and explain why (see rule 3).
     `Contact` (`ContactForm` posts to `submitInquiry`; the section owns `id="contact"`).
   - Public portfolio: `/work` and `/work/[slug]` (`src/app/(site)/work`, `src/components/work`)
     read only `src/db/queries/projects.ts` (published rows), are `force-dynamic` so the build
-    never needs `DATABASE_URL`, and 404 drafts. No media yet (object storage isn't wired).
+    never needs `DATABASE_URL`, and 404 drafts. The hero image is the `/work` card cover and
+    leads the case study (preloaded, also the Open Graph image); gallery images follow it.
+    Images render through `MediaImage`, which reserves the stored width/height (or a 16:10
+    frame when unknown), so they never shift layout.
   - `src/content/site.ts`: static site copy and navigation. `src/content/work.ts`: static
     Selected Work content (concept projects only; real client work comes from the DB via `/work`).
 - **Content rule:** Selected Work may contain real client work and clearly identified LOOKDIT
@@ -147,7 +162,8 @@ arises, and explain why (see rule 3).
 - Server Components by default. Client components: `MobileMenu`, `ContactForm`, `SignInForm`
   (`src/components/auth`, shared by admin and portal sign-in), the portal and admin `error.tsx`
   boundaries, and in the admin
-  `ClientForm`, `ProjectForm`, the workspace's `InlineAdd` and `WorkspaceEditForm` and `AdminNav`
+  `ClientForm`, `ProjectForm`, the workspace's `InlineAdd` and `WorkspaceEditForm`, the media
+  `MediaUploadForm` (measures the image in the browser) and `MediaDetailsForm`, and `AdminNav`
   (reads the path for `aria-current`).
 
 ## Commands

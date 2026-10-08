@@ -3,7 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { SectionLabel } from "@/components/ui/SectionLabel";
-import { getPublishedProjectBySlug } from "@/db/queries/projects";
+import { MediaImage } from "@/components/work/MediaImage";
+import { getPublishedProjectBySlug, type ProjectMediaItem } from "@/db/queries/projects";
+import { mediaUrl } from "@/lib/media/url";
 import { PROJECT_CATEGORY_LABELS, type ProjectCategory } from "@/lib/projects/status";
 
 import styles from "./page.module.css";
@@ -13,6 +15,20 @@ export const dynamic = "force-dynamic";
 
 function categoryLabel(category: string): string {
   return PROJECT_CATEGORY_LABELS[category as ProjectCategory] ?? category;
+}
+
+type ResolvedImage = ProjectMediaItem & { src: string };
+
+/** Images that resolve to a loadable URL, split into the hero and the gallery (in display order). */
+function caseStudyImages(media: ProjectMediaItem[]): { hero: ResolvedImage | null; gallery: ResolvedImage[] } {
+  const images = media.flatMap((item) => {
+    const src = item.kind === "image" ? mediaUrl(item.storageKey) : null;
+    return src ? [{ ...item, src }] : [];
+  });
+  return {
+    hero: images.find((item) => item.role === "hero") ?? null,
+    gallery: images.filter((item) => item.role === "gallery"),
+  };
 }
 
 export async function generateMetadata({
@@ -25,12 +41,25 @@ export async function generateMetadata({
   const title = project.seoTitle ?? project.title;
   const description = project.seoDescription ?? project.summary;
   const canonical = `/work/${project.slug}`;
+  const { hero } = caseStudyImages(project.media);
 
   return {
     title,
     description,
     alternates: { canonical },
-    openGraph: { title: `${title} — LOOKDIT`, description, url: canonical, type: "article" },
+    openGraph: {
+      title: `${title} — LOOKDIT`,
+      description,
+      url: canonical,
+      type: "article",
+      ...(hero
+        ? {
+            images: [
+              { url: hero.src, alt: hero.alt ?? "", ...(hero.width && hero.height ? { width: hero.width, height: hero.height } : {}) },
+            ],
+          }
+        : {}),
+    },
   };
 }
 
@@ -38,6 +67,7 @@ export default async function WorkDetailPage({ params }: PageProps<"/work/[slug]
   const { slug } = await params;
   const project = await getPublishedProjectBySlug(slug);
   if (project === null) notFound();
+  const { hero, gallery } = caseStudyImages(project.media);
 
   return (
     <article className={styles.section} aria-labelledby="case-title">
@@ -56,6 +86,19 @@ export default async function WorkDetailPage({ params }: PageProps<"/work/[slug]
           </h1>
           <p className={styles.summary}>{project.summary}</p>
         </header>
+
+        {hero ? (
+          <figure className={styles.hero}>
+            <MediaImage
+              src={hero.src}
+              alt={hero.alt ?? ""}
+              width={hero.width}
+              height={hero.height}
+              sizes="(min-width: 98rem) 90rem, 100vw"
+              preload
+            />
+          </figure>
+        ) : null}
 
         <div className={styles.layout}>
           <div className={styles.body}>
@@ -112,6 +155,24 @@ export default async function WorkDetailPage({ params }: PageProps<"/work/[slug]
             ) : null}
           </aside>
         </div>
+
+        {gallery.length > 0 ? (
+          <section aria-label="Project images" className={styles.gallery}>
+            <ul className={styles.galleryList}>
+              {gallery.map((image) => (
+                <li key={image.id}>
+                  <MediaImage
+                    src={image.src}
+                    alt={image.alt ?? ""}
+                    width={image.width}
+                    height={image.height}
+                    sizes="(min-width: 98rem) 90rem, 100vw"
+                  />
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
       </div>
     </article>
   );
