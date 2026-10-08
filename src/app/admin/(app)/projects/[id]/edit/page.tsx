@@ -6,6 +6,7 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
 import { getProject, listClientOptions } from "@/db/queries/admin-projects";
 import { requireUser } from "@/lib/auth/session";
 import { isProjectId } from "@/lib/projects/status";
+import { formatMetricsText } from "@/lib/projects/validation";
 
 import styles from "@/components/admin/AdminFormPage.module.css";
 
@@ -33,6 +34,12 @@ export default async function EditProjectPage({ params }: PageProps<"/admin/proj
           category: project.category,
           year: String(project.year),
           summary: project.summary,
+          client: project.publicClient ?? "",
+          liveUrl: project.liveUrl ?? "",
+          featured: project.featured ? "on" : "",
+          metrics: formatMetricsText(project.metrics),
+          seoTitle: project.seoTitle ?? "",
+          seoDescription: project.seoDescription ?? "",
         }}
         clients={clients}
         cancelHref={`/admin/projects/${project.id}`}

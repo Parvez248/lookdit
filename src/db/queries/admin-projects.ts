@@ -31,6 +31,13 @@ export type ProjectDetail = ProjectSummary & {
   year: number;
   summary: string;
   createdAt: Date;
+  // Public case-study fields (shown on /work once published).
+  publicClient: string | null;
+  liveUrl: string | null;
+  featured: boolean;
+  metrics: Array<{ label: string; value: string }> | null;
+  seoTitle: string | null;
+  seoDescription: string | null;
 };
 
 const summaryColumns = {
@@ -80,6 +87,12 @@ export async function getProject(id: string): Promise<ProjectDetail | null> {
       year: projects.year,
       summary: projects.summary,
       createdAt: projects.createdAt,
+      publicClient: projects.client,
+      liveUrl: projects.liveUrl,
+      featured: projects.featured,
+      metrics: projects.metrics,
+      seoTitle: projects.seoTitle,
+      seoDescription: projects.seoDescription,
     })
     .from(projects)
     .leftJoin(clients, eq(projects.clientId, clients.id))

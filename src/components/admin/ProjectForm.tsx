@@ -25,6 +25,13 @@ export type ProjectFormValues = {
   category: ProjectCategory;
   year: string;
   summary: string;
+  client: string;
+  liveUrl: string;
+  /** "on" when featured, "" when not: the value a checkbox posts. */
+  featured: "on" | "";
+  metrics: string;
+  seoTitle: string;
+  seoDescription: string;
 };
 
 type ProjectFormProps = {
@@ -186,6 +193,123 @@ export function ProjectForm({ id, initial, clients, cancelHref }: ProjectFormPro
           {errorFor("summary")}
         </div>
       </div>
+
+      <fieldset className={`${styles.fieldset} ${styles.group}`}>
+        <legend className={styles.groupTitle}>Public case study</legend>
+        <p className={styles.groupHint}>Shown on the site&rsquo;s Work page only while the project is published.</p>
+
+        <div className={styles.grid}>
+          <div className={styles.field}>
+            <label htmlFor="client" className={styles.label}>
+              Client name<span className={styles.optional}>Optional</span>
+            </label>
+            <p id="client-hint" className={styles.hint}>
+              As it should appear publicly. Leave blank to keep the client private.
+            </p>
+            <input
+              {...describe("client", true)}
+              type="text"
+              autoComplete="off"
+              maxLength={PROJECT_LIMITS.client}
+              defaultValue={values.client ?? ""}
+              className={styles.input}
+            />
+            {errorFor("client")}
+          </div>
+
+          <div className={styles.field}>
+            <label htmlFor="liveUrl" className={styles.label}>
+              Live site<span className={styles.optional}>Optional</span>
+            </label>
+            <p id="liveUrl-hint" className={styles.hint}>
+              The full address, starting with https://
+            </p>
+            <input
+              {...describe("liveUrl", true)}
+              type="url"
+              inputMode="url"
+              autoComplete="off"
+              spellCheck={false}
+              maxLength={PROJECT_LIMITS.liveUrl}
+              defaultValue={values.liveUrl ?? ""}
+              className={styles.input}
+            />
+            {errorFor("liveUrl")}
+          </div>
+
+          <div className={`${styles.field} ${styles.wide}`}>
+            <label htmlFor="metrics" className={styles.label}>
+              Results<span className={styles.optional}>Optional</span>
+            </label>
+            <p id="metrics-hint" className={styles.hint}>
+              One per line as Value | Label, for example &ldquo;2× | Faster checkout&rdquo;. Real, measured
+              results only. Up to {PROJECT_LIMITS.metrics}.
+            </p>
+            <textarea
+              {...describe("metrics", true)}
+              rows={4}
+              spellCheck={false}
+              defaultValue={values.metrics ?? ""}
+              className={`${styles.input} ${styles.textarea} ${styles.textareaShort}`}
+            />
+            {errorFor("metrics")}
+          </div>
+
+          <div className={`${styles.field} ${styles.wide}`}>
+            <label htmlFor="seoTitle" className={styles.label}>
+              SEO title<span className={styles.optional}>Optional</span>
+            </label>
+            <p id="seoTitle-hint" className={styles.hint}>
+              The browser and search title. Defaults to the project title.
+            </p>
+            <input
+              {...describe("seoTitle", true)}
+              type="text"
+              autoComplete="off"
+              maxLength={PROJECT_LIMITS.seoTitle}
+              defaultValue={values.seoTitle ?? ""}
+              className={styles.input}
+            />
+            {errorFor("seoTitle")}
+          </div>
+
+          <div className={`${styles.field} ${styles.wide}`}>
+            <label htmlFor="seoDescription" className={styles.label}>
+              SEO description<span className={styles.optional}>Optional</span>
+            </label>
+            <p id="seoDescription-hint" className={styles.hint}>
+              The search snippet. Defaults to the summary. Up to {PROJECT_LIMITS.seoDescription} characters.
+            </p>
+            <textarea
+              {...describe("seoDescription", true)}
+              rows={2}
+              maxLength={PROJECT_LIMITS.seoDescription}
+              defaultValue={values.seoDescription ?? ""}
+              className={`${styles.input} ${styles.textarea} ${styles.textareaShort}`}
+            />
+            {errorFor("seoDescription")}
+          </div>
+
+          <div className={`${styles.field} ${styles.wide}`}>
+            <label className={styles.check}>
+              <input
+                // Keyed like the selects, so a rejected save keeps the admin's choice.
+                key={values.featured}
+                id="featured"
+                name="featured"
+                type="checkbox"
+                defaultChecked={values.featured === "on"}
+                aria-describedby="featured-hint"
+                className={styles.checkbox}
+              />
+              <span>Feature this project</span>
+            </label>
+            <p id="featured-hint" className={styles.hint}>
+              Featured projects are listed first on the Work page.
+            </p>
+          </div>
+        </div>
+      </fieldset>
 
       <div className={styles.actions}>
         <button type="submit" className={styles.submit} disabled={pending}>

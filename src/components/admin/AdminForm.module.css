@@ -244,3 +244,44 @@
     grid-column: 1 / -1;
   }
 }
+
+/* A titled group of fields, divided from the fields above it. */
+.group {
+  margin-top: var(--space-7);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--line);
+}
+
+.groupTitle {
+  padding: 0;
+  font-size: var(--text-heading-s);
+  font-weight: 500;
+}
+
+.groupHint {
+  margin-top: var(--space-2);
+  margin-bottom: var(--space-5);
+  font-size: var(--text-body-s);
+  color: var(--text-muted);
+}
+
+/* Native checkbox with its label on one line; the box carries the brand blue. */
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 2.75rem;
+  align-self: flex-start;
+  font-size: var(--text-body-s);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.checkbox {
+  flex: none;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin: 0;
+  accent-color: var(--blue-600);
+  cursor: pointer;
+}

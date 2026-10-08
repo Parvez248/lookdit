@@ -96,8 +96,12 @@ arises, and explain why (see rule 3).
   - Projects reuse the `projects` table. `status` (draft / published / archived) is the public
     publishing switch; `work_status` (planned / active / on_hold / completed / cancelled) is the
     internal workflow; `client_id` links a client (set null on delete) while `client` stays the
-    public display text and is never derived from it. The admin can't publish yet, so projects
-    it creates stay `draft`. The slug is generated from the title (-2, -3 … when taken, via
+    public display text and is never derived from it. New projects start `draft`; the
+    Publish / Unpublish button on `/admin/projects/[id]` (`setProjectPublication`) switches
+    `draft` ↔ `published`, stamping `published_at` once (COALESCE keeps the first go-live date).
+    The project form also edits the public case-study fields (`client`, `live_url` (http(s)
+    only), `featured`, `metrics` as `Value | Label` lines, `seo_title`, `seo_description`).
+    The slug is generated from the title (-2, -3 … when taken, via
     `ON CONFLICT DO NOTHING`) and never changed by the admin. Admin reads live in
     `src/db/queries/admin-projects.ts`, apart from the public reads, so internal fields never
     reach a public query.
@@ -129,14 +133,18 @@ arises, and explain why (see rule 3).
   - `src/components/ui`: shared primitives (`Badge`, `ButtonLink`, `FocusFrame`, `SectionLabel`).
   - `src/components/portal`: portal header, project card, progress bar and milestone timeline.
   - `src/components/home`: home page sections: `Hero`, `Services`, `Industries`,
-    `SelectedWork` (with `CapabilityMap`, the temporary visual for the concept project).
+    `SelectedWork` (with `CapabilityMap`, the temporary visual for the concept project) and
+    `Contact` (`ContactForm` posts to `submitInquiry`; the section owns `id="contact"`).
+  - Public portfolio: `/work` and `/work/[slug]` (`src/app/(site)/work`, `src/components/work`)
+    read only `src/db/queries/projects.ts` (published rows), are `force-dynamic` so the build
+    never needs `DATABASE_URL`, and 404 drafts. No media yet (object storage isn't wired).
   - `src/content/site.ts`: static site copy and navigation. `src/content/work.ts`: static
-    Selected Work content (concept projects only; real client work will come from the DB).
+    Selected Work content (concept projects only; real client work comes from the DB via `/work`).
 - **Content rule:** Selected Work may contain real client work and clearly identified LOOKDIT
   concept work. Concept work must never be presented in a way that implies a real client,
   commercial engagement, or measured result. Concept projects are never written to the
   `projects` table.
-- Server Components by default. Client components: `MobileMenu`, `SignInForm`
+- Server Components by default. Client components: `MobileMenu`, `ContactForm`, `SignInForm`
   (`src/components/auth`, shared by admin and portal sign-in), the portal and admin `error.tsx`
   boundaries, and in the admin
   `ClientForm`, `ProjectForm`, the workspace's `InlineAdd` and `WorkspaceEditForm` and `AdminNav`

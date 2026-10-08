@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { slugCandidate, slugify, SLUG_MAX_LENGTH } from "./slug";
 import { parseProjectListParams, projectListHref } from "./status";
-import { parseProjectForm } from "./validation";
+import { formatMetricsText, parseMetricsText, parseProjectForm } from "./validation";
 
 function form(fields: Record<string, string>): FormData {
   const data = new FormData();
@@ -22,7 +22,10 @@ const valid = {
 
 describe("project form", () => {
   it("normalizes a full form and ignores unknown fields", () => {
-    const result = parseProjectForm(form({ ...valid, slug: "evil", status: "published", featured: "true" }));
+    // status/slug/publishedAt can't be set from the form: publishing has its own action.
+    const result = parseProjectForm(
+      form({ ...valid, slug: "evil", status: "published", publishedAt: "2020-01-01" }),
+    );
     expect(result).toEqual({
       ok: true,
       value: {
@@ -32,8 +35,62 @@ describe("project form", () => {
         category: "website",
         year: 2026,
         summary: "A faster booking flow for a design studio.",
+        client: null,
+        liveUrl: null,
+        featured: false,
+        metrics: null,
+        seoTitle: null,
+        seoDescription: null,
       },
     });
+  });
+
+  it("reads the public case-study fields", () => {
+    const result = parseProjectForm(
+      form({
+        ...valid,
+        client: "  Northwind Studio ",
+        liveUrl: " https://northwind.example/book ",
+        featured: "on",
+        metrics: "2× | Faster checkout\n\n +38% |  Organic traffic \n",
+        seoTitle: " Northwind booking ",
+        seoDescription: "",
+      }),
+    );
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.value).toMatchObject({
+      client: "Northwind Studio",
+      liveUrl: "https://northwind.example/book",
+      featured: true,
+      metrics: [
+        { value: "2×", label: "Faster checkout" },
+        { value: "+38%", label: "Organic traffic" },
+      ],
+      seoTitle: "Northwind booking",
+      seoDescription: null,
+    });
+  });
+
+  it("accepts only http(s) live URLs, since they render as public links", () => {
+    for (const liveUrl of ["javascript:alert(1)", "data:text/html,x", "northwind.example", "https://", "https://a b.com"]) {
+      expect(parseProjectForm(form({ ...valid, liveUrl })).ok).toBe(false);
+    }
+    expect(parseProjectForm(form({ ...valid, liveUrl: "http://northwind.example" })).ok).toBe(true);
+  });
+
+  it("rejects malformed or too many results", () => {
+    expect(parseMetricsText("no separator")).toEqual({ ok: false, error: "Line 1: write it as Value | Label." });
+    expect(parseMetricsText("2× | ").ok).toBe(false);
+    expect(parseMetricsText(Array.from({ length: 7 }, (_, i) => `${i} | x`).join("\n")).ok).toBe(false);
+    const result = parseProjectForm(form({ ...valid, metrics: "| Faster" }));
+    expect(result.ok === false && result.errors.metrics).toBe("Line 1: write it as Value | Label.");
+  });
+
+  it("round-trips results through the edit form", () => {
+    const metrics = [{ value: "2×", label: "Faster checkout" }];
+    expect(parseMetricsText(formatMetricsText(metrics))).toEqual({ ok: true, value: metrics });
+    expect(formatMetricsText(null)).toBe("");
   });
 
   it("treats no client as null", () => {
