@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { setProjectPublication } from "@/app/actions/admin-projects";
 import { ProjectStatusBadge } from "@/components/admin/StatusBadge";
 import { Workspace } from "@/components/admin/workspace/Workspace";
 import { getProject } from "@/db/queries/admin-projects";
@@ -78,7 +79,22 @@ export default async function ProjectPage({ params }: PageProps<"/admin/projects
             </div>
             <div>
               <dt>Public site</dt>
-              <dd>{PUBLIC_STATUS_LABELS[project.publicStatus]}</dd>
+              <dd>
+                {PUBLIC_STATUS_LABELS[project.publicStatus]}
+                {project.publicStatus === "published" ? (
+                  <>
+                    {" · "}
+                    <a
+                      href={`/work/${project.slug}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={styles.viewLink}
+                    >
+                      View on site
+                    </a>
+                  </>
+                ) : null}
+              </dd>
             </div>
             <div>
               <dt>Slug</dt>
@@ -98,9 +114,25 @@ export default async function ProjectPage({ params }: PageProps<"/admin/projects
             </div>
           </dl>
 
-          <Link href={`/admin/projects/${project.id}/edit`} className={detail.edit}>
-            Edit project
-          </Link>
+          <div className={styles.actions}>
+            <Link href={`/admin/projects/${project.id}/edit`} className={detail.edit}>
+              Edit project
+            </Link>
+            <form action={setProjectPublication}>
+              <input type="hidden" name="id" value={project.id} />
+              <input
+                type="hidden"
+                name="intent"
+                value={project.publicStatus === "published" ? "unpublish" : "publish"}
+              />
+              <button
+                type="submit"
+                className={project.publicStatus === "published" ? styles.unpublish : styles.publish}
+              >
+                {project.publicStatus === "published" ? "Unpublish" : "Publish"}
+              </button>
+            </form>
+          </div>
         </aside>
       </div>
     </div>

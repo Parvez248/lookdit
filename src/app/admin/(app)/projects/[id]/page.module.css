@@ -12,3 +12,65 @@
   font-family: var(--font-mono);
   font-size: var(--text-mono-data);
 }
+
+.viewLink {
+  color: var(--blue-400);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .viewLink:hover {
+    text-decoration: underline;
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.actions form {
+  display: contents;
+}
+
+/* Primary action: publish a draft/archived project to the public site. */
+.publish,
+.unpublish {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding-inline: var(--space-5);
+  border-radius: var(--radius-s);
+  font-size: var(--text-body-s);
+  font-weight: 500;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.publish {
+  background: var(--blue-600);
+  color: #fff;
+}
+
+.publish:active {
+  background: var(--blue-700);
+}
+
+/* Reversible, lower-emphasis action. */
+.unpublish {
+  border: 1px solid var(--line-interactive);
+  color: var(--text);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .publish:hover {
+    background: var(--blue-700);
+  }
+
+  .unpublish:hover {
+    border-color: var(--text-muted);
+    background: var(--surface-2);
+  }
+}
