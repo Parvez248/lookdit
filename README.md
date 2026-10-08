@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Lookdit
 
-## Getting Started
+LOOKDIT's company site: the public portfolio, a staff admin (inquiries, clients, projects,
+case-study images) and a read-only client portal.
 
-First, run the development server:
+Next.js (App Router) + React + strict TypeScript, CSS Modules with design tokens, PostgreSQL 18
+on Neon via Drizzle, images on Vercel Blob. Hosted on Vercel; `main` deploys to production.
+
+Architecture, rules and the current state of every area are in [CLAUDE.md](./CLAUDE.md).
+
+## Setup
+
+Requires Node 22.18+ and pnpm (the version is pinned in `package.json`).
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+cp .env.example .env.local   # then fill in the values (see the comments in the file)
+pnpm dev                     # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The public pages build and render without a database. The admin, portal, contact form and
+`/work` need `DATABASE_URL`, and sign-in also needs `INQUIRY_IP_HMAC_SECRET`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Commands
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+pnpm build               # production build (run before tsc on a fresh clone)
+pnpm exec tsc --noEmit   # typecheck
+pnpm lint                # ESLint
+pnpm test                # Vitest unit tests
+pnpm admin:create-user <email> "<name>"                 # create an admin account
+pnpm portal:create-account <clientId> <email> "<name>"  # create/reset a client portal account
+```
 
-## Learn More
+CI (`.github/workflows/ci.yml`) runs build, typecheck, lint and tests on every pull request.
 
-To learn more about Next.js, take a look at the following resources:
+## Database
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Schema in `src/db/schema`, SQL migrations in `drizzle/` (PostgreSQL 18: `uuidv7()`).
+`drizzle-kit` reads `DATABASE_URL_UNPOOLED` from `.env.local`. Migrations are applied to
+production deliberately, never as part of a deploy.
