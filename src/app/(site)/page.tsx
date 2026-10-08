@@ -1,3 +1,4 @@
+import { Contact } from "@/components/home/Contact";
 import { Hero } from "@/components/home/Hero";
 import { Industries } from "@/components/home/Industries";
 import { SelectedWork } from "@/components/home/SelectedWork";
@@ -10,6 +11,7 @@ export default function HomePage() {
       <Services />
       <Industries />
       <SelectedWork />
+      <Contact />
     </>
   );
 }
