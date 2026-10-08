@@ -11,7 +11,7 @@ export type NavItem = { label: string; href: string };
 export const primaryNav: readonly NavItem[] = [
   { label: "Services", href: "/#services" },
   { label: "Industries", href: "/#industries" },
-  { label: "Work", href: "/#work" },
+  { label: "Work", href: "/work" },
 ];
 
 export const contactCta: NavItem = { label: "Start a project", href: "/#contact" };
@@ -82,6 +82,20 @@ export const contact = {
   success: {
     heading: "Message sent.",
     body: "Thanks — we've got your message and will get back to you by email soon.",
+  },
+} as const;
+
+/**
+ * Public portfolio (/work) copy. The projects themselves come from the database
+ * (published only); this is only the page framing and the empty state.
+ */
+export const workIndex = {
+  label: "Selected work",
+  heading: "Work built to hold up to a closer look.",
+  intro: "A selection of projects across SEO, digital marketing and web application development.",
+  empty: {
+    heading: "Case studies are on the way.",
+    body: "We're preparing a selection of recent work. In the meantime, tell us what you're building.",
   },
 } as const;
 

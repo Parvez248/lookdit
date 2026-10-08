@@ -43,3 +43,23 @@ export async function updateProject(id: string, input: ProjectInput): Promise<bo
     .returning({ id: projects.id });
   return rows.length > 0;
 }
+
+/**
+ * Publish a project (status `published`) or take it back to `draft`. Publishing
+ * sets `published_at` only the first time, with COALESCE, so the original go-live
+ * date survives a later unpublish/republish. The CHECK
+ * (`projects_published_requires_published_at`) is always satisfied because a
+ * published row keeps a non-null `published_at`. Returns false for an unknown id.
+ */
+export async function setProjectPublished(id: string, publish: boolean): Promise<boolean> {
+  const rows = await getDb()
+    .update(projects)
+    .set(
+      publish
+        ? { status: "published", publishedAt: sql`coalesce(${projects.publishedAt}, now())`, updatedAt: sql`now()` }
+        : { status: "draft", updatedAt: sql`now()` },
+    )
+    .where(eq(projects.id, id))
+    .returning({ id: projects.id });
+  return rows.length > 0;
+}

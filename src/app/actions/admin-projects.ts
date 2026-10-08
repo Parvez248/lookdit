@@ -3,9 +3,10 @@
 // Admin-only project actions. Every export of a "use server" file is a
 // POST-reachable endpoint, so each one checks the session itself first.
 
+import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
 
-import { createProject, updateProject } from "@/db/mutations/admin-projects";
+import { createProject, setProjectPublished, updateProject } from "@/db/mutations/admin-projects";
 import { requireUser } from "@/lib/auth/session";
 import { describeErrorForLog } from "@/lib/inquiries/submission";
 import type { ProjectFormState } from "@/lib/projects/form-state";
@@ -62,4 +63,27 @@ export async function saveProject(_previous: ProjectFormState, formData: FormDat
   // was deleted or never existed.
   if (savedId === null) redirect("/admin/projects");
   redirect(`/admin/projects/${savedId}`);
+}
+
+/**
+ * Publish or unpublish a project from a form with `id` and `intent`
+ * ("publish" | "unpublish"). Signed-out callers are redirected to sign-in;
+ * malformed input or an unknown id changes nothing. The page re-renders with the
+ * stored state either way.
+ */
+export async function setProjectPublication(formData: FormData): Promise<void> {
+  await requireUser();
+  if (!(formData instanceof FormData)) return;
+
+  const id = formData.get("id");
+  const intent = formData.get("intent");
+  if (!isProjectId(id) || (intent !== "publish" && intent !== "unpublish")) return;
+
+  try {
+    await setProjectPublished(id, intent === "publish");
+  } catch (error) {
+    console.error("[admin] project publication change failed", { event: "error", ...describeErrorForLog(error) });
+    throw new Error("The publishing status couldn't be saved. Try again.");
+  }
+  refresh();
 }

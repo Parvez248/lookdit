@@ -1,0 +1,54 @@
+.section {
+  padding-block: var(--section-space);
+}
+
+.inner {
+  display: grid;
+  row-gap: var(--space-8);
+}
+
+.intro {
+  display: grid;
+  gap: var(--space-5);
+  max-width: var(--measure);
+}
+
+.heading {
+  max-width: 18ch;
+  font-size: var(--text-display-l);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+
+.lead {
+  max-width: 48ch;
+  font-size: var(--text-body-l);
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.list {
+  border-bottom: 1px solid var(--line);
+}
+
+/* Empty state: honest, not apologetic, and keeps the conversion path open. */
+.empty {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-5);
+  padding: var(--space-8) 0;
+  border-top: 1px solid var(--line);
+}
+
+.emptyHeading {
+  font-size: var(--text-display-m);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.emptyBody {
+  max-width: 44ch;
+  font-size: var(--text-body-l);
+  line-height: 1.5;
+  color: var(--text-muted);
+}
