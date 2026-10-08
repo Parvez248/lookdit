@@ -10,16 +10,25 @@ import type { ImageType, MediaDetails, UploadDetails } from "@/lib/projects/medi
 // validate first. Every write matches on project id AND media id, so a crafted
 // form can't touch another project's media.
 
-/** Demote the project's current hero (other than `exceptId`) to gallery. */
-async function demoteHero(projectId: string, exceptId?: string): Promise<void> {
-  await getDb()
+/**
+ * Demote the project's current hero to gallery. Only ever sent in the same
+ * `db.batch` (one transaction) as the write that sets the new hero, so a failed
+ * write rolls the demotion back and the old hero stays. With `newHeroId`, it
+ * skips that row and does nothing unless the row exists in this project, so a
+ * stale or crafted media id can't strip the hero without setting a new one.
+ */
+function demoteHero(projectId: string, newHeroId?: string) {
+  return getDb()
     .update(projectMedia)
     .set({ role: "gallery", updatedAt: sql`now()` })
     .where(
       and(
         eq(projectMedia.projectId, projectId),
         eq(projectMedia.role, "hero"),
-        exceptId ? ne(projectMedia.id, exceptId) : undefined,
+        newHeroId ? ne(projectMedia.id, newHeroId) : undefined,
+        newHeroId
+          ? sql`exists (select 1 from ${projectMedia} where ${projectMedia.projectId} = ${projectId} and ${projectMedia.id} = ${newHeroId})`
+          : undefined,
       ),
     );
 }
@@ -37,8 +46,8 @@ export async function insertProjectImage(
   fileSize: number,
   details: UploadDetails,
 ): Promise<void> {
-  if (details.role === "hero") await demoteHero(projectId);
-  await getDb()
+  const db = getDb();
+  const insert = db
     .insert(projectMedia)
     .values({
       projectId,
@@ -52,24 +61,29 @@ export async function insertProjectImage(
       fileSize,
       displayOrder: sql`coalesce((select max(${projectMedia.displayOrder}) from ${projectMedia} where ${projectMedia.projectId} = ${projectId}), 0) + 10`,
     });
+  if (details.role === "hero") await db.batch([demoteHero(projectId), insert]);
+  else await insert;
 }
 
 /**
- * Save alt text, role and order. Making an image the hero first demotes the
- * project's current hero to gallery, because `project_media_one_hero_per_project_idx`
- * allows one hero per project. Returns false when no such media row exists.
+ * Save alt text, role and order. Making an image the hero demotes the
+ * project's current hero to gallery in the same transaction, because
+ * `project_media_one_hero_per_project_idx` allows one hero per project.
+ * Returns false when no such media row exists.
  */
 export async function updateProjectMediaDetails(
   projectId: string,
   mediaId: string,
   details: MediaDetails,
 ): Promise<boolean> {
-  if (details.role === "hero") await demoteHero(projectId, mediaId);
-  const rows = await getDb()
+  const db = getDb();
+  const update = db
     .update(projectMedia)
     .set({ ...details, updatedAt: sql`now()` })
     .where(and(eq(projectMedia.projectId, projectId), eq(projectMedia.id, mediaId)))
     .returning({ id: projectMedia.id });
+  if (details.role !== "hero") return (await update).length > 0;
+  const [, rows] = await db.batch([demoteHero(projectId, mediaId), update]);
   return rows.length > 0;
 }
 
