@@ -21,7 +21,7 @@ function submittedValues(formData: FormData): Record<string, string> {
   return Object.fromEntries(
     PROJECT_FIELDS.map((field) => {
       const value = formData.get(field);
-      return [field, typeof value === "string" ? value.slice(0, 1000) : ""];
+      return [field, typeof value === "string" ? value.slice(0, 2048) : ""];
     }),
   );
 }

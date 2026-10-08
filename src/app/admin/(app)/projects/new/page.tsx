@@ -31,6 +31,12 @@ export default async function NewProjectPage({ searchParams }: PageProps<"/admin
           category: "website",
           year: String(new Date().getUTCFullYear()),
           summary: "",
+          client: "",
+          liveUrl: "",
+          featured: "",
+          metrics: "",
+          seoTitle: "",
+          seoDescription: "",
         }}
         clients={clients}
         cancelHref={clientId ? `/admin/clients/${clientId}` : "/admin/projects"}
