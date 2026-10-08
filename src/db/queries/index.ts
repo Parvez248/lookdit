@@ -6,3 +6,4 @@ export * from "./inquiries";
 export * from "./clients";
 export * from "./admin-projects";
 export * from "./project-workspace";
+export * from "./portal";

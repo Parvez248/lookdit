@@ -1,0 +1,17 @@
+.bar {
+  height: 2px;
+  background: var(--line-strong);
+}
+
+.bar[data-size="large"] {
+  height: 4px;
+}
+
+.fill {
+  height: 100%;
+  background: var(--blue-500);
+}
+
+.bar[data-muted] .fill {
+  background: var(--text-subtle);
+}

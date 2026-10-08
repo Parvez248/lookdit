@@ -107,13 +107,27 @@ arises, and explain why (see rule 3).
     milestone in the same project, and deleting a milestone keeps its tasks
     (`ON DELETE SET NULL (milestone_id)`, hand-written in migration 0007, PostgreSQL 15+).
     Writes match on project id and row id. Progress and overdue rules: `src/lib/workspace`.
+- **Client portal** (`/portal`): read-only, for a client's own contacts. Separate from the
+  admin end to end: own root layout (`src/app/portal/layout.tsx`, noindex), own tables
+  (`client_accounts`, one per `clients` row; `client_sessions`; `client_sign_in_attempts`), own
+  `__Host-lookdit-portal` cookie and own DAL (`src/lib/portal/session.ts`). Same password,
+  token and throttle rules as admin auth. Accounts come from `pnpm portal:create-account`
+  (re-running it for a client resets the password and signs the account out). Rules:
+  - Every portal page calls `requireClient()` itself; it reads only the portal cookie and
+    tables. `requireUser()` never accepts a client session, and vice versa.
+  - Every portal project read goes through `portalProjectScope(clientId)`
+    (`src/db/queries/portal-scope.ts`) with the client id from the session, never from the URL.
+    Milestones and tasks load only via `getPortalProjectView()`, after that check. Someone
+    else's project is a 404, like a missing one. Cancelled projects are hidden.
+  - Clients see every milestone and task of their projects, so nothing internal goes in titles.
 - **Frontend (in progress):** dark-only "In Focus" design system. `src/app/(site)/layout.tsx`
   holds the shell (fonts, skip link, header, footer); `src/app/globals.css` holds the tokens
   (colour, type, space, motion), reset and the `.container` / `.grid` layout primitives.
   - `src/components/site`: header, native `<dialog>` mobile menu, footer, and
     `Brand` (the supplied logo in `public/brand/` with the "LOOKDIT" name beside it). The app
     icons `src/app/icon.png` / `apple-icon.png` are the same logo padded to square (temporary).
-  - `src/components/ui`: shared primitives (`ButtonLink`, `FocusFrame`, `SectionLabel`).
+  - `src/components/ui`: shared primitives (`Badge`, `ButtonLink`, `FocusFrame`, `SectionLabel`).
+  - `src/components/portal`: portal header, project card, progress bar and milestone timeline.
   - `src/components/home`: home page sections: `Hero`, `Services`, `Industries`,
     `SelectedWork` (with `CapabilityMap`, the temporary visual for the concept project).
   - `src/content/site.ts`: static site copy and navigation. `src/content/work.ts`: static
@@ -122,8 +136,11 @@ arises, and explain why (see rule 3).
   concept work. Concept work must never be presented in a way that implies a real client,
   commercial engagement, or measured result. Concept projects are never written to the
   `projects` table.
-- Server Components by default. Client components: `MobileMenu`, and in the admin `SignInForm`,
-  `ClientForm`, `ProjectForm`, the workspace's `InlineAdd` and `WorkspaceEditForm`, `AdminNav` (reads the path for `aria-current`) and the `error.tsx` boundary.
+- Server Components by default. Client components: `MobileMenu`, `SignInForm`
+  (`src/components/auth`, shared by admin and portal sign-in), the portal and admin `error.tsx`
+  boundaries, and in the admin
+  `ClientForm`, `ProjectForm`, the workspace's `InlineAdd` and `WorkspaceEditForm` and `AdminNav`
+  (reads the path for `aria-current`).
 
 ## Commands
 
@@ -134,6 +151,7 @@ pnpm lint                # ESLint
 pnpm exec tsc --noEmit   # typecheck (strict)
 pnpm test                # Vitest unit tests
 pnpm admin:create-user <email> "<name>"  # create an admin account (Node 22.18+)
+pnpm portal:create-account <clientId> <email> "<name>"  # create/reset a client portal account
 ```
 
 <!-- BEGIN:nextjs-agent-rules -->

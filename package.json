@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "admin:create-user": "node --env-file=.env.local scripts/create-admin-user.ts"
+    "admin:create-user": "node --env-file=.env.local scripts/create-admin-user.ts",
+    "portal:create-account": "node --env-file=.env.local scripts/create-portal-account.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "1.1.0",

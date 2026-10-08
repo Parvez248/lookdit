@@ -71,3 +71,8 @@
     padding: var(--space-7) var(--space-7) var(--space-6);
   }
 }
+
+.note {
+  font-size: var(--text-body-s);
+  color: var(--text-subtle);
+}
