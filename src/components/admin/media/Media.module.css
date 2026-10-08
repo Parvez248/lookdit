@@ -1,0 +1,213 @@
+/* Project images on the admin project page: list, per-image details, upload panel. */
+
+.manager {
+  margin-top: var(--space-7);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--line);
+}
+
+.heading {
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-label);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+.intro,
+.empty {
+  max-width: var(--measure);
+  margin-top: var(--space-2);
+  font-size: var(--text-body-s);
+  color: var(--text-muted);
+}
+
+.list {
+  margin-top: var(--space-5);
+  border-top: 1px solid var(--line);
+}
+
+.item {
+  display: grid;
+  gap: var(--space-4);
+  padding-block: var(--space-5);
+  border-bottom: 1px solid var(--line);
+}
+
+@media (min-width: 40rem) {
+  .item {
+    grid-template-columns: 10rem minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.preview {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  max-width: 20rem;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-s);
+  background: var(--surface-1);
+}
+
+.previewImage {
+  object-fit: cover;
+}
+
+.missing {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: var(--text-body-s);
+  color: var(--text-subtle);
+}
+
+.roleTag {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  padding: 0.125rem var(--space-2);
+  border-radius: var(--radius-s);
+  background: color-mix(in srgb, var(--ground) 80%, transparent);
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.roleTag[data-role="hero"] {
+  background: var(--blue-600);
+  color: #fff;
+}
+
+.itemBody {
+  min-width: 0;
+}
+
+/* Remove sits right under the details instead of the edit pages' wide gap. */
+.itemBody > details {
+  margin-top: var(--space-3);
+  padding-top: 0;
+  border-top: 0;
+}
+
+.details {
+  display: grid;
+  gap: var(--space-4);
+}
+
+@media (min-width: 52rem) {
+  .details {
+    grid-template-columns: minmax(0, 1fr) 9rem 6rem;
+    align-items: end;
+  }
+
+  .altField,
+  .detailsActions {
+    grid-column: 1 / -1;
+  }
+}
+
+.order {
+  max-width: 6rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.detailsActions,
+.uploadActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+}
+
+.save {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding-inline: var(--space-5);
+  border: 1px solid var(--line-interactive);
+  border-radius: var(--radius-s);
+  font-size: var(--text-body-s);
+  font-weight: 500;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+.save:disabled {
+  cursor: progress;
+  color: var(--text-muted);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .save:hover {
+    border-color: var(--text-muted);
+    background: var(--surface-2);
+  }
+}
+
+.message {
+  font-size: var(--text-body-s);
+  color: var(--text-muted);
+}
+
+.message:empty {
+  display: none;
+}
+
+/* --- Upload --------------------------------------------------------------- */
+
+.addPanel {
+  margin-top: var(--space-6);
+  padding: var(--space-5);
+  border: 1px dashed var(--line-strong);
+}
+
+.addTitle {
+  font-size: var(--text-body);
+  font-weight: 500;
+}
+
+.upload {
+  display: grid;
+  gap: var(--space-5);
+  margin-top: var(--space-4);
+}
+
+.file {
+  max-width: 100%;
+  font-size: var(--text-body-s);
+  color: var(--text-muted);
+}
+
+.file::file-selector-button {
+  min-height: 2.75rem;
+  margin-right: var(--space-4);
+  padding-inline: var(--space-5);
+  border: 1px solid var(--line-interactive);
+  border-radius: var(--radius-s);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.file:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .file::file-selector-button:hover {
+    background: var(--surface-2);
+  }
+}
+
+.roles {
+  margin-top: var(--space-2);
+}

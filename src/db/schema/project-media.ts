@@ -15,9 +15,10 @@ import { projects } from "./projects";
 
 /**
  * Project media — METADATA ONLY. Binary image/video content lives in object
- * storage; `storage_key` is the object-storage identifier/key (not a binary,
- * not a signed/public URL). Signed/public URLs are resolved by the storage
- * layer later.
+ * storage; `storage_key` is the object-storage identifier (never binary data).
+ * With Vercel Blob (public store) that identifier is the blob's permanent
+ * public URL; `mediaUrl()` in `src/lib/media/url.ts` is the only reader that
+ * turns it into something the browser loads.
  */
 export const projectMedia = pgTable(
   "project_media",

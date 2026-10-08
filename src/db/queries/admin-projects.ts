@@ -3,7 +3,7 @@ import "server-only";
 import { asc, count, desc, eq, sql } from "drizzle-orm";
 
 import { getDb } from "@/db";
-import { clients, projects } from "@/db/schema";
+import { clients, projectMedia, projects } from "@/db/schema";
 import {
   PROJECTS_PAGE_SIZE,
   type ProjectCategory,
@@ -123,4 +123,31 @@ export async function listClientOptions(): Promise<ClientOption[]> {
     .from(clients)
     .orderBy(asc(sql`lower(${clients.name})`), asc(clients.id))
     .limit(1000);
+}
+
+export type AdminProjectMedia = {
+  id: string;
+  role: string;
+  storageKey: string;
+  alt: string | null;
+  width: number | null;
+  height: number | null;
+  displayOrder: number;
+};
+
+/** A project's media for the admin, in display order (`project_media_project_order_idx`). */
+export async function listProjectMedia(projectId: string): Promise<AdminProjectMedia[]> {
+  return getDb()
+    .select({
+      id: projectMedia.id,
+      role: projectMedia.role,
+      storageKey: projectMedia.storageKey,
+      alt: projectMedia.alt,
+      width: projectMedia.width,
+      height: projectMedia.height,
+      displayOrder: projectMedia.displayOrder,
+    })
+    .from(projectMedia)
+    .where(eq(projectMedia.projectId, projectId))
+    .orderBy(asc(projectMedia.displayOrder), asc(projectMedia.id));
 }

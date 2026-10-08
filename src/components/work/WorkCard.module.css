@@ -74,3 +74,49 @@
     transform: translateX(0.25rem);
   }
 }
+
+.body {
+  display: grid;
+  gap: var(--space-4);
+  align-content: start;
+  min-width: 0;
+}
+
+/* --- Cover (the project's hero image) -------------------------------------- */
+
+.cover {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-s);
+  background: var(--surface-1);
+}
+
+.coverImage {
+  object-fit: cover;
+}
+
+@media (min-width: 56rem) {
+  .link[data-cover] {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--space-8);
+    align-items: center;
+  }
+
+  /* The image is decorative (alt=""), so moving it right changes nothing for screen readers. */
+  .link[data-cover] .cover {
+    order: 2;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .coverImage {
+    transition: transform var(--dur-slow) var(--ease-out);
+  }
+
+  .link:hover .coverImage {
+    transform: scale(1.02);
+  }
+}
