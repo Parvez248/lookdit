@@ -6,7 +6,7 @@ import { Contact } from "@/components/home/Contact";
 import { PageIntro } from "@/components/site/PageIntro";
 import { Specimen } from "@/components/specimens/Specimen";
 import { ButtonLink } from "@/components/ui/ButtonLink";
-import { about, contactCta, industries, services } from "@/content/site";
+import { company, contactCta, industries, services } from "@/content/site";
 import { jsonLd } from "@/lib/json-ld";
 import { siteUrl } from "@/lib/site-url";
 
@@ -139,10 +139,10 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
                 </ul>
               </dd>
             </div>
-            {about.facts.based ? (
+            {company.country ? (
               <div className={styles.row}>
                 <dt>Based in</dt>
-                <dd>{about.facts.based}</dd>
+                <dd>{company.country}</dd>
               </div>
             ) : null}
           </dl>

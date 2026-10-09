@@ -9,6 +9,10 @@ import { hero, services } from "@/content/site";
 import { jsonLd } from "@/lib/json-ld";
 import { siteUrl } from "@/lib/site-url";
 
+// Selected Work reads published projects; regenerate at most every 5 minutes so
+// the page stays static and fast. Without a database it renders the concepts.
+export const revalidate = 300;
+
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };

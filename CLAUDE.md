@@ -157,10 +157,11 @@ arises, and explain why (see rule 3).
     `Contact` section with a per-service heading), `/about` and `/privacy`. They open with
     `PageIntro` (`src/components/site`); About reuses the home `Services` / `Industries`.
     The footer CTA hides itself (`body:has(#contact)`) on pages that end with the form.
-    About lists company facts (`about.facts`) only once they're set. `/privacy` describes what
-    the code does and is a 404, unlinked and out of the sitemap until `privacyPublished()`
-    (legal name, country, contact email, retention and date in `privacy`) is true; change its
-    copy whenever data handling changes.
+    Company details live in one place, `company` in `src/content/site.ts` (null = not
+    confirmed). About lists facts only once they're set. `/privacy` describes what the code
+    does, is linked from the footer, and while `privacy.status` is "draft" it is noindex, out of
+    the sitemap and shows every unconfirmed detail as "Pending confirmation"; change its copy
+    whenever data handling changes.
   - Public portfolio: `/work` and `/work/[slug]` (`src/app/(site)/work`, `src/components/work`)
     read only `src/db/queries/projects.ts` (published rows), are `force-dynamic` so the build
     never needs `DATABASE_URL`, and 404 drafts. The hero image is the `/work` card cover and
@@ -173,8 +174,14 @@ arises, and explain why (see rule 3).
     published case studies, falling back to the static pages if the DB read fails. The home page
     carries Organization JSON-LD with only facts the site states. Unknown URLs hit
     `(site)/[...missing]` and get the branded `(site)/not-found.tsx`.
-  - `src/content/site.ts`: static site copy and navigation. `src/content/work.ts`: static
-    Selected Work content (concept projects only; real client work comes from the DB via `/work`).
+  - `src/content/site.ts`: static site copy and navigation. `src/content/work.ts`: the three
+    LOOKDIT concept case studies (static, never in the DB), shown at `/work/concepts/[slug]`
+    (static) with a concept drawing, gallery `ScreenPlaceholder`s and the `ConceptBadge`
+    ("LOOKDIT Concept Project — Demonstration Only.") on every appearance.
+  - Homepage Selected Work (`featuredWork()`, `src/lib/work`): published client projects first
+    (featured, then display order), topped up with concepts to three; concepts alone if the DB
+    read fails. The home page is ISR (`revalidate = 300`), so a newly published project shows
+    within five minutes. `/work` lists client work, then the concepts.
 - **Content rule:** Selected Work may contain real client work and clearly identified LOOKDIT
   concept work. Concept work must never be presented in a way that implies a real client,
   commercial engagement, or measured result. Concept projects are never written to the

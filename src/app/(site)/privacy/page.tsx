@@ -1,47 +1,94 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import Link from "next/link";
+import type { ReactNode } from "react";
 
 import { PageIntro } from "@/components/site/PageIntro";
-import { privacy, privacyPublished } from "@/content/site";
+import { company, PENDING, privacy } from "@/content/site";
 
 import styles from "./page.module.css";
 
 const DESCRIPTION = "What LOOKDIT collects through this website, why, and how long it keeps it.";
+const isDraft = privacy.status === "draft";
 
 export const metadata: Metadata = {
   title: "Privacy policy",
   description: DESCRIPTION,
   alternates: { canonical: "/privacy" },
+  // A draft stays out of search results until it has been legally reviewed.
+  robots: isDraft ? { index: false, follow: true } : undefined,
   openGraph: { title: "Privacy policy — LOOKDIT", description: DESCRIPTION, url: "/privacy", siteName: "LOOKDIT", type: "website" },
 };
 
+/** A business detail that hasn't been confirmed yet, shown as such. */
+function Detail({ value }: { value: string | null }): ReactNode {
+  return value ?? <span className={styles.pending}>{PENDING}</span>;
+}
+
 /**
- * Every statement here describes what the code does today (contact form fields,
- * the IP fingerprint, sign-in cookies, hosting). Change the page when that
- * changes. Until the business facts in `privacy` are confirmed the page is a
- * 404 and nothing links to it.
+ * Every statement here describes what the code does today. Sources:
+ * contact form fields and the IP fingerprint in src/db/schema/inquiries.ts and
+ * src/lib/inquiries; sign-in cookies in src/lib/auth and src/lib/portal; no
+ * analytics or third-party scripts anywhere in src. Change this page whenever
+ * that changes. Business details come from `company` and `privacy`.
  */
 export default function PrivacyPage() {
-  if (!privacyPublished()) notFound();
-  const { legalName, country, email } = privacy.owner;
-
   return (
     <article className={styles.page} aria-labelledby="privacy-title">
       <div className={`container ${styles.inner}`}>
         <PageIntro
-          label={`Last updated ${privacy.lastUpdated}`}
+          label={`${isDraft ? "Draft · " : ""}Last updated ${privacy.lastUpdated}`}
           title="Privacy policy"
           titleId="privacy-title"
           lead={DESCRIPTION}
         />
 
+        {isDraft ? (
+          <aside className={styles.draft} aria-label="Draft notice">
+            <p className={styles.draftTitle}>Draft, pending legal review</p>
+            <p>
+              This policy has not been legally reviewed yet. Details marked &ldquo;{PENDING}&rdquo; have not been
+              confirmed and will be filled in before the policy is final.
+            </p>
+          </aside>
+        ) : null}
+
         <div className={styles.body}>
           <section aria-labelledby="who">
             <h2 id="who">Who we are</h2>
-            <p>
-              This website is run by {legalName}, trading as LOOKDIT, in {country}. For anything about this policy or
-              your information, email <a href={`mailto:${email}`}>{email}</a>.
-            </p>
+            <dl className={styles.facts}>
+              <div>
+                <dt>Business</dt>
+                <dd>{company.name}</dd>
+              </div>
+              <div>
+                <dt>Legal name</dt>
+                <dd>
+                  <Detail value={company.legalName} />
+                </dd>
+              </div>
+              <div>
+                <dt>Country</dt>
+                <dd>
+                  <Detail value={company.country} />
+                </dd>
+              </div>
+              <div>
+                <dt>Privacy contact</dt>
+                <dd>
+                  {company.privacyEmail ? (
+                    <a href={`mailto:${company.privacyEmail}`}>{company.privacyEmail}</a>
+                  ) : (
+                    <Detail value={null} />
+                  )}
+                </dd>
+              </div>
+            </dl>
+            {company.privacyEmail ? null : (
+              <p>
+                Until a privacy contact is confirmed, you can reach us through the{" "}
+                <Link href="/#contact">contact form</Link>.
+              </p>
+            )}
           </section>
 
           <section aria-labelledby="collect">
@@ -56,6 +103,7 @@ export default function PrivacyPage() {
               We don&apos;t store your IP address. To limit spam and abuse of the form we keep a one-way, keyed
               fingerprint of it with your message, which on its own doesn&apos;t reveal the address.
             </p>
+            <p>Browsing the public pages doesn&apos;t send us any personal information.</p>
           </section>
 
           <section aria-labelledby="use">
@@ -75,23 +123,26 @@ export default function PrivacyPage() {
           </section>
 
           <section aria-labelledby="processors">
-            <h2 id="processors">Who processes it</h2>
+            <h2 id="processors">Hosting and storage</h2>
             <p>
               The site is hosted on Vercel, which handles standard request data such as IP addresses to serve pages.
-              Contact form messages are stored in a PostgreSQL database run by Neon.
+              Contact form messages are stored in a PostgreSQL database run by Neon. Images on project pages are stored
+              with Vercel Blob; they never contain information you send us.
             </p>
           </section>
 
           <section aria-labelledby="retention">
             <h2 id="retention">How long we keep it</h2>
-            <p>{privacy.retention}</p>
+            <p>
+              <Detail value={privacy.retention} />
+            </p>
           </section>
 
           <section aria-labelledby="rights">
             <h2 id="rights">Your choices</h2>
             <p>
-              You can ask us what we hold about you, and ask us to correct or delete it, by emailing{" "}
-              <a href={`mailto:${email}`}>{email}</a>.
+              How to ask what we hold about you, or to have it corrected or deleted:{" "}
+              <span className={styles.pending}>{PENDING}</span>
             </p>
           </section>
         </div>

@@ -10,13 +10,23 @@ import styles from "./Specimen.module.css";
  * because the surrounding copy already says what the service is.
  */
 
-export type SpecimenKind = "seo" | "digital-marketing" | "web-apps" | "overview";
+export type SpecimenKind =
+  | "seo"
+  | "digital-marketing"
+  | "web-apps"
+  | "overview"
+  | "concept-ecommerce"
+  | "concept-healthcare"
+  | "concept-dashboard";
 
 const CAPTIONS: Record<SpecimenKind, [string, string]> = {
   seo: ["Fig. 01", "Search visibility"],
   "digital-marketing": ["Fig. 02", "Channel reach"],
   "web-apps": ["Fig. 03", "Web systems"],
   overview: ["Fig. 00", "Found, reached, served"],
+  "concept-ecommerce": ["Concept screens", "Storefront · product · cart"],
+  "concept-healthcare": ["Concept screens", "Availability · booking"],
+  "concept-dashboard": ["Concept screens", "Overview · job board"],
 };
 
 type SpecimenProps = {
@@ -255,9 +265,213 @@ function OverviewDrawing() {
   );
 }
 
+/** Browser chrome for the concept screens: frame, title bar, three dots, address bar. */
+function Window({ w, h }: { w: number; h: number }) {
+  return (
+    <g>
+      <rect x="0.5" y="0.5" width={w - 1} height={h - 1} className={styles.rule} />
+      <rect x="1" y="1" width={w - 2} height="20" className={styles.panel} />
+      <circle cx="12" cy="11" r="3" className={styles.bar} />
+      <circle cx="23" cy="11" r="3" className={styles.bar} />
+      <circle cx="34" cy="11" r="3" className={styles.bar} />
+      <rect x={w / 2 - 60} y="7" width="120" height="8" className={styles.barSoft} />
+    </g>
+  );
+}
+
+/** A phone outline at (x, y), 92 × 196, with a notch; children draw the screen. */
+function Phone({ x, y, children }: { x: number; y: number; children: ReactNode }) {
+  return (
+    <g transform={`translate(${x} ${y})`}>
+      <rect x="0" y="0" width="92" height="196" rx="12" className={styles.phone} />
+      <rect x="34" y="7" width="24" height="5" rx="2.5" className={styles.bar} />
+      {children}
+    </g>
+  );
+}
+
+function EcommerceDrawing() {
+  const tiles = [0, 1, 2, 3, 4, 5];
+  return (
+    <svg className={styles.svg} viewBox="0 0 480 300">
+      <Window w={384} h={300} />
+      {/* Store header: logo, menu, cart with a count dot */}
+      <rect x="16" y="34" width="44" height="8" className={styles.bar} />
+      <rect x="150" y="36" width="34" height="4" className={styles.barSoft} />
+      <rect x="194" y="36" width="34" height="4" className={styles.barSoft} />
+      <rect x="238" y="36" width="34" height="4" className={styles.barSoft} />
+      <path d="M342 33h4l3 10h14l3-8h-18" className={styles.rule} />
+      <circle cx="366" cy="32" r="3" className={styles.accent} />
+      <path d="M1 54H383" className={styles.rule} />
+
+      {/* Filters */}
+      {[0, 1, 2, 3, 4].map((i) => (
+        <g key={i}>
+          <rect x="16" y={70 + i * 20} width="8" height="8" className={i === 1 ? styles.accent : styles.rule} />
+          <rect x="30" y={72 + i * 20} width={36 + ((i * 13) % 20)} height="4" className={styles.barSoft} />
+        </g>
+      ))}
+
+      {/* Product grid */}
+      {tiles.map((i) => {
+        const x = 96 + (i % 3) * 94;
+        const y = 66 + Math.floor(i / 3) * 112;
+        return (
+          <g key={i}>
+            <rect x={x} y={y} width="84" height="70" className={styles.panel} />
+            <path d={`M${x + 22} ${y + 50}l14-16 10 10 8-6 12 12`} className={styles.ruleDashed} />
+            <rect x={x} y={y + 78} width="60" height="5" className={styles.bar} />
+            <rect x={x} y={y + 89} width="28" height="5" className={i === 1 ? styles.accent : styles.barSoft} />
+          </g>
+        );
+      })}
+      <Corners x={184} y={60} w={96} h={106} arm={9} />
+
+      {/* Phone: product page with options and add to cart */}
+      <Phone x={388} y={74}>
+        <rect x="8" y="22" width="76" height="70" className={styles.panel} />
+        <circle cx="38" cy="98" r="2" className={styles.textFill} />
+        <circle cx="46" cy="98" r="2" className={styles.bar} />
+        <circle cx="54" cy="98" r="2" className={styles.bar} />
+        <rect x="8" y="108" width="62" height="6" className={styles.bar} />
+        <rect x="8" y="120" width="30" height="5" className={styles.barSoft} />
+        {[0, 1, 2].map((i) => (
+          <rect key={i} x={8 + i * 26} y="134" width="22" height="12" className={i === 0 ? styles.ruleStrong : styles.rule} />
+        ))}
+        <rect x="8" y="160" width="76" height="20" className={styles.accent} />
+      </Phone>
+    </svg>
+  );
+}
+
+function HealthcareDrawing() {
+  const days = [0, 1, 2, 3, 4];
+  const slots = [0, 1, 2, 3, 4, 5];
+  // Which slots are taken: a fixed pattern, so the drawing is stable.
+  const taken = (d: number, s: number) => (d * 7 + s * 3) % 5 === 0 || (d + s) % 4 === 0;
+  return (
+    <svg className={styles.svg} viewBox="0 0 480 300">
+      <Window w={384} h={300} />
+      <rect x="16" y="34" width="70" height="8" className={styles.bar} />
+      <rect x="290" y="32" width="78" height="14" className={styles.rule} />
+      <path d="M1 54H383" className={styles.rule} />
+
+      {/* Practitioners */}
+      {[0, 1, 2, 3].map((i) => (
+        <g key={i}>
+          {i === 0 ? <rect x="8" y={68} width="3" height="30" className={styles.accent} /> : null}
+          <circle cx="30" cy={83 + i * 44} r="11" className={i === 0 ? styles.ruleStrong : styles.rule} />
+          <rect x="48" y={77 + i * 44} width="52" height="5" className={i === 0 ? styles.bar : styles.barSoft} />
+          <rect x="48" y={87 + i * 44} width="34" height="4" className={styles.barSoft} />
+        </g>
+      ))}
+      <path d="M116 54V300" className={styles.rule} />
+
+      {/* Week of availability */}
+      {days.map((d) => (
+        <g key={d}>
+          <rect x={130 + d * 50} y="66" width="30" height="5" className={styles.bar} />
+          <rect x={130 + d * 50} y="76" width="18" height="4" className={styles.barSoft} />
+          {slots.map((s) => {
+            const selected = d === 2 && s === 2;
+            const isTaken = !selected && taken(d, s);
+            return (
+              <rect
+                key={s}
+                x={130 + d * 50}
+                y={92 + s * 30}
+                width="42"
+                height="20"
+                className={selected ? styles.accent : isTaken ? styles.panel : styles.rule}
+              />
+            );
+          })}
+        </g>
+      ))}
+      <Corners x={224} y={146} w={54} h={32} arm={8} />
+
+      {/* Phone: booking confirmed */}
+      <Phone x={388} y={74}>
+        <circle cx="46" cy="58" r="18" className={styles.accentLine} />
+        <path d="M38 58l6 6 11-12" className={styles.accentLine} />
+        <rect x="18" y="90" width="56" height="6" className={styles.bar} />
+        <rect x="24" y="102" width="44" height="4" className={styles.barSoft} />
+        <rect x="8" y="118" width="76" height="34" className={styles.panel} />
+        <rect x="14" y="126" width="40" height="4" className={styles.bar} />
+        <rect x="14" y="136" width="56" height="4" className={styles.barSoft} />
+        <rect x="8" y="162" width="76" height="20" className={styles.ruleStrong} />
+      </Phone>
+    </svg>
+  );
+}
+
+function DashboardDrawing() {
+  const columns = [0, 1, 2];
+  return (
+    <svg className={styles.svg} viewBox="0 0 480 300">
+      <Window w={384} h={300} />
+      {/* Sidebar */}
+      <path d="M72 21V300" className={styles.rule} />
+      <rect x="12" y="34" width="40" height="7" className={styles.bar} />
+      {[0, 1, 2, 3, 4].map((i) => (
+        <g key={i}>
+          {i === 1 ? <rect x="6" y={59 + i * 18} width="3" height="9" className={styles.accent} /> : null}
+          <rect x="14" y={61 + i * 18} width={30 + ((i * 11) % 16)} height="5" className={i === 1 ? styles.bar : styles.barSoft} />
+        </g>
+      ))}
+
+      {/* Overview tiles: shapes only, never figures */}
+      {[0, 1, 2, 3].map((i) => (
+        <g key={i}>
+          <rect x={84 + i * 74} y="32" width="66" height="44" className={styles.panel} />
+          <rect x={92 + i * 74} y="40" width="26" height="4" className={styles.barSoft} />
+          <rect x={92 + i * 74} y="52" width={22 + i * 6} height="9" className={styles.bar} />
+          <polyline
+            points={`${92 + i * 74},70 ${104 + i * 74},${66 - i} ${116 + i * 74},68 ${130 + i * 74},${63 - i} ${142 + i * 74},64`}
+            className={styles.rule}
+          />
+        </g>
+      ))}
+
+      {/* Job board: three status columns */}
+      {columns.map((c) => (
+        <g key={c}>
+          <rect x={84 + c * 98} y="90" width="40" height="5" className={styles.bar} />
+          <circle cx={174 + c * 98} cy="92.5" r="3" className={c === 0 ? styles.signal : c === 1 ? styles.accent : styles.bar} />
+          {[0, 1, 2].map((r) => (
+            <g key={r}>
+              <rect x={84 + c * 98} y={104 + r * 62} width="90" height="52" className={styles.panel} />
+              <rect x={92 + c * 98} y={112 + r * 62} width={50 + ((c + r) * 9) % 24} height="5" className={styles.bar} />
+              <rect x={92 + c * 98} y={123 + r * 62} width="40" height="4" className={styles.barSoft} />
+              <circle cx={162 + c * 98} cy={144 + r * 62} r="5" className={styles.rule} />
+            </g>
+          ))}
+        </g>
+      ))}
+      <Corners x={178} y={162} w={102} h={64} arm={9} />
+
+      {/* Phone: today's jobs */}
+      <Phone x={388} y={74}>
+        <rect x="8" y="22" width="44" height="6" className={styles.bar} />
+        {[0, 1, 2, 3, 4].map((i) => (
+          <g key={i}>
+            <rect x="8" y={38 + i * 30} width="76" height="24" className={styles.panel} />
+            <circle cx="16" cy={50 + i * 30} r="3" className={i === 1 ? styles.accent : i === 0 ? styles.signal : styles.bar} />
+            <rect x="24" y={44 + i * 30} width={40 + ((i * 7) % 16)} height="4" className={styles.bar} />
+            <rect x="24" y={52 + i * 30} width="28" height="3" className={styles.barSoft} />
+          </g>
+        ))}
+      </Phone>
+    </svg>
+  );
+}
+
 const DRAWINGS: Record<SpecimenKind, ReactNode> = {
   seo: <SeoDrawing />,
   "digital-marketing": <MarketingDrawing />,
   "web-apps": <WebAppDrawing />,
   overview: <OverviewDrawing />,
+  "concept-ecommerce": <EcommerceDrawing />,
+  "concept-healthcare": <HealthcareDrawing />,
+  "concept-dashboard": <DashboardDrawing />,
 };

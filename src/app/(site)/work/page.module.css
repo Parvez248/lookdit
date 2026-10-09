@@ -52,3 +52,40 @@
   line-height: 1.5;
   color: var(--text-muted);
 }
+
+.concepts {
+  display: grid;
+  gap: var(--space-7);
+  padding-top: var(--space-8);
+}
+
+.conceptsHead {
+  display: grid;
+  gap: var(--space-4);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--line);
+}
+
+.conceptsNote {
+  max-width: 60ch;
+  font-size: var(--text-body-s);
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.conceptGrid {
+  display: grid;
+  gap: var(--space-8) calc(var(--grid-gap) * 2);
+}
+
+@media (min-width: 48rem) {
+  .conceptGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 80rem) {
+  .conceptGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

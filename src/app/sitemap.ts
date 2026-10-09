@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 
-import { privacyPublished, services } from "@/content/site";
+import { privacy, services } from "@/content/site";
+import { selectedWork } from "@/content/work";
 import { listPublishedSlugs } from "@/db/queries/projects";
 import { describeErrorForLog } from "@/lib/inquiries/submission";
 import { siteUrl } from "@/lib/site-url";
@@ -20,7 +21,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     })),
     { url: url("/about"), changeFrequency: "monthly", priority: 0.6 },
-    ...(privacyPublished() ? [{ url: url("/privacy"), changeFrequency: "yearly" as const, priority: 0.2 }] : []),
+    ...selectedWork.items.map((concept) => ({
+      url: url(`/work/concepts/${concept.slug}`),
+      changeFrequency: "monthly" as const,
+      priority: 0.4,
+    })),
+    // The draft policy is noindex, so it stays out until it's final.
+    ...(privacy.status === "final" ? [{ url: url("/privacy"), changeFrequency: "yearly" as const, priority: 0.2 }] : []),
   ];
 
   try {

@@ -71,6 +71,19 @@
   color: var(--text-subtle);
 }
 
+.legalLink {
+  color: var(--text-muted);
+  text-decoration: underline;
+  text-decoration-color: var(--line-interactive);
+  text-underline-offset: 0.25em;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .legalLink:hover {
+    color: var(--text);
+  }
+}
+
 @media (min-width: 64rem) {
   .cta {
     flex-direction: row;
