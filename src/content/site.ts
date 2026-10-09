@@ -114,14 +114,15 @@ export const footer = {
 /**
  * About page. Only facts already approved elsewhere on the site. `facts` holds
  * company details (base, founding year, who runs it); each is null until
- * Khaled confirms it, and the page lists only the ones that are set.
+ * Khaled confirms it, and the page lists only the ones that are set. Bangladesh
+ * confirmed as the operating country 2026-10-09.
  */
 export const about = {
   label: "About LOOKDIT",
   heading: "Visibility, reach and the web systems behind them.",
   lead: hero.supporting,
   facts: {
-    based: null as string | null,
+    based: "Bangladesh" as string | null,
     founded: null as string | null,
     team: null as string | null,
   },
@@ -137,7 +138,7 @@ export const about = {
 export const privacy = {
   owner: {
     legalName: null as string | null,
-    country: null as string | null,
+    country: "Bangladesh" as string | null,
     email: null as string | null,
   },
   retention: null as string | null,
