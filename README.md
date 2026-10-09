@@ -7,6 +7,8 @@ Next.js (App Router) + React + strict TypeScript, CSS Modules with design tokens
 on Neon via Drizzle, images on Vercel Blob. Hosted on Vercel; `main` deploys to production.
 
 Architecture, rules and the current state of every area are in [CLAUDE.md](./CLAUDE.md).
+The handoff from the October 2026 development pause is in [docs/HANDOFF.md](./docs/HANDOFF.md),
+and outstanding work in [docs/BACKLOG.md](./docs/BACKLOG.md).
 
 ## Setup
 
