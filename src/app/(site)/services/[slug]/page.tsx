@@ -2,12 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { Industries } from "@/components/home/Industries";
-import { ServiceLinks } from "@/components/services/ServiceLinks";
+import { Contact } from "@/components/home/Contact";
 import { PageIntro } from "@/components/site/PageIntro";
+import { Specimen } from "@/components/specimens/Specimen";
 import { ButtonLink } from "@/components/ui/ButtonLink";
-import { SectionLabel } from "@/components/ui/SectionLabel";
-import { contactCta, services } from "@/content/site";
+import { about, contactCta, industries, services } from "@/content/site";
 import { jsonLd } from "@/lib/json-ld";
 import { siteUrl } from "@/lib/site-url";
 
@@ -49,9 +48,10 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
   const service = findService(slug);
   if (service === null) notFound();
   const index = services.items.indexOf(service) + 1;
+  const others = services.items.filter((item) => item.slug !== service.slug);
   const origin = siteUrl();
 
-  // Only what the page states: no area served, prices or ratings.
+  // Only what the page states: no prices, ratings or results.
   const structuredData = jsonLd({
     "@type": "Service",
     name: service.name,
@@ -62,11 +62,11 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
   });
 
   return (
-    <article className={styles.page} aria-labelledby="service-title">
+    <article aria-labelledby="service-title">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData }} />
 
       <section className={styles.top}>
-        <div className={`container ${styles.inner}`}>
+        <div className="container">
           <Link href="/#services" className={styles.back}>
             <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false" className={styles.backIcon}>
               <path d="M13 8H3.5M7.5 4l-4 4 4 4" fill="none" stroke="currentColor" strokeWidth="1.5" />
@@ -74,50 +74,82 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
             All services
           </Link>
 
-          <PageIntro
-            label={`Service ${String(index).padStart(2, "0")}`}
-            title={service.name}
-            titleId="service-title"
-            lead={service.description}
-            actions={
-              <>
-                <ButtonLink href={contactCta.href}>{contactCta.label}</ButtonLink>
-                <ButtonLink href="/work" variant="quiet">
-                  See our work
-                </ButtonLink>
-              </>
-            }
-          />
-        </div>
-      </section>
-
-      {service.focusAreas.length > 0 ? (
-        <section className={styles.block} aria-labelledby="focus-title">
-          <div className={`container ${styles.inner}`}>
-            <SectionLabel as="h2" id="focus-title">
-              What it covers
-            </SectionLabel>
-            <ul className={styles.focus}>
-              {service.focusAreas.map((area) => (
-                <li key={area} className={styles.focusItem}>
-                  {area}
-                </li>
-              ))}
-            </ul>
+          <div className={`grid ${styles.split}`}>
+            <div className={styles.intro}>
+              <PageIntro
+                label={`Service ${String(index).padStart(2, "0")}`}
+                title={service.name}
+                titleId="service-title"
+                lead={service.description}
+                actions={
+                  <>
+                    <ButtonLink href="#contact">{contactCta.label}</ButtonLink>
+                    <ButtonLink href="/work" variant="quiet">
+                      See our work
+                    </ButtonLink>
+                  </>
+                }
+              />
+            </div>
+            <Specimen kind={service.slug} animate className={styles.figure} />
           </div>
-        </section>
-      ) : null}
-
-      <Industries />
-
-      <section className={styles.block} aria-labelledby="other-services-title">
-        <div className={`container ${styles.inner}`}>
-          <SectionLabel as="h2" id="other-services-title">
-            Other services
-          </SectionLabel>
-          <ServiceLinks exclude={service.slug} />
         </div>
       </section>
+
+      {/* The brief: a definition list, one hairline row per fact. */}
+      <section className={styles.brief} aria-label={`${service.name} at a glance`}>
+        <div className="container">
+          <dl className={styles.rows}>
+            {service.focusAreas.length > 0 ? (
+              <div className={styles.row}>
+                <dt>What it covers</dt>
+                <dd>
+                  <ul className={styles.tags}>
+                    {service.focusAreas.map((area) => (
+                      <li key={area}>{area}</li>
+                    ))}
+                  </ul>
+                </dd>
+              </div>
+            ) : null}
+            <div className={styles.row}>
+              <dt>Priority industries</dt>
+              <dd>
+                <ul className={styles.tags}>
+                  {industries.items.map((industry) => (
+                    <li key={industry}>{industry}</li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+            <div className={styles.row}>
+              <dt>Works with</dt>
+              <dd>
+                <ul className={styles.links}>
+                  {others.map((other) => (
+                    <li key={other.slug}>
+                      <Link href={`/services/${other.slug}`} className={styles.link}>
+                        {other.name}
+                        <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false" className={styles.linkIcon}>
+                          <path d="M3 8h9.5M8.5 4l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                        </svg>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+            {about.facts.based ? (
+              <div className={styles.row}>
+                <dt>Based in</dt>
+                <dd>{about.facts.based}</dd>
+              </div>
+            ) : null}
+          </dl>
+        </div>
+      </section>
+
+      <Contact heading={service.contactHeading} />
     </article>
   );
 }

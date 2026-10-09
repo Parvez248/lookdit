@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { ButtonLink } from "@/components/ui/ButtonLink";
-import { contactCta, footer, primaryNav, privacyPublished } from "@/content/site";
+import { about, contactCta, footer, primaryNav, privacyPublished } from "@/content/site";
 
 import { Brand } from "./Brand";
 import styles from "./SiteFooter.module.css";
@@ -12,6 +12,7 @@ export function SiteFooter() {
   return (
     <footer className={styles.footer}>
       <div className="container">
+        {/* Hidden by CSS on pages whose own contact form sits just above it. */}
         <div className={styles.cta}>
           <p className={styles.ctaLine}>{footer.cta}</p>
           <ButtonLink href={contactCta.href}>{contactCta.label}</ButtonLink>
@@ -36,6 +37,7 @@ export function SiteFooter() {
 
           <p className={styles.legal}>
             © {year} LOOKDIT
+            {about.facts.based ? ` · ${about.facts.based}` : null}
             {privacyPublished() ? (
               <>
                 {" · "}

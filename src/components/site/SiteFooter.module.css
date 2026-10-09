@@ -10,6 +10,15 @@
   padding-block: var(--space-9) var(--space-8);
 }
 
+/* A page with the contact form already ends on that ask; don't repeat it. */
+:global(body:has(#contact)) .cta {
+  display: none;
+}
+
+:global(body:has(#contact)) .meta {
+  border-top: 0;
+}
+
 .ctaLine {
   max-width: 16ch;
   font-size: var(--text-display-l);

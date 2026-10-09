@@ -30,14 +30,18 @@
   border-top: 1px solid var(--line);
 }
 
-/* Small screens: one priority per row, index beside the name. */
+/* Phones: one sector per row, mark and index above the name. */
 .cell {
   display: grid;
-  grid-template-columns: 2.5rem minmax(0, 1fr);
-  align-items: baseline;
-  column-gap: var(--space-3);
-  padding-block: var(--space-5);
+  gap: var(--space-5);
+  padding-block: var(--space-5) var(--space-6);
   border-bottom: 1px solid var(--line);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .index {
@@ -49,30 +53,34 @@
   font-variant-numeric: tabular-nums;
 }
 
+.mark {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: none;
+  stroke: var(--blue-400);
+  stroke-width: 1.25;
+  stroke-linecap: square;
+}
+
 .name {
+  max-width: 20ch;
   font-size: var(--text-heading-s);
   font-weight: 500;
-  line-height: 1.25;
+  line-height: 1.2;
   letter-spacing: -0.015em;
   text-wrap: balance;
 }
 
-/*
- * From 40rem: a 2 × 2 matrix. Hairlines on the top, bottom and between cells;
- * the outer left and right edges stay open so it reads as part of the grid.
- */
+/* Tablets: a 2 × 2 matrix with a hairline between columns. */
 @media (min-width: 40rem) {
   .matrix {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .cell {
-    grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto 1fr;
-    align-items: start;
-    row-gap: var(--space-7);
-    min-height: 13rem;
-    padding: var(--space-5) var(--space-6) var(--space-6);
+    gap: var(--space-8);
+    padding: var(--space-5) var(--space-5) var(--space-6);
   }
 
   .cell:nth-child(odd) {
@@ -82,20 +90,35 @@
 
   .name {
     align-self: end;
-    max-width: 18ch;
-    font-size: var(--text-display-m);
-    line-height: 1.05;
-    letter-spacing: -0.03em;
   }
 }
 
+/* Wide: all four sectors in one row. */
 @media (min-width: 64rem) {
   .intro {
     grid-column: 1 / span 8;
   }
 
+  .matrix {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
   .cell {
-    min-height: 16rem;
-    padding: var(--space-6) var(--space-7) var(--space-7);
+    gap: var(--space-9);
+    padding: var(--space-5) var(--space-5) var(--space-6);
+    border-right: 1px solid var(--line);
+  }
+
+  .cell:nth-child(odd) {
+    padding-left: var(--space-5);
+  }
+
+  .cell:first-child {
+    padding-left: 0;
+  }
+
+  .cell:last-child {
+    border-right: 0;
+    padding-right: 0;
   }
 }

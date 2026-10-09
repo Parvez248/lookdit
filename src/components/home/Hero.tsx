@@ -1,3 +1,4 @@
+import { Specimen } from "@/components/specimens/Specimen";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { FocusFrame } from "@/components/ui/FocusFrame";
 import { contactCta, hero } from "@/content/site";
@@ -19,26 +20,35 @@ export function Hero() {
       </div>
 
       <div className={`container ${styles.inner}`}>
-        <p className={styles.eyebrow}>{hero.eyebrow}</p>
-
-        <div className={`grid ${styles.titleRow}`}>
-          <h1 id="hero-title" className={styles.title}>
-            {hero.headlineLead}{" "}
-            <FocusFrame intro className={styles.focus}>
-              {hero.headlineFocus}
-            </FocusFrame>
-          </h1>
-        </div>
-
-        <div className={`grid ${styles.lower}`}>
-          <p className={styles.supporting}>{hero.supporting}</p>
-          <div className={styles.actions}>
-            <ButtonLink href={contactCta.href}>{contactCta.label}</ButtonLink>
-            <ButtonLink href={hero.secondaryCta.href} variant="quiet">
-              {hero.secondaryCta.label}
-            </ButtonLink>
+        <div className={`grid ${styles.top}`}>
+          <div className={styles.copy}>
+            <p className={styles.eyebrow}>{hero.eyebrow}</p>
+            <h1 id="hero-title" className={styles.title}>
+              {hero.headlineLead}{" "}
+              <FocusFrame intro className={styles.focus}>
+                {hero.headlineFocus}
+              </FocusFrame>
+            </h1>
+            <p className={styles.supporting}>{hero.supporting}</p>
+            <div className={styles.actions}>
+              <ButtonLink href={contactCta.href}>{contactCta.label}</ButtonLink>
+              <ButtonLink href={hero.secondaryCta.href} variant="quiet">
+                {hero.secondaryCta.label}
+              </ButtonLink>
+            </div>
           </div>
+
+          <Specimen kind="overview" animate className={styles.figure} />
         </div>
+
+        <dl className={styles.facts}>
+          {hero.facts.map((fact) => (
+            <div key={fact.label} className={styles.fact}>
+              <dt>{fact.label}</dt>
+              <dd>{fact.value}</dd>
+            </div>
+          ))}
+        </dl>
       </div>
     </section>
   );

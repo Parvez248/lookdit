@@ -147,9 +147,16 @@ arises, and explain why (see rule 3).
   - `src/components/home`: home page sections: `Hero`, `Services`, `Industries`,
     `SelectedWork` (with `CapabilityMap`, the temporary visual for the concept project) and
     `Contact` (`ContactForm` posts to `submitInquiry`; the section owns `id="contact"`).
+  - `src/components/specimens`: the "Under the Lens" visual system. `Specimen` renders an
+    abstract inline-SVG drawing per service (`seo`, `digital-marketing`, `web-apps`) plus the
+    hero `overview`, with Focus Frame corners on the part in focus. Decorative (aria-hidden),
+    token colours only, CSS-only load motion that respects reduced motion. Never put numbers
+    that read as data, client names or results in a drawing.
   - Inner pages (static, no DB): `/services/[slug]` (one per pillar in `services.items`,
-    `dynamicParams = false`, Service JSON-LD), `/about` and `/privacy`. They open with
-    `PageIntro` (`src/components/site`) and reuse the home `Services` / `Industries` sections.
+    `dynamicParams = false`, Service JSON-LD; specimen, a brief of hairline rows and the shared
+    `Contact` section with a per-service heading), `/about` and `/privacy`. They open with
+    `PageIntro` (`src/components/site`); About reuses the home `Services` / `Industries`.
+    The footer CTA hides itself (`body:has(#contact)`) on pages that end with the form.
     About lists company facts (`about.facts`) only once they're set. `/privacy` describes what
     the code does and is a 404, unlinked and out of the sitemap until `privacyPublished()`
     (legal name, country, contact email, retention and date in `privacy`) is true; change its
