@@ -1,0 +1,148 @@
+/* The tile is positioned so the title link's ::after can cover all of it. */
+.tile {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: var(--space-5);
+}
+
+.cover {
+  min-width: 0;
+}
+
+.image {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  background: var(--surface-1);
+}
+
+.imageEl {
+  object-fit: cover;
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+.empty {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--line-strong);
+  background: var(--surface-1);
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+.body {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-3);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+.kind {
+  color: var(--text);
+}
+
+.title {
+  max-width: 22ch;
+  font-size: var(--text-heading-l);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.link:focus-visible {
+  outline: none;
+}
+
+.link:focus-visible::after {
+  outline: 2px solid var(--focus);
+  outline-offset: 4px;
+}
+
+.summary {
+  max-width: 46ch;
+  font-size: var(--text-body);
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+.cue {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+  font-size: var(--text-body-s);
+  font-weight: 500;
+  color: var(--text);
+}
+
+.cueIcon {
+  width: 1rem;
+  height: 1rem;
+  color: var(--blue-400);
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tile:hover .cueIcon {
+    transform: translateX(0.25rem);
+  }
+
+  .tile:hover .imageEl {
+    transform: scale(1.02);
+  }
+
+  .tile:hover .cover figure > div {
+    border-color: var(--line-interactive);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile:hover .cueIcon,
+  .tile:hover .imageEl {
+    transform: none;
+  }
+}
+
+/* Lead tile: cover beside the text on wide screens, and a bigger title. */
+@media (min-width: 64rem) {
+  .lead {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: var(--grid-gap) calc(var(--grid-gap) * 2);
+    align-items: center;
+  }
+
+  .lead .title {
+    font-size: var(--text-display-m);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  .lead .summary {
+    font-size: var(--text-body-l);
+  }
+}

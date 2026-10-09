@@ -111,8 +111,8 @@ export const workIndex = {
   heading: "Work built to hold up to a closer look.",
   intro: "A selection of projects across SEO, digital marketing and web application development.",
   empty: {
-    heading: "Case studies are on the way.",
-    body: "We're preparing a selection of recent work. In the meantime, tell us what you're building.",
+    heading: "Client case studies are on the way.",
+    body: "We're preparing a selection of recent work. Meanwhile, the concept projects below show how we approach a brief.",
   },
 } as const;
 
@@ -121,41 +121,46 @@ export const footer = {
 } as const;
 
 /**
- * About page. Only facts already approved elsewhere on the site. `facts` holds
- * company details (base, founding year, who runs it); each is null until
- * Khaled confirms it, and the page lists only the ones that are set. Bangladesh
- * confirmed as the operating country 2026-10-09.
+ * Company details, in one place. `null` means "not confirmed yet": pages show
+ * nothing for it, or a visible "Pending confirmation" label where the text
+ * needs it (the privacy policy). Replace a null with the confirmed value and
+ * every page picks it up.
  */
+export const company = {
+  name: "LOOKDIT",
+  /** Registered legal name. */
+  legalName: null as string | null,
+  /** Operating country, confirmed 2026-10-09. */
+  country: "Bangladesh" as string | null,
+  /** Address for privacy and data requests. */
+  privacyEmail: null as string | null,
+  founded: null as string | null,
+  team: null as string | null,
+};
+
+/** About page. Company facts come from `company` and show only once confirmed. */
 export const about = {
   label: "About LOOKDIT",
   heading: "Visibility, reach and the web systems behind them.",
   lead: hero.supporting,
   facts: {
-    based: "Bangladesh" as string | null,
-    founded: null as string | null,
-    team: null as string | null,
+    based: company.country,
+    founded: company.founded,
+    team: company.team,
   },
 } as const;
 
 /**
- * Privacy policy. The sections describe what the code actually does (see
- * src/db/schema/inquiries.ts, src/lib/inquiries, src/lib/auth). The page stays
- * unpublished (404, no links) until every field in `owner` and `retention` is
- * confirmed: legal identity, contact and retention are commitments only the
- * business can make.
+ * Privacy policy. Published as a DRAFT (noindex, out of the sitemap) until it
+ * has been legally reviewed and the pending details are confirmed. The page
+ * text describes what the code actually does; see the page for the sources.
  */
 export const privacy = {
-  owner: {
-    legalName: null as string | null,
-    country: "Bangladesh" as string | null,
-    email: null as string | null,
-  },
+  status: "draft" as "draft" | "final",
+  /** How long contact-form inquiries are kept. */
   retention: null as string | null,
-  lastUpdated: null as string | null,
-} as const;
+  /** Date the current text was written. */
+  lastUpdated: "9 October 2026",
+};
 
-/** True once the business facts the policy depends on are filled in. */
-export function privacyPublished(): boolean {
-  const { legalName, country, email } = privacy.owner;
-  return Boolean(legalName && country && email && privacy.retention && privacy.lastUpdated);
-}
+export const PENDING = "Pending confirmation";

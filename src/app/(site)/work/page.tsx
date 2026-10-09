@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { SectionLabel } from "@/components/ui/SectionLabel";
+import { FeatureTile } from "@/components/work/FeatureTile";
 import { WorkCard } from "@/components/work/WorkCard";
 import { contactCta, workIndex } from "@/content/site";
+import { conceptNote, selectedWork } from "@/content/work";
 import { listPublishedProjects } from "@/db/queries/projects";
 
 import styles from "./page.module.css";
@@ -46,6 +48,20 @@ export default async function WorkPage() {
             <ButtonLink href={contactCta.href}>{contactCta.label}</ButtonLink>
           </div>
         )}
+
+        <section className={styles.concepts} aria-labelledby="concepts-title">
+          <div className={styles.conceptsHead}>
+            <SectionLabel as="h2" id="concepts-title">
+              Concept projects
+            </SectionLabel>
+            <p className={styles.conceptsNote}>{conceptNote}</p>
+          </div>
+          <div className={styles.conceptGrid}>
+            {selectedWork.items.map((concept) => (
+              <FeatureTile key={concept.slug} entry={{ kind: "concept", concept }} />
+            ))}
+          </div>
+        </section>
       </div>
     </section>
   );

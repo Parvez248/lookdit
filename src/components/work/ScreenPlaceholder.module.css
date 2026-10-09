@@ -1,0 +1,49 @@
+.figure {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.frame {
+  position: relative;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: var(--space-2);
+  aspect-ratio: 16 / 10;
+  max-width: 100%;
+  padding: var(--space-5);
+  border: 1px dashed var(--line-interactive);
+  background:
+    repeating-linear-gradient(135deg, transparent 0 14px, var(--grid-line) 14px 15px),
+    var(--surface-1);
+  text-align: center;
+}
+
+.tag {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.title {
+  font-size: var(--text-heading-s);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+
+.note {
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-data);
+  color: var(--text-subtle);
+}
+
+.caption {
+  font-size: var(--text-body-s);
+  line-height: 1.5;
+  color: var(--text-muted);
+}
