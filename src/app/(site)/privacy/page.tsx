@@ -103,7 +103,11 @@ export default function PrivacyPage() {
               We don&apos;t store your IP address. To limit spam and abuse of the form we keep a one-way, keyed
               fingerprint of it with your message, which on its own doesn&apos;t reveal the address.
             </p>
-            <p>Browsing the public pages doesn&apos;t send us any personal information.</p>
+            <p>
+              Browsing the public pages doesn&apos;t add anything to our database. Like any website, each page request
+              reaches our hosting provider with standard request information, including your IP address; see
+              Hosting and storage below.
+            </p>
           </section>
 
           <section aria-labelledby="use">

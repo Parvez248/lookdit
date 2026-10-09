@@ -24,9 +24,10 @@ type FeatureTileProps = {
 
 /**
  * One project as a linked tile: cover, then classification, title, summary.
- * Client work shows its uploaded hero image and its category and year; a
- * concept shows its concept drawing and always carries the concept badge, so
- * the two can never be confused. The whole tile is one link.
+ * A published project shows its uploaded hero image and its category and
+ * year under a neutral "Case study" label (publishing doesn't verify that it
+ * is client work); a concept shows its concept drawing and always carries
+ * the concept badge, so the two can never be confused. The whole tile is one link.
  */
 export function FeatureTile({ entry, size = "standard", headingLevel: Heading = "h3" }: FeatureTileProps) {
   const isConcept = entry.kind === "concept";
@@ -65,7 +66,7 @@ export function FeatureTile({ entry, size = "standard", headingLevel: Heading = 
           </>
         ) : (
           <p className={styles.meta}>
-            <span className={styles.client}>Client project</span>
+            <span className={styles.kind}>Case study</span>
             <span>{PROJECT_CATEGORY_LABELS[entry.project.category as ProjectCategory] ?? entry.project.category}</span>
             <span>{entry.project.year}</span>
           </p>
