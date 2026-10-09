@@ -25,6 +25,12 @@ export const hero = {
     "LOOKDIT helps businesses improve visibility, reach customers, and build the web systems they need through SEO, digital marketing, and web application development.",
   // Points at Services until Selected Work exists.
   secondaryCta: { label: "Explore services", href: "/#services" },
+  // The strip under the hero: confirmed facts only, never statistics.
+  facts: [
+    { label: "Services", value: "SEO, Digital Marketing, Web Apps" },
+    { label: "Priority industries", value: "E-commerce, healthcare, home services, construction" },
+    { label: "Based in", value: "Bangladesh" },
+  ],
 } as const;
 
 /**
@@ -41,12 +47,14 @@ export const services = {
       slug: "seo",
       name: "SEO",
       description: "Improve search visibility so the right customers can find your business.",
+      contactHeading: "Tell us about your search goals.",
       focusAreas: [] as readonly string[],
     },
     {
       slug: "digital-marketing",
       name: "Digital Marketing",
       description: "Reach customers through focused digital channels.",
+      contactHeading: "Tell us who you need to reach.",
       focusAreas: [] as readonly string[],
     },
     {
@@ -54,6 +62,7 @@ export const services = {
       name: "Web Apps Development",
       description:
         "Build websites and web applications that support customer journeys and business operations.",
+      contactHeading: "Tell us what you need built.",
       focusAreas: [] as readonly string[],
     },
   ],

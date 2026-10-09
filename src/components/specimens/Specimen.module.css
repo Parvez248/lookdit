@@ -1,0 +1,142 @@
+/*
+ * Specimens: hairline drawings of what each service works on, with the blue
+ * Focus Frame corners on the part in focus. Every colour comes from the
+ * tokens; text inside the SVG uses the mono face at viewBox units.
+ */
+.figure {
+  position: relative;
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.plate {
+  position: relative;
+  padding: clamp(0.75rem, 0.4rem + 1.4vw, 1.5rem);
+  border: 1px solid var(--line-strong);
+  background:
+    linear-gradient(180deg, var(--surface-1), var(--ground) 85%);
+  transition: border-color var(--dur-base) var(--ease-out);
+}
+
+/* Faint measuring grid behind the drawing, like a cutting mat. */
+.plate::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 1.5rem 1.5rem;
+  mask-image: radial-gradient(ellipse at center, #000 30%, transparent 80%);
+  pointer-events: none;
+}
+
+.svg {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.caption {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+/* Drawing vocabulary */
+.panel {
+  fill: var(--surface-2);
+}
+
+.bar {
+  fill: var(--line-strong);
+}
+
+.barSoft {
+  fill: var(--line);
+}
+
+.rule {
+  fill: none;
+  stroke: var(--line-strong);
+  stroke-width: 1;
+}
+
+.ruleDashed {
+  fill: none;
+  stroke: var(--line-interactive);
+  stroke-width: 1;
+  stroke-dasharray: 3 4;
+}
+
+.accent {
+  fill: var(--blue-500);
+}
+
+.accentLine {
+  fill: none;
+  stroke: var(--blue-500);
+  stroke-width: 1.5;
+}
+
+.corner {
+  fill: none;
+  stroke: var(--blue-500);
+  stroke-width: 2;
+}
+
+.signal {
+  fill: var(--cyan);
+}
+
+.text {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  fill: var(--text-subtle);
+}
+
+.textStrong {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  fill: var(--text);
+}
+
+/* Load motion: the focus corners settle and the highlighted path draws in. */
+@media (prefers-reduced-motion: no-preference) {
+  .animate .corner {
+    animation: settle 560ms var(--ease-out) 500ms both;
+  }
+
+  .animate .accentLine {
+    stroke-dasharray: 600;
+    animation: draw 1200ms var(--ease-in-out) 300ms both;
+  }
+}
+
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 600;
+  }
+}
+
+.corner {
+  transform-box: fill-box;
+  transform-origin: center;
+}
