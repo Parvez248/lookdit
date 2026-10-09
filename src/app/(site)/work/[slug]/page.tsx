@@ -50,6 +50,7 @@ export async function generateMetadata({
     openGraph: {
       title: `${title} — LOOKDIT`,
       description,
+      siteName: "LOOKDIT",
       url: canonical,
       type: "article",
       ...(hero

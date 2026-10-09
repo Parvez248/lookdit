@@ -134,6 +134,16 @@ async function coversByProjectIds(projectIds: readonly string[]): Promise<Map<st
   return covers;
 }
 
+/** Slugs and last update of every published project, for the sitemap. */
+export async function listPublishedSlugs(): Promise<{ slug: string; updatedAt: Date }[]> {
+  return getDb()
+    .select({ slug: projects.slug, updatedAt: projects.updatedAt })
+    .from(projects)
+    .where(eq(projects.status, "published"))
+    .orderBy(asc(projects.slug))
+    .limit(5000);
+}
+
 /**
  * Public portfolio listing: published projects only, ordered
  * featured DESC, display_order ASC, year DESC (with a deterministic id tiebreak).
