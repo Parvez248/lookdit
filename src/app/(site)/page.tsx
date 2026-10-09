@@ -6,6 +6,7 @@ import { Industries } from "@/components/home/Industries";
 import { SelectedWork } from "@/components/home/SelectedWork";
 import { Services } from "@/components/home/Services";
 import { hero, services } from "@/content/site";
+import { jsonLd } from "@/lib/json-ld";
 import { siteUrl } from "@/lib/site-url";
 
 export const metadata: Metadata = {
@@ -19,17 +20,14 @@ export const metadata: Metadata = {
  */
 function organizationJsonLd(): string {
   const origin = siteUrl();
-  const data = {
-    "@context": "https://schema.org",
+  return jsonLd({
     "@type": "Organization",
     name: "LOOKDIT",
     url: origin.href,
     logo: new URL("/brand/lookdit-logo.png", origin).href,
     description: hero.supporting,
     knowsAbout: services.items.map((item) => item.name),
-  };
-  // Escape "<" so content can never close the script element.
-  return JSON.stringify(data).replace(/</g, "\\u003c");
+  });
 }
 
 export default function HomePage() {

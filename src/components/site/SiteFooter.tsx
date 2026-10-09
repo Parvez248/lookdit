@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { ButtonLink } from "@/components/ui/ButtonLink";
-import { contactCta, footer, primaryNav } from "@/content/site";
+import { contactCta, footer, primaryNav, privacyPublished } from "@/content/site";
 
 import { Brand } from "./Brand";
 import styles from "./SiteFooter.module.css";
@@ -34,7 +34,17 @@ export function SiteFooter() {
             </ul>
           </nav>
 
-          <p className={styles.legal}>© {year} LOOKDIT</p>
+          <p className={styles.legal}>
+            © {year} LOOKDIT
+            {privacyPublished() ? (
+              <>
+                {" · "}
+                <Link href="/privacy" className={styles.link}>
+                  Privacy
+                </Link>
+              </>
+            ) : null}
+          </p>
         </div>
       </div>
     </footer>

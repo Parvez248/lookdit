@@ -1,0 +1,29 @@
+.intro {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-5);
+  max-width: var(--measure);
+}
+
+.title {
+  max-width: 16ch;
+  font-size: var(--text-display-l);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.lead {
+  max-width: 48ch;
+  font-size: var(--text-body-l);
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4) var(--space-6);
+  margin-top: var(--space-3);
+}

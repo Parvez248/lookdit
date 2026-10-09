@@ -1,0 +1,54 @@
+/* Sections space themselves from the top, as the home sections do. */
+.page {
+  padding-bottom: var(--section-space);
+}
+
+.top,
+.block {
+  padding-top: var(--section-space);
+}
+
+.inner {
+  display: grid;
+  row-gap: var(--space-7);
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  justify-self: start;
+  font-size: var(--text-body-s);
+  color: var(--text-muted);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.backIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .back:hover {
+    color: var(--text);
+  }
+}
+
+.focus {
+  display: grid;
+  border-top: 1px solid var(--line);
+}
+
+@media (min-width: 48rem) {
+  .focus {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--gutter);
+  }
+}
+
+.focusItem {
+  padding-block: var(--space-5);
+  border-bottom: 1px solid var(--line);
+  font-size: var(--text-body-l);
+  line-height: 1.4;
+}

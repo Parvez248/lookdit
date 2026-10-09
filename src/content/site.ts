@@ -5,13 +5,13 @@
 export type NavItem = { label: string; href: string };
 
 /**
- * Section anchors on the home page, in page order. Only sections that exist are
- * listed: Studio returns only when a real Studio/About section exists.
+ * Primary navigation: home sections in page order, then pages.
  */
 export const primaryNav: readonly NavItem[] = [
   { label: "Services", href: "/#services" },
   { label: "Industries", href: "/#industries" },
   { label: "Work", href: "/work" },
+  { label: "About", href: "/about" },
 ];
 
 export const contactCta: NavItem = { label: "Start a project", href: "/#contact" };
@@ -29,24 +29,32 @@ export const hero = {
 
 /**
  * The three core service pillars, peers of one another. Descriptions are v1
- * working copy. Sub-services are unconfirmed, so none are listed.
+ * working copy. Each has a page at /services/<slug>. `focusAreas` stays empty
+ * until sub-services are confirmed; the page shows that section only when it
+ * has entries.
  */
 export const services = {
   label: "Core services",
   heading: "Built around visibility, reach and useful web systems.",
   items: [
     {
+      slug: "seo",
       name: "SEO",
       description: "Improve search visibility so the right customers can find your business.",
+      focusAreas: [] as readonly string[],
     },
     {
+      slug: "digital-marketing",
       name: "Digital Marketing",
       description: "Reach customers through focused digital channels.",
+      focusAreas: [] as readonly string[],
     },
     {
+      slug: "web-apps",
       name: "Web Apps Development",
       description:
         "Build websites and web applications that support customer journeys and business operations.",
+      focusAreas: [] as readonly string[],
     },
   ],
 } as const;
@@ -102,3 +110,42 @@ export const workIndex = {
 export const footer = {
   cta: "Have something worth building?",
 } as const;
+
+/**
+ * About page. Only facts already approved elsewhere on the site. `facts` holds
+ * company details (base, founding year, who runs it); each is null until
+ * Khaled confirms it, and the page lists only the ones that are set.
+ */
+export const about = {
+  label: "About LOOKDIT",
+  heading: "Visibility, reach and the web systems behind them.",
+  lead: hero.supporting,
+  facts: {
+    based: null as string | null,
+    founded: null as string | null,
+    team: null as string | null,
+  },
+} as const;
+
+/**
+ * Privacy policy. The sections describe what the code actually does (see
+ * src/db/schema/inquiries.ts, src/lib/inquiries, src/lib/auth). The page stays
+ * unpublished (404, no links) until every field in `owner` and `retention` is
+ * confirmed: legal identity, contact and retention are commitments only the
+ * business can make.
+ */
+export const privacy = {
+  owner: {
+    legalName: null as string | null,
+    country: null as string | null,
+    email: null as string | null,
+  },
+  retention: null as string | null,
+  lastUpdated: null as string | null,
+} as const;
+
+/** True once the business facts the policy depends on are filled in. */
+export function privacyPublished(): boolean {
+  const { legalName, country, email } = privacy.owner;
+  return Boolean(legalName && country && email && privacy.retention && privacy.lastUpdated);
+}
