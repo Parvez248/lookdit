@@ -67,6 +67,9 @@ arises, and explain why (see rule 3).
 
 ## Current state
 
+Development paused on 2026-10-09. Start with `docs/HANDOFF.md` (overview, deployment, how to
+resume) and `docs/BACKLOG.md` (launch blockers and pending facts).
+
 - **Backend:** PostgreSQL (Neon) via Drizzle. Schema and migrations in `src/db/schema` and
   `drizzle/`; typed reads in `src/db/queries`; inquiry writes in `src/db/mutations` behind the
   `submitInquiry` Server Action (`src/app/actions/inquiry.ts`) with validation and per-client
