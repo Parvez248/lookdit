@@ -1,0 +1,33 @@
+name: CI
+
+# The checks a contributor runs locally, on every PR and on main. No secrets:
+# the build never needs DATABASE_URL, and tests don't touch a database.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4 # version comes from package.json "packageManager"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Build first: it generates the PageProps/LayoutProps types tsc needs.
+      - run: pnpm build
+      - run: pnpm exec tsc --noEmit
+      - run: pnpm lint
+      - run: pnpm test
