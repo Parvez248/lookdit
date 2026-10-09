@@ -16,6 +16,7 @@ export const metadata: Metadata = {
   title: "Work",
   description: workIndex.intro,
   alternates: { canonical: "/work" },
+  openGraph: { title: "Work — LOOKDIT", description: workIndex.intro, url: "/work", siteName: "LOOKDIT", type: "website" },
 };
 
 export default async function WorkPage() {

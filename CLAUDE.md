@@ -153,6 +153,12 @@ arises, and explain why (see rule 3).
     leads the case study (preloaded, also the Open Graph image); gallery images follow it.
     Images render through `MediaImage`, which reserves the stored width/height (or a 16:10
     frame when unknown), so they never shift layout.
+  - SEO: `metadataBase` comes from `siteUrl()` (`src/lib/site-url.ts`, Vercel's
+    `VERCEL_PROJECT_PRODUCTION_URL`, so previews never claim to be canonical). `src/app/robots.ts`
+    keeps `/admin` and `/portal` out; `src/app/sitemap.ts` (force-dynamic) lists home, `/work` and
+    published case studies, falling back to the static pages if the DB read fails. The home page
+    carries Organization JSON-LD with only facts the site states. Unknown URLs hit
+    `(site)/[...missing]` and get the branded `(site)/not-found.tsx`.
   - `src/content/site.ts`: static site copy and navigation. `src/content/work.ts`: static
     Selected Work content (concept projects only; real client work comes from the DB via `/work`).
 - **Content rule:** Selected Work may contain real client work and clearly identified LOOKDIT
