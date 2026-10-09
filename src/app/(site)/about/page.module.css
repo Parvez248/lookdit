@@ -1,0 +1,43 @@
+.page {
+  padding-bottom: var(--section-space);
+}
+
+.top {
+  padding-top: var(--section-space);
+}
+
+.inner {
+  display: grid;
+  row-gap: var(--space-8);
+}
+
+.facts {
+  display: grid;
+  border-top: 1px solid var(--line);
+}
+
+@media (min-width: 48rem) {
+  .facts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: var(--gutter);
+  }
+}
+
+.fact {
+  display: grid;
+  gap: var(--space-2);
+  padding-block: var(--space-5);
+  border-bottom: 1px solid var(--line);
+}
+
+.fact dt {
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+.fact dd {
+  font-size: var(--text-body-l);
+}

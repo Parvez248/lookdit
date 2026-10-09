@@ -33,6 +33,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   row-gap: var(--space-3);
+  position: relative;
   padding-block: var(--space-6) var(--space-7);
   border-top: 1px solid var(--line);
 }
@@ -50,6 +51,52 @@
   font-size: var(--text-display-m);
   line-height: 1.05;
   letter-spacing: -0.03em;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+/* Stretches the link over the row (the row is position: relative). */
+.link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.arrow {
+  flex: none;
+  width: 0.5em;
+  height: 0.5em;
+  color: var(--text-subtle);
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .row:hover .arrow {
+    color: var(--blue-400);
+    transform: translateX(0.25rem);
+  }
+}
+
+.link:focus-visible {
+  outline: none;
+}
+
+/* The focus ring goes round the whole row, matching the click target. */
+.link:focus-visible::after {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row:hover .arrow {
+    transform: none;
+  }
 }
 
 .description {

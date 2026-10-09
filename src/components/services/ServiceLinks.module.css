@@ -1,0 +1,63 @@
+.list {
+  display: grid;
+  border-top: 1px solid var(--line);
+}
+
+@media (min-width: 48rem) {
+  .list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--gutter);
+  }
+}
+
+.item {
+  border-bottom: 1px solid var(--line);
+}
+
+.link {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-3) var(--space-5);
+  padding-block: var(--space-6);
+  color: var(--text);
+}
+
+.name {
+  font-size: var(--text-heading-s);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+
+.description {
+  grid-column: 1;
+  max-width: 40ch;
+  font-size: var(--text-body-s);
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.arrow {
+  grid-column: 2;
+  grid-row: 1;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.15em;
+  color: var(--text-subtle);
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .link:hover .arrow {
+    color: var(--blue-400);
+    transform: translateX(0.25rem);
+  }
+}
+
+/* The nudge is motion; colour alone carries the hover when motion is reduced. */
+@media (prefers-reduced-motion: reduce) {
+  .link:hover .arrow {
+    transform: none;
+  }
+}

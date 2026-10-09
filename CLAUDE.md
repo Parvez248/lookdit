@@ -147,6 +147,13 @@ arises, and explain why (see rule 3).
   - `src/components/home`: home page sections: `Hero`, `Services`, `Industries`,
     `SelectedWork` (with `CapabilityMap`, the temporary visual for the concept project) and
     `Contact` (`ContactForm` posts to `submitInquiry`; the section owns `id="contact"`).
+  - Inner pages (static, no DB): `/services/[slug]` (one per pillar in `services.items`,
+    `dynamicParams = false`, Service JSON-LD), `/about` and `/privacy`. They open with
+    `PageIntro` (`src/components/site`) and reuse the home `Services` / `Industries` sections.
+    About lists company facts (`about.facts`) only once they're set. `/privacy` describes what
+    the code does and is a 404, unlinked and out of the sitemap until `privacyPublished()`
+    (legal name, country, contact email, retention and date in `privacy`) is true; change its
+    copy whenever data handling changes.
   - Public portfolio: `/work` and `/work/[slug]` (`src/app/(site)/work`, `src/components/work`)
     read only `src/db/queries/projects.ts` (published rows), are `force-dynamic` so the build
     never needs `DATABASE_URL`, and 404 drafts. The hero image is the `/work` card cover and

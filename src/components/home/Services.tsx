@@ -1,11 +1,14 @@
+import Link from "next/link";
+
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { services } from "@/content/site";
 
 import styles from "./Services.module.css";
 
 /**
- * Core services as an editorial ledger. The rows are not links: service pages
- * don't exist yet, so nothing here suggests it can be clicked.
+ * Core services as an editorial ledger. Each row links to the service's page:
+ * the link sits on the name, and its ::after stretches over the whole row so
+ * the row is one target without nesting the description inside the link.
  */
 export function Services() {
   return (
@@ -20,11 +23,18 @@ export function Services() {
 
         <ol className={styles.list}>
           {services.items.map((service, index) => (
-            <li key={service.name} className={styles.row}>
+            <li key={service.slug} className={styles.row}>
               <span className={styles.index} aria-hidden="true">
                 {String(index + 1).padStart(2, "0")}
               </span>
-              <h3 className={styles.name}>{service.name}</h3>
+              <h3 className={styles.name}>
+                <Link href={`/services/${service.slug}`} className={styles.link}>
+                  {service.name}
+                  <svg className={styles.arrow} viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                    <path d="M3 8h9.5M8.5 4l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                  </svg>
+                </Link>
+              </h3>
               <p className={styles.description}>{service.description}</p>
             </li>
           ))}
