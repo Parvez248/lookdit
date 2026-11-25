@@ -185,6 +185,12 @@ resume) and `docs/BACKLOG.md` (launch blockers and pending facts).
     (featured, then display order), topped up with concepts to three; concepts alone if the DB
     read fails. The home page is ISR (`revalidate = 300`), so a newly published project shows
     within five minutes. `/work` lists client work, then the concepts.
+- **Static copy** (`pnpm export:static`, `scripts/export-static.mts`): an optional, frontend-only
+  export for plain static hosting. It builds an isolated copy with no secrets, crawls the public
+  pages and writes `static-site/` (generated; never edit it by hand): each page's CSS inlined in a
+  `<style>` block, Next.js scripts removed, a small vanilla script for the mobile menu, the contact
+  form posting to `--form-action` (a form service). No inquiries saved, no client projects, no
+  admin or portal. Vercel stays the real deployment.
 - **Content rule:** Selected Work may contain real client work and clearly identified LOOKDIT
   concept work. Concept work must never be presented in a way that implies a real client,
   commercial engagement, or measured result. Concept projects are never written to the
@@ -206,6 +212,7 @@ pnpm exec tsc --noEmit   # typecheck (strict)
 pnpm test                # Vitest unit tests
 pnpm admin:create-user <email> "<name>"  # create an admin account (Node 22.18+)
 pnpm portal:create-account <clientId> <email> "<name>"  # create/reset a client portal account
+pnpm export:static [--site-url https://…] [--form-action https://…]  # public site as static HTML, CSS inlined, into static-site/
 ```
 
 <!-- BEGIN:nextjs-agent-rules -->

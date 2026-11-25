@@ -76,6 +76,9 @@ Architecture in brief:
   reported applied to production on 2026-10-08 (unverified). No migration was added after it.
   Migrations are applied manually, never by a deploy.
 - **No `vercel.json`.** Deploy settings live in the Vercel dashboard.
+- **Static copy (optional):** `pnpm export:static` writes a frontend-only, server-free copy of the
+  public site to `static-site/` (CSS inlined per page). See `static-site/README.md` for what it
+  leaves out. It does not replace the Vercel deployment.
 
 ## 5. Public website pages
 
